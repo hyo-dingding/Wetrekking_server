@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { CrewBoardModule } from './apis/crewBoard/crewBoard.module';
+import { CrewBoardModule } from './apis/crewBoards/crewBoard.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
