@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CrewBoard } from './Entities/crewBoard.entity';
+import { CrewBoard } from './entities/crewBoard.entity';
 
 @Injectable()
 export class CrewBoardService {
@@ -10,8 +10,20 @@ export class CrewBoardService {
     private readonly crewBoardRepository: Repository<CrewBoard>, //
   ) {}
 
+  findOneById({ crewBoardId }) {
+    return this.crewBoardRepository.findOne({
+      where: { id: crewBoardId },
+    });
+  }
+
   findAll() {
     return this.crewBoardRepository.find();
+  }
+
+  findAllWithDelete() {
+    return this.crewBoardRepository.find({
+      withDeleted: true,
+    });
   }
 
   create({ createCrewBoardInput }) {
