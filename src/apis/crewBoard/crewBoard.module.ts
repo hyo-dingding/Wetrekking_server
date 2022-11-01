@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CrewBoardResolver } from './crewBoard.resolver';
 import { CrewBoardService } from './crewBoard.service';
-import { CrewBoard } from './Entities/crewBoard.entity';
+import { CrewBoard } from './entities/crewBoard.entity';
 
 @Module({
   imports: [

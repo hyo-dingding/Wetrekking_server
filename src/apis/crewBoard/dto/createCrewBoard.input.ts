@@ -9,13 +9,16 @@ export class CreateCrewBoardInput {
   date: string;
 
   @Field(() => String)
-  location: string;
+  address: string;
+
+  @Field(() => String)
+  addressDetail: string;
 
   @Field(() => Int)
   dues: number;
 
   @Field(() => String)
-  detail: string;
+  description: string;
 
   @Field(() => String)
   gender: string;
