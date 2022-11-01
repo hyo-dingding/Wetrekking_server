@@ -1,0 +1,14 @@
+version: '3.7'
+
+services:
+  team-wetrekking:
+    image: asia.gcr.io/wetrekking-367206/team-wetrekking:1.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/myfolder/src
+    env_file:
+      - ./.env.dev
+    ports:
+      - 3000:3000
