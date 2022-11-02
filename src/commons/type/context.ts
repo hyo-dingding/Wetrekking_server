@@ -1,11 +1,11 @@
 export interface IUser {
-  user: {
+  user?: {
     email: string;
     password: string;
   };
 }
 
 export interface IContext {
-  req?: Request & IUser;
-  res?: Response;
+  req: Request & IUser;
+  res: Response;
 }
