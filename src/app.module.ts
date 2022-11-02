@@ -8,12 +8,14 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './apis/users/user.module';
 import { AuthModule } from './apis/auth/auth.module';
+import { ImageModule } from './apis/Images/image.module';
 
 @Module({
   imports: [
     CrewBoardModule,
     UserModule,
     AuthModule,
+    ImageModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'src/commons/graghql/schema.gql',
