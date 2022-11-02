@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
@@ -11,8 +11,18 @@ export class UserService {
     private readonly userRepository: Repository<User>, //
   ) {}
 
+  findAll() {
+    return this.userRepository.find();
+  }
+
+  findOne({ email }) {
+    return this.userRepository.findOne({
+      where: { email },
+    });
+  }
+
   async create({ createUserInput }) {
-    // const { email, nickname, profile_img, ...user } = createUserInput;
+    const { nickname, profile_img, ...user } = createUserInput;
 
     const hashedPassword = await bcrypt.hash(createUserInput.password, 10);
 
@@ -22,5 +32,24 @@ export class UserService {
     });
 
     return result;
+  }
+
+  async update({ userId, updateUserInput }) {
+    const origin = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    const result = this.userRepository.save({
+      ...origin,
+      id: userId,
+      ...updateUserInput,
+    });
+
+    return result;
+  }
+
+  async delete({ userId }) {
+    const result = await this.userRepository.softDelete({ id: userId });
+    return result.affected ? true : false;
   }
 }

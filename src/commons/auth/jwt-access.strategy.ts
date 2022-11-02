@@ -4,13 +4,11 @@ import { Cache } from 'cache-manager';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 export class JwtAccessStrategy extends PassportStrategy(Strategy, 'access') {
-  constructor(
-    @Inject(CACHE_MANAGER)
-    private readonly cacheManager: Cache,
-  ) {
+  constructor() {
+    // private readonly cacheManager: Cache, // @Inject(CACHE_MANAGER)
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), //
-      sercretOrKey: process.env.ACCESSTOKEN_KEY,
+      secretOrKey: process.env.ACCESSTOKEN_KEY,
       passReqToCallback: true,
     });
   }
@@ -18,6 +16,9 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, 'access') {
   async validate(req, payload) {
     console.log('payload: ', payload);
 
-    const replaceAccess = req.headers.authorization.replace('Bearer  ', '');
+    return {
+      email: payload.email,
+      id: payload.sub,
+    };
   }
 }

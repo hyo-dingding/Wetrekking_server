@@ -29,6 +29,7 @@ type Query {
   fetchCrewBoard(crewBoardId: String!): CrewBoard!
   fetchCrewBoards: [CrewBoard!]!
   fetchCrewBoardWithDelete: [CrewBoard!]!
+  fetchUser(email: String!): User!
 }
 
 type Mutation {
@@ -36,6 +37,10 @@ type Mutation {
   updateCrewBoard(crewBoardId: String!, updateCrewBoardInput: UpdateCrewBoardInput!): CrewBoard!
   deleteCrewBoard(crewBoardId: String!): String!
   createUser(createUserInput: CreateUserInput!): User!
+  updateUser(userId: String!, updateUserInput: UpdateUserInput!): User!
+  deleteUser(userId: String!): Boolean!
+  login(email: String!, password: String!): String!
+  restoreAccessToken: String!
 }
 
 input CreateCrewBoardInput {
@@ -73,4 +78,14 @@ input CreateUserInput {
   phone: String!
   gender: String!
   profile_img: String!
+}
+
+input UpdateUserInput {
+  email: String
+  password: String
+  name: String
+  nickname: String
+  phone: String
+  gender: String
+  profile_img: String
 }
