@@ -5,7 +5,7 @@ services:
     image: asia.gcr.io/wetrekking-367206/team-wetrekking:1.0
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     volumes:
       - ./src:/myfolder/src
     env_file:
