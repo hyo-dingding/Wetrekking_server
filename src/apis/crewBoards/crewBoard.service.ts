@@ -16,7 +16,11 @@ export class CrewBoardService {
     });
   }
 
-  async findAll() {
+  findAll() {
+    return this.crewBoardRepository.find();
+  }
+
+  async findAllDivideNine() {
     const crewBoard = await this.crewBoardRepository.find();
     const newCrewBoard = [];
     console.log(crewBoard);
