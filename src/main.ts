@@ -8,16 +8,20 @@ import { graphqlUploadExpress } from 'graphql-upload';
 // import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
-  // const app = await NestFactory.create(AppModule, { cors: true });
-  // app.use(cors());
-  // app.use(express.json());
+  const app = await NestFactory.create(AppModule, { cors: true });
+  app.use(cors());
+  app.use(express.json());
 
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*'); // 모든 도메인
+    // res.header("Access-Control-Allow-Origin", "https://example.com"); // 특정 도메인
+  });
+  // const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.enableCors({
     origin: 'https://wetrekking.kr',
     credentials: true,
   });
-  app.use(graphqlUploadExpress());
+  // app.use(graphqlUploadExpress());
   // app.useWebSocketAdapter(new SocketIoAdapter(app));
 
   // app.enableCors({
