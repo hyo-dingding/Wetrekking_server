@@ -26,7 +26,11 @@ export class CrewBoard {
 
   @Column()
   @Field(() => String)
-  date: Date;
+  date: string;
+
+  @Column()
+  @Field(() => String)
+  dateTime: string;
 
   @Column()
   @Field(() => String)
