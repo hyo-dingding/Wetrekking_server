@@ -30,6 +30,14 @@ export class CrewBoardService {
     return newCrewBoard;
   }
 
+  findAllValid() {
+    // 현재 시간을 여기에 해야하나?
+
+    return this.crewBoardRepository.find({
+      where: {},
+    });
+  }
+
   // async findByDate({ startDate, endDate }) {
   //   // startDate = startDate.split('-');
   //   // endDate = endDate.split('-');
