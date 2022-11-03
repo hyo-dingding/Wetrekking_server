@@ -5,23 +5,23 @@ import * as express from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.use(
-    cors({
-      origin: true,
-      credentials: true,
-    }),
-  );
+  // app.use(
+  //   cors({
+  //     origin: true,
+  //     credentials: true,
+  //   }),
+  // );
   // app.use(
   //   cors({
   //     origin: 'http://localhost:3000/',
   //   }),
   // );
-  app.use(express.json());
+  // app.use(express.json());
   // app.enableCors({
   //   origin: '*',
   // });
   app.enableCors({
-    origin: true,
+    origin: ['http://localhost:3000/', 'http://34.64.102.157:3000/graphql'],
     credentials: true,
   });
   await app.listen(3000);
