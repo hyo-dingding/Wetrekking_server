@@ -23,6 +23,14 @@ import { ImageModule } from './apis/Images/image.module';
       cors: {
         origin: ['http://localhost:3000/', 'http://34.64.102.157:3000/graphql'],
         credentials: true,
+        method: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+        allowedHeaders: [
+          'Access-Control-Allow-Headers',
+          'Authorization',
+          'X-Requested-With',
+          'Content-Type',
+          'Accept',
+        ],
       },
     }),
     ConfigModule.forRoot(),
