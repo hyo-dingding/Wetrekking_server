@@ -22,7 +22,7 @@ export class CrewBoard {
 
   @Column()
   @Field(() => String)
-  detail: string;
+  description: string;
 
   @Column()
   @Field(() => String)
