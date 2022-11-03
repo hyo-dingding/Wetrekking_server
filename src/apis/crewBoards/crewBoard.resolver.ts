@@ -21,9 +21,22 @@ export class CrewBoardResolver {
   }
 
   @Query(() => [CrewBoard])
-  fetchCrewBoardWithDelete() {
+  fetchCrewBoardsWithDelete() {
     return this.crewBoardService.findAllWithDelete();
   }
+
+  @Query(() => [CrewBoard])
+  fetchCrewBoardsSortNew() {
+    this.crewBoardService.findAll();
+  }
+
+  // @Query(() => [CrewBoard])
+  // fetchCrewBoardsByDate(
+  //   @Args('startDate') startDate: string,
+  //   @Args('endDate') endDate: string,
+  // ) {
+  //   return this.crewBoardService.findByDate({ startDate, endDate });
+  // }
 
   @Mutation(() => CrewBoard)
   createCrewBoard(

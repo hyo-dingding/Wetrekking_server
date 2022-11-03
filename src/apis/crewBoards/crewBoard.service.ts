@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { CrewBoard } from './entities/crewBoard.entity';
 
 @Injectable()
@@ -19,6 +19,32 @@ export class CrewBoardService {
   findAll() {
     return this.crewBoardRepository.find();
   }
+
+  // async findByDate({ startDate, endDate }) {
+  //   // startDate = startDate.split('-');
+  //   // endDate = endDate.split('-');
+  //   console.log(new Date(2022, 10, 10));
+  //   const a = await this.crewBoardRepository.find({
+  //     where: {
+  //       // date: Between(
+  //       //   new Date(
+  //       //     Number(endDate[0]),
+  //       //     Number(endDate[1] - 1),
+  //       //     Number(endDate[2] + 1 ),
+  //       //   ),
+  //       //   new Date(
+  //       //     Number(startDate[0]),
+  //       //     Number(startDate[1] - 1),
+  //       //     Number(startDate[2] + 1),
+  //       //   ),
+  //       // ),
+  //       // date: new Date(2022, 11)
+  //       date: '2022-11-09',
+  //     },
+  //   });
+  //   // console.log(a);
+  //   return a;
+  // }
 
   findAllWithDelete() {
     return this.crewBoardRepository.find({
