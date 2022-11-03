@@ -21,8 +21,8 @@ export class CrewBoardResolver {
   }
 
   @Query(() => [[CrewBoard]])
-  fetchCrewBoardsTEST() {
-    return this.crewBoardService.findAll();
+  async fetchCrewBoardsTEST() {
+    return await this.crewBoardService.findAll();
   }
 
   @Query(() => [CrewBoard])
