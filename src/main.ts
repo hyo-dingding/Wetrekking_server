@@ -4,7 +4,7 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: ['http://localhost:3000/', 'http://34.64.102.157:3000/graphql'],
+    origin: ['http://localhost:3000/'],
     credentials: true,
   });
   await app.listen(3000);

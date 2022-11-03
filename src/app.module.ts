@@ -21,9 +21,10 @@ import { ImageModule } from './apis/Images/image.module';
       autoSchemaFile: 'src/commons/graghql/schema.gql',
       context: ({ req, res }) => ({ req, res }),
       cors: {
-        origin: ['http://localhost:3000/', 'http://34.64.102.157:3000/graphql'],
+        origin: ['http://localhost:3000/'],
         credentials: true,
-        method: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+        exposedHeaders: ['Set-Cookie', 'Cookie'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
         allowedHeaders: [
           'Access-Control-Allow-Headers',
           'Authorization',
