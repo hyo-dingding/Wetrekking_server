@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   team-wetrekking:
-    image: asia.gcr.io/wetrekking-367408/team-wetrekking:1.0
+    image: asia.gcr.io/wetrekking-367408/team-wetrekking-develop:1.0
     build:
       context: .
       dockerfile: Dockerfile.dev
