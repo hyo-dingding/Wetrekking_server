@@ -30,7 +30,7 @@ export class CrewBoard {
 
   @Column()
   @Field(() => String)
-  location: string;
+  addressDetail: string;
 
   @Column({ default: false })
   @Field(() => String)
