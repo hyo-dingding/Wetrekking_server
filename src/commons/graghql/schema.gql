@@ -7,8 +7,8 @@ type CrewBoard {
   title: String!
   description: String!
   date: String!
-  address: String!
   addressDetail: String!
+  address: String!
   gender: String!
   dues: Int!
   peoples: Int!
@@ -36,6 +36,7 @@ type Image {
 type Query {
   fetchCrewBoard(crewBoardId: String!): CrewBoard!
   fetchCrewBoards: [CrewBoard!]!
+  fetchCrewBoardsTEST: [[CrewBoard!]!]!
   fetchCrewBoardsWithDelete: [CrewBoard!]!
   fetchCrewBoardsSortNew: [CrewBoard!]!
   fetchUser(email: String!): User!
@@ -45,6 +46,7 @@ type Query {
 
 type Mutation {
   createCrewBoard(createCrewBoardInput: CreateCrewBoardInput!): CrewBoard!
+  createCrewBoardTEST(createCrewBoardInput: CreateCrewBoardInput!): CrewBoard!
   updateCrewBoard(crewBoardId: String!, updateCrewBoardInput: UpdateCrewBoardInput!): CrewBoard!
   deleteCrewBoard(crewBoardId: String!): String!
   createUser(createUserInput: CreateUserInput!): User!
