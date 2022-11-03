@@ -15,6 +15,12 @@ export class CrewBoardResolver {
     return this.crewBoardService.findOneById({ crewBoardId });
   }
 
+  // @Query(() => [CrewBoard])
+  // fetchCrewBoards() {
+  //   return this.crewBoardService.findAll();
+  // }
+
+  // 현재 시간 기준으로 이후 게시글만 나오는 fetchCrewBoards
   @Query(() => [CrewBoard])
   fetchCrewBoards() {
     return this.crewBoardService.findAll();
@@ -22,7 +28,7 @@ export class CrewBoardResolver {
 
   @Query(() => [[CrewBoard]])
   async fetchCrewBoardsTEST() {
-    return await this.crewBoardService.findAll();
+    return await this.crewBoardService.findAllDivideNine();
   }
 
   @Query(() => [CrewBoard])
@@ -30,10 +36,10 @@ export class CrewBoardResolver {
     return this.crewBoardService.findAllWithDelete();
   }
 
-  @Query(() => [CrewBoard])
-  fetchCrewBoardsSortNew() {
-    this.crewBoardService.findAll();
-  }
+  // @Query(() => [CrewBoard])
+  // fetchCrewBoardsSortNew() {
+  //   this.crewBoardService.findAll();
+  // }
 
   // @Query(() => [CrewBoard])
   // fetchCrewBoardsByDate(

@@ -16,7 +16,11 @@ export class CrewBoardService {
     });
   }
 
-  async findAll() {
+  findAll() {
+    return this.crewBoardRepository.find();
+  }
+
+  async findAllDivideNine() {
     const crewBoard = await this.crewBoardRepository.find();
     const newCrewBoard = [];
     console.log(crewBoard);
@@ -24,6 +28,14 @@ export class CrewBoardService {
       newCrewBoard.push(crewBoard.splice(0, 9));
     }
     return newCrewBoard;
+  }
+
+  findAllValid() {
+    // 현재 시간을 여기에 해야하나?
+
+    return this.crewBoardRepository.find({
+      where: {},
+    });
   }
 
   // async findByDate({ startDate, endDate }) {

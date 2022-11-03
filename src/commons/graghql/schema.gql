@@ -7,6 +7,7 @@ type CrewBoard {
   title: String!
   description: String!
   date: String!
+  dateTime: String!
   addressDetail: String!
   address: String!
   gender: String!
@@ -38,7 +39,6 @@ type Query {
   fetchCrewBoards: [CrewBoard!]!
   fetchCrewBoardsTEST: [[CrewBoard!]!]!
   fetchCrewBoardsWithDelete: [CrewBoard!]!
-  fetchCrewBoardsSortNew: [CrewBoard!]!
   fetchUser(email: String!): User!
   fetchCrewBoardImages: [Image!]!
   fetchBoardImage(ImageId: String!): Image!
@@ -59,7 +59,8 @@ type Mutation {
 
 input CreateCrewBoardInput {
   title: String!
-  date: DateTime!
+  date: String!
+  dateTime: String!
   address: String!
   addressDetail: String!
   dues: Int!
@@ -68,14 +69,10 @@ input CreateCrewBoardInput {
   peoples: Int!
 }
 
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
 input UpdateCrewBoardInput {
   title: String
-  date: DateTime
+  date: String
+  dateTime: String
   address: String
   addressDetail: String
   dues: Int
