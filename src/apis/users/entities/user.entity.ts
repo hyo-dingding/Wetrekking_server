@@ -26,25 +26,25 @@ export class User {
   @Field(() => String)
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   @Field(() => String)
   nickname: string;
 
-  @Column()
+  @Column({ nullable: true })
   @Field(() => String)
   phone: string;
 
-  // 이넘타입으로 할지 고민
-  @Column()
+  @Column({ nullable: true })
   @Field(() => String)
   gender: string;
 
-  // 유저 프로필 이미지 폴더 따로 만들어서 string이 아니라 input으로 가져올지 고민
+  // 유저 프로필 이미지 폴더 따로 만들어서 string이 아니라 input으로 가져올지 고민(필수X) 이미지 디폴트
   @Column({ nullable: true })
   @Field(() => String, { nullable: true })
   profile_img: string;
 
-  @Column({ default: 0 })
+  // 1,000 point
+  @Column({ default: 1000 })
   @Field(() => Int)
   point: number;
 
