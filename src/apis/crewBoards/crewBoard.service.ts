@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CrewBoard } from './entities/crewBoard.entity';
 
 @Injectable()
@@ -16,8 +16,14 @@ export class CrewBoardService {
     });
   }
 
-  findAll() {
-    return this.crewBoardRepository.find();
+  async findAll() {
+    const crewBoard = await this.crewBoardRepository.find();
+    const newCrewBoard = [];
+    console.log(crewBoard);
+    while (crewBoard.length > 0) {
+      newCrewBoard.push(crewBoard.splice(0, 9));
+    }
+    return newCrewBoard;
   }
 
   // async findByDate({ startDate, endDate }) {
