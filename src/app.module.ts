@@ -20,6 +20,10 @@ import { ImageModule } from './apis/Images/image.module';
       driver: ApolloDriver,
       autoSchemaFile: 'src/commons/graghql/schema.gql',
       context: ({ req, res }) => ({ req, res }),
+      cors: {
+        origin: ['http://localhost:3000/', 'http://34.64.102.157:3000/graphql'],
+        credentials: true,
+      },
     }),
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
