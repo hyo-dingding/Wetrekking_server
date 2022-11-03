@@ -21,7 +21,7 @@ import { ImageModule } from './apis/Images/image.module';
       autoSchemaFile: 'src/commons/graghql/schema.gql',
       context: ({ req, res }) => ({ req, res }),
       cors: {
-        origin: ['http://wetrekking.kr', 'https://wetrekking.kr'],
+        origin: ['http://localhost:3000'],
         credentials: true,
         exposedHeaders: ['Set-Cookie', 'Cookie'],
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
