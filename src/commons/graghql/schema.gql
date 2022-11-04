@@ -53,6 +53,7 @@ type Mutation {
   updateUser(userId: String!, updateUserInput: UpdateUserInput!): User!
   deleteUser(userId: String!): Boolean!
   login(email: String!, password: String!): String!
+  logout: String!
   restoreAccessToken: String!
   uploadCrewBoaredImage(image: [Upload!]!): String!
 }

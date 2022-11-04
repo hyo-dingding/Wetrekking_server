@@ -21,17 +21,16 @@ export class JwtKakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
     const profileJson = profile._json;
     console.log(accessToken);
     console.log(refreshToken);
-    // console.log(profile);
 
     const kakao_account = profileJson.kakao_account;
     console.log(kakao_account);
-
+    console.log(profile);
     return {
       // req.user ={값이 이안에 들어감} 리턴된 값 넣어주기
       email: kakao_account.email,
       password: kakao_account.email,
       name: profile.displayName,
-      nickname: profile.nickname,
+      nickname: profile.username,
       phone: '01022223333',
       gender: kakao_account.gender,
     };

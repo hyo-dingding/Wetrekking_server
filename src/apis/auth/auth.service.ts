@@ -24,22 +24,25 @@ export class AuthService {
       { secret: process.env.REFRESHTOKEN_KEY, expiresIn: '2w' },
     );
 
-    const allowedOrigins = process.env.CORS_URLS.split(', ');
-    const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
-    }
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT');
-    res.setHeader(
-      'Access-Control-Allow-Headers',
-      'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers',
-    );
-    res.setHeader(
-      'Set-Cookie',
-      `refreshToken=${refreshToken}; path=/; domain=.wetrekking.kr; SameSite=None; Secure; httpOnly;`,
-    );
-    // res.setHeader('Set-Cookie', `refreshToken=${refreshToken} path=/;`);
+    console.log(user.email);
+
+    // const allowedOrigins = 'http://localhost:3000';
+    // const origin = req.headers.origin;
+    // if (allowedOrigins.includes(origin)) {
+    //   res.setHeader('Access-Control-Allow-Origin', origin);
+    // }
+    // res.setHeader('Access-Control-Allow-Credentials', 'true');
+    // res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT');
+    // res.setHeader(
+    //   'Access-Control-Allow-Headers',
+    //   'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers',
+    // );
+    // res.setHeader(
+    //   'Set-Cookie',
+    //   `refreshToken=${refreshToken}; path=/; domain=.wetrekking.kr; SameSite=None; Secure; httpOnly;`,
+    // );
+    res.setHeader('Set-Cookie', `refreshToken=${refreshToken} path=/;`);
+    // return refreshToken;
   }
 
   async socialLogin({ req, res }) {
@@ -59,10 +62,11 @@ export class AuthService {
 
       // User.push(createUserInput);
     }
-    this.setRefreshToken({ user, res, req });
-    console.log(user);
+    // console.log(user);
+    // this.setRefreshToken({ user, res, req });
+    // console.log(user);
     //redirect 페이지 이동 다시 내페이지로 다시옴.
-    res.redirect('http://localhost:5500/frontend/social-login.html');
+    res.redirect('http://127.0.0.1:5500/frentend.html');
 
     //  소셜로그인 완료 후 Redirect 되면 nickname, phone, gender 입력하게 하기
   }
