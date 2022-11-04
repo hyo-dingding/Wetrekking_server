@@ -40,6 +40,8 @@ type Query {
   fetchCrewBoardsTEST: [[CrewBoard!]!]!
   fetchCrewBoardsWithDelete: [CrewBoard!]!
   fetchUser(email: String!): User!
+  fetchCheckEmail(email: String!): User!
+  fetchCheckNickName(nickname: String!): User!
   fetchCrewBoardImages: [Image!]!
   fetchBoardImage(ImageId: String!): Image!
 }
@@ -86,10 +88,10 @@ input CreateUserInput {
   email: String!
   password: String!
   name: String!
-  nickname: String!
-  phone: String!
-  gender: String!
-  profile_img: String!
+  nickname: String
+  phone: String
+  gender: String
+  profile_img: String
 }
 
 input UpdateUserInput {

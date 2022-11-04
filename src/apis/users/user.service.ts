@@ -15,19 +15,22 @@ export class UserService {
     return this.userRepository.find();
   }
 
-  findOne({ email }) {
+  // email, nickname check 확인을 위해 변수로 등록함.
+  findOne(type) {
     return this.userRepository.findOne({
-      where: { email },
+      where: type,
     });
   }
 
   async create({ createUserInput }) {
-    const { nickname, profile_img, ...user } = createUserInput;
+    // const { nickname, profile_img, ...user } = createUserInput;
+    const { ...user } = createUserInput;
 
     const hashedPassword = await bcrypt.hash(createUserInput.password, 10);
 
     const result = await this.userRepository.save({
-      ...createUserInput,
+      // ...createUserInput,
+      ...user,
       password: hashedPassword,
     });
 

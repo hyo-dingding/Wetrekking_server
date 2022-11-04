@@ -17,6 +17,24 @@ export class UserResolver {
     return this.userService.findOne({ email });
   }
 
+  @Query(() => User)
+  async fetchCheckEmail(@Args('email') email: string) {
+    const findEmail = await this.userService.findOne({ email });
+    if (findEmail) {
+      throw new Error('이미 등록된 이메일 입니다');
+    }
+    return findEmail;
+  }
+
+  @Query(() => User)
+  async fetchCheckNickName(@Args('nickname') nickname: string) {
+    const findNickName = await this.userService.findOne({ nickname });
+    if (findNickName) {
+      throw new Error('이미 등록된 닉네임 입니다');
+    }
+    return findNickName;
+  }
+
   // 회원가입
   @Mutation(() => User)
   createUser(

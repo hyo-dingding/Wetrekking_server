@@ -26,15 +26,15 @@ export class User {
   @Field(() => String)
   name: string;
 
-  @Column({ nullable: true })
+  @Column({ unique: true })
   @Field(() => String)
   nickname: string;
 
-  @Column({ nullable: true })
+  @Column()
   @Field(() => String)
   phone: string;
 
-  @Column({ nullable: true })
+  @Column()
   @Field(() => String)
   gender: string;
 
