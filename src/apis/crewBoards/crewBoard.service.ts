@@ -30,13 +30,41 @@ export class CrewBoardService {
     return newCrewBoard;
   }
 
-  findAllValid() {
-    // 현재 시간을 여기에 해야하나?
+  async findAllNew() {
+    const newCrewBoard = [];
+    const cutAlreadyDone = [];
+    const today = new Date();
+    const crewBoard = await this.crewBoardRepository.find();
 
-    return this.crewBoardRepository.find({
-      where: {},
-    });
+    crewBoard.map((x) =>
+      Number(x.date) > Number(today) ? cutAlreadyDone.push(x) : x,
+    );
+    cutAlreadyDone.sort((a, b) => Number(b.createdAt) - Number(a.createdAt));
+
+    while (cutAlreadyDone.length > 0) {
+      newCrewBoard.push(cutAlreadyDone.splice(0, 9));
+    }
+
+    return newCrewBoard;
   }
+
+  // findAllValid() {
+  // 현재 시간을 여기에 해야하나?
+  // 일단 여기에 하고 나중에 옮기자
+  // const today = new Date();
+  // const todayYear = today.getFullYear();
+  // const todayMonth = today.getMonth() + 1;
+  // const todayDate = today.getDate();
+  // // const day = today.getDay();
+  // const date = `${todayYear}-${todayMonth}-${todayDate}`;
+
+  // const newToday = today.toString().split(' ')[4].split(':');
+  // const dateTime = `${newToday[0]}:${newToday[1]}`;
+
+  //   const today = new Date();
+
+  //   return this.crewBoardRepository.find();
+  // }
 
   // async findByDate({ startDate, endDate }) {
   //   // startDate = startDate.split('-');

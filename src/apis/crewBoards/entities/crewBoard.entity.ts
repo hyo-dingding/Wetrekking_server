@@ -25,18 +25,18 @@ export class CrewBoard {
   description: string;
 
   @Column()
-  @Field(() => String)
-  date: string;
+  @Field(() => Date)
+  date: Date;
 
-  @Column()
-  @Field(() => String)
-  dateTime: string;
+  // @Column()
+  // @Field(() => String)
+  // dateTime: string;
 
   @Column()
   @Field(() => String)
   addressDetail: string;
 
-  @Column({ default: false })
+  @Column()
   @Field(() => String)
   address: string;
 

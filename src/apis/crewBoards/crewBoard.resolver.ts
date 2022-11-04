@@ -16,24 +16,24 @@ export class CrewBoardResolver {
   }
 
   // @Query(() => [CrewBoard])
-  // fetchCrewBoards() {
+  // fetchAllCrewBoards() {
   //   return this.crewBoardService.findAll();
   // }
 
-  // 현재 시간 기준으로 이후 게시글만 나오는 fetchCrewBoards
   @Query(() => [CrewBoard])
+  fetchAllCrewBoardsWithDelete() {
+    return this.crewBoardService.findAllWithDelete();
+  }
+
+  // 현재 시간 기준으로 이후 게시글만 나오는 fetchCrewBoards
+  @Query(() => [[CrewBoard]])
   fetchCrewBoards() {
-    return this.crewBoardService.findAll();
+    return this.crewBoardService.findAllNew();
   }
 
   @Query(() => [[CrewBoard]])
   async fetchCrewBoardsTEST() {
     return await this.crewBoardService.findAllDivideNine();
-  }
-
-  @Query(() => [CrewBoard])
-  fetchCrewBoardsWithDelete() {
-    return this.crewBoardService.findAllWithDelete();
   }
 
   // @Query(() => [CrewBoard])
@@ -57,10 +57,12 @@ export class CrewBoardResolver {
   }
 
   @Mutation(() => CrewBoard)
-  createCrewBoardTEST(
+  async createCrewBoardTEST(
     @Args('createCrewBoardInput') createCrewBoardInput: CreateCrewBoardInput,
   ) {
-    return this.crewBoardService.create({ createCrewBoardInput });
+    const a = await this.crewBoardService.create({ createCrewBoardInput });
+    console.log(a);
+    return a;
   }
 
   @Mutation(() => CrewBoard)
