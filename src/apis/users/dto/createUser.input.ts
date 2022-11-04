@@ -11,15 +11,15 @@ export class CreateUserInput {
   @Field(() => String)
   name: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   nickname: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   phone: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   gender: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   profile_img: string;
 }
