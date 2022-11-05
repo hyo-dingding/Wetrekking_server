@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>채팅방</title>
+    <!-- 제이쿼리 -->
+    <script
+      src="https://code.jquery.com/jquery-3.6.1.min.js"
+      integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+      crossorigin="anonymous"
+    ></script>
+    <!-- 소켓아이오 -->
+    <script
+      src="https://cdn.socket.io/4.5.3/socket.io.min.js"
+      integrity="sha384-WPFUvHkB1aHA5TDSZi6xtDgkF0wXJcIIxXhC6h8OT8EH3fC5PWro5pWJ1THjcfEi"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      const socket = io('http://localhost:3000/chat');
+      const name = prompt('이름을 알려주세요');
+      const room = prompt('입장할 방의 코드를 적어주세요');
+      if (!(name && room)) {
+        alert('다시 입력하세요.');
+        window.location.reload();
+      }
+      socket.emit('hihi', name, room);
+
+      socket.on('connect', () => {
+        // 누군가 채팅침
+        socket.on(room, (data) => {
+          $('#chatList').append(`<div>${data[0]} : ${data[1]}</div>`);
+        });
+        // 누군가 입장
+        socket.on('comeOn' + room, (comeOn) => {
+          $('#chatList').append(`<div style="color:blue;">${comeOn}</div>`);
+        });
+      });
+
+      function msg_send() {
+        // 메시지 전송
+        let message = $('#msg').val();
+        socket.emit('send', room, name, message);
+        $('#msg').val('');
+        $('#chatList').append(`<div style="color:red;">나 : ${message}</div>`);
+      }
+
+      $(document).ready(() => {
+        $('#room').text(`${room}`);
+      });
+    </script>
+  </head>
+  <body>
+    <h1>weTrekking 채팅방 <span id="room" style="font-size: large"></span></h1>
+
+    <div id="chatList"></div>
+
+    <div id="sendMessage" style="position: fixed; bottom: 5%">
+      <input
+        type="text"
+        id="msg"
+        onKeyPress="if( event.keyCode==13 ){msg_send();}"
+      />
+      <button onclick="msg_send()">제출</button>
+    </div>
+  </body>
+</html>
