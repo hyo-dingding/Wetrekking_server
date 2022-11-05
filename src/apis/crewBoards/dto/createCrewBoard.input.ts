@@ -5,11 +5,11 @@ export class CreateCrewBoardInput {
   @Field(() => String)
   title: string;
 
-  @Field(() => Date)
-  date: Date;
+  @Field(() => String)
+  date: string;
 
-  // @Field(() => String)
-  // dateTime: string;
+  @Field(() => String)
+  dateTime: string;
 
   @Field(() => String)
   address: string;

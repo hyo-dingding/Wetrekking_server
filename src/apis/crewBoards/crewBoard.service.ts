@@ -20,87 +20,91 @@ export class CrewBoardService {
     return this.crewBoardRepository.find();
   }
 
-  async findAllDivideNine() {
-    const crewBoard = await this.crewBoardRepository.find();
-    const newCrewBoard = [];
-    console.log(crewBoard);
-    while (crewBoard.length > 0) {
-      newCrewBoard.push(crewBoard.splice(0, 9));
-    }
-    return newCrewBoard;
-  }
-
-  async findAllNew() {
-    const newCrewBoard = [];
-    const cutAlreadyDone = [];
-    const today = new Date();
-    const crewBoard = await this.crewBoardRepository.find();
-
-    crewBoard.map((x) =>
-      Number(x.date) > Number(today) ? cutAlreadyDone.push(x) : x,
-    );
-    cutAlreadyDone.sort((a, b) => Number(b.createdAt) - Number(a.createdAt));
-
-    while (cutAlreadyDone.length > 0) {
-      newCrewBoard.push(cutAlreadyDone.splice(0, 9));
-    }
-
-    return newCrewBoard;
-  }
-
-  // findAllValid() {
-  // 현재 시간을 여기에 해야하나?
-  // 일단 여기에 하고 나중에 옮기자
-  // const today = new Date();
-  // const todayYear = today.getFullYear();
-  // const todayMonth = today.getMonth() + 1;
-  // const todayDate = today.getDate();
-  // // const day = today.getDay();
-  // const date = `${todayYear}-${todayMonth}-${todayDate}`;
-
-  // const newToday = today.toString().split(' ')[4].split(':');
-  // const dateTime = `${newToday[0]}:${newToday[1]}`;
-
-  //   const today = new Date();
-
-  //   return this.crewBoardRepository.find();
-  // }
-
-  // async findByDate({ startDate, endDate }) {
-  //   // startDate = startDate.split('-');
-  //   // endDate = endDate.split('-');
-  //   console.log(new Date(2022, 10, 10));
-  //   const a = await this.crewBoardRepository.find({
-  //     where: {
-  //       // date: Between(
-  //       //   new Date(
-  //       //     Number(endDate[0]),
-  //       //     Number(endDate[1] - 1),
-  //       //     Number(endDate[2] + 1 ),
-  //       //   ),
-  //       //   new Date(
-  //       //     Number(startDate[0]),
-  //       //     Number(startDate[1] - 1),
-  //       //     Number(startDate[2] + 1),
-  //       //   ),
-  //       // ),
-  //       // date: new Date(2022, 11)
-  //       date: '2022-11-09',
-  //     },
-  //   });
-  //   // console.log(a);
-  //   return a;
-  // }
-
-  findAllWithDelete() {
+  findAllWithDeleted() {
     return this.crewBoardRepository.find({
       withDeleted: true,
     });
   }
 
-  create({ createCrewBoardInput }) {
+  async findAllDivideNine() {
+    const crewBoard = await this.crewBoardRepository.find();
+    const newCrewBoard = [];
+
+    this.divideNine(crewBoard, newCrewBoard);
+    return newCrewBoard;
+  }
+
+  divideNine(array, newArray) {
+    while (array.length > 0) {
+      newArray.push(array.splice(0, 9));
+    }
+  }
+
+  cutAlreadyDone(array, today, newArray) {
+    array.map((x) =>
+      Number(x.dateStandard) > Number(today) ? newArray.push(x) : x,
+    );
+  }
+
+  async findAllLatestFirst() {
+    const newCrewBoard = [];
+    const cutAlreadyDone = [];
+    const today = new Date();
+    const crewBoard = await this.crewBoardRepository.find();
+
+    this.cutAlreadyDone(crewBoard, today, cutAlreadyDone);
+    cutAlreadyDone.sort((a, b) => Number(b.createdAt) - Number(a.createdAt));
+    this.divideNine(cutAlreadyDone, newCrewBoard);
+
+    return newCrewBoard;
+  }
+
+  async findAllDeadlineFirst() {
+    const newCrewBoard = [];
+    const cutAlreadyDone = [];
+    const today = new Date();
+    const crewBoard = await this.crewBoardRepository.find();
+
+    this.cutAlreadyDone(crewBoard, today, cutAlreadyDone);
+
+    cutAlreadyDone.sort(
+      (a, b) => Number(a.dateStandard) - Number(b.dateStandard),
+    );
+
+    this.divideNine(cutAlreadyDone, newCrewBoard);
+
+    return newCrewBoard;
+  }
+
+  async findByDate({ startDate, endDate }) {
+    const newCrewBoard = [];
+    const cutAlreadyDone = [];
+    const pickedDate = [];
+    const today = new Date();
+    const crewBoard = await this.crewBoardRepository.find();
+
+    this.cutAlreadyDone(crewBoard, today, cutAlreadyDone);
+
+    cutAlreadyDone.map((x) =>
+      Date.parse(startDate) <= Date.parse(x.date) &&
+      Date.parse(x.date) < Date.parse(endDate) + 86400000
+        ? pickedDate.push(x)
+        : x,
+    );
+    pickedDate.sort((a, b) => Number(a.dateStandard) - Number(b.dateStandard));
+
+    this.divideNine(pickedDate, newCrewBoard);
+
+    return newCrewBoard;
+  }
+
+  async create({ createCrewBoardInput }) {
     const { ...crewBoard } = createCrewBoardInput;
-    return this.crewBoardRepository.save({ ...crewBoard });
+    const dateStandard = crewBoard.date + ' ' + crewBoard.dateTime;
+    return await this.crewBoardRepository.save({
+      ...crewBoard,
+      dateStandard: dateStandard,
+    });
   }
 
   async update({ crewBoardId, updateCrewBoardInput }) {

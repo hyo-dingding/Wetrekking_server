@@ -15,39 +15,38 @@ export class CrewBoardResolver {
     return this.crewBoardService.findOneById({ crewBoardId });
   }
 
-  // @Query(() => [CrewBoard])
-  // fetchAllCrewBoards() {
-  //   return this.crewBoardService.findAll();
-  // }
+  @Query(() => [CrewBoard])
+  fetchAllCrewBoards() {
+    return this.crewBoardService.findAll();
+  }
 
   @Query(() => [CrewBoard])
   fetchAllCrewBoardsWithDelete() {
-    return this.crewBoardService.findAllWithDelete();
+    return this.crewBoardService.findAllWithDeleted();
   }
 
-  // 현재 시간 기준으로 이후 게시글만 나오는 fetchCrewBoards
   @Query(() => [[CrewBoard]])
-  fetchCrewBoards() {
-    return this.crewBoardService.findAllNew();
+  fetchCrewBoardsLatestFirst() {
+    return this.crewBoardService.findAllLatestFirst();
+  }
+
+  @Query(() => [[CrewBoard]])
+  fetchCrewBoardsDeadlineFirst() {
+    return this.crewBoardService.findAllDeadlineFirst();
+  }
+
+  @Query(() => [[CrewBoard]])
+  async fetchCrewBoardsByDate(
+    @Args('startDate') startDate: string,
+    @Args('endDate') endDate: string,
+  ) {
+    return await this.crewBoardService.findByDate({ startDate, endDate });
   }
 
   @Query(() => [[CrewBoard]])
   async fetchCrewBoardsTEST() {
     return await this.crewBoardService.findAllDivideNine();
   }
-
-  // @Query(() => [CrewBoard])
-  // fetchCrewBoardsSortNew() {
-  //   this.crewBoardService.findAll();
-  // }
-
-  // @Query(() => [CrewBoard])
-  // fetchCrewBoardsByDate(
-  //   @Args('startDate') startDate: string,
-  //   @Args('endDate') endDate: string,
-  // ) {
-  //   return this.crewBoardService.findByDate({ startDate, endDate });
-  // }
 
   @Mutation(() => CrewBoard)
   createCrewBoard(
@@ -60,9 +59,7 @@ export class CrewBoardResolver {
   async createCrewBoardTEST(
     @Args('createCrewBoardInput') createCrewBoardInput: CreateCrewBoardInput,
   ) {
-    const a = await this.crewBoardService.create({ createCrewBoardInput });
-    console.log(a);
-    return a;
+    return await this.crewBoardService.create({ createCrewBoardInput });
   }
 
   @Mutation(() => CrewBoard)

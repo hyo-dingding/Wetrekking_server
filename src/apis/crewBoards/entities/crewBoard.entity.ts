@@ -25,12 +25,15 @@ export class CrewBoard {
   description: string;
 
   @Column()
-  @Field(() => Date)
-  date: Date;
+  dateStandard: Date;
 
-  // @Column()
-  // @Field(() => String)
-  // dateTime: string;
+  @Column()
+  @Field(() => String)
+  date: string;
+
+  @Column()
+  @Field(() => String)
+  dateTime: string;
 
   @Column()
   @Field(() => String)
