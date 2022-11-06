@@ -46,6 +46,39 @@ export class CrewBoardService {
     );
   }
 
+  changeDateTimeTo24h(dateTimeAMPM) {
+    if (
+      dateTimeAMPM.split(' ')[1] === 'pm' &&
+      dateTimeAMPM.split(' ')[0].split(':')[0] === '12'
+    ) {
+      return dateTimeAMPM.split(' ')[0];
+    }
+
+    if (
+      dateTimeAMPM.split(' ')[1] === 'am' &&
+      dateTimeAMPM.split(' ')[0].split(':')[0] === '12'
+    ) {
+      const hour = Number(dateTimeAMPM.split(' ')[0].split(':')[0]) - 12;
+      return `${hour}:${dateTimeAMPM.split(' ')[0].split(':')[1]}`;
+    }
+    const hour =
+      dateTimeAMPM.split(' ')[1] === 'pm'
+        ? Number(dateTimeAMPM.split(' ')[0].split(':')[0]) + 12
+        : String(Number(dateTimeAMPM.split(' ')[0].split(':')[0])).padStart(
+            2,
+            '0',
+          );
+    return `${hour}:${dateTimeAMPM.split(' ')[0].split(':')[1]}`;
+  }
+
+  changeDateTimeToAMPM(dateTime24h) {
+    const AMPM = dateTime24h.split(':')[0] / 12 >= 1 ? 'pm' : 'am';
+    return (
+      `${String(Number(dateTime24h.split(':')[0]) % 12).padStart(2, '0')}:` +
+      `${String(dateTime24h.split(':')[1]).padStart(2, '0')} ${AMPM}`
+    );
+  }
+
   async findAllLatestFirst() {
     const newCrewBoard = [];
     const cutAlreadyDone = [];
@@ -100,7 +133,8 @@ export class CrewBoardService {
 
   async create({ createCrewBoardInput }) {
     const { ...crewBoard } = createCrewBoardInput;
-    const dateStandard = crewBoard.date + ' ' + crewBoard.dateTime;
+    const dateTime24h = this.changeDateTimeTo24h(crewBoard.dateTime);
+    const dateStandard = crewBoard.date + ' ' + dateTime24h;
     return await this.crewBoardRepository.save({
       ...crewBoard,
       dateStandard: dateStandard,
