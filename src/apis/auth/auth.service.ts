@@ -24,8 +24,6 @@ export class AuthService {
       { secret: process.env.REFRESHTOKEN_KEY, expiresIn: '2w' },
     );
 
-    console.log(user.email);
-
     const allowedOrigins = [
       'http://localhost:3000',
       'https://develop.wetrekking.kr',
@@ -44,12 +42,11 @@ export class AuthService {
       'Set-Cookie',
       `refreshToken=${refreshToken}; path=/; domain=.wetrekking.kr; SameSite=None; Secure; httpOnly;`,
     );
-    // res.setHeader('Set-Cookie', `refreshToken=${refreshToken} path=/;`);
+    // res.setHeader('Set-Cookie', `refreshToken=${refreshToken}; path=/;`);
     return refreshToken;
   }
 
   async socialLogin({ req, res }) {
-    const User = [];
     // 1. 회원조회
     const user = await this.userService.findOne({ email: req.user.email });
 

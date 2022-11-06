@@ -50,6 +50,8 @@ type Query {
 }
 
 type Mutation {
+  sendTokenToPhone(phone: String!): String!
+  checkTokenPhone(phone: String!, token: String!): String!
   createCrewBoard(createCrewBoardInput: CreateCrewBoardInput!): CrewBoard!
   createCrewBoardTEST(createCrewBoardInput: CreateCrewBoardInput!): CrewBoard!
   updateCrewBoard(crewBoardId: String!, updateCrewBoardInput: UpdateCrewBoardInput!): CrewBoard!

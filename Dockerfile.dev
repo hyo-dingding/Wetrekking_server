@@ -1,4 +1,4 @@
-FROM node:14
+FROM node:16
 
 WORKDIR /team-wetrekking/
 COPY ./package.json/ /team-wetrekking/

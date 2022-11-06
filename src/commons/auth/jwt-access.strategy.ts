@@ -4,8 +4,7 @@ import { Cache } from 'cache-manager';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 export class JwtAccessStrategy extends PassportStrategy(Strategy, 'access') {
-  constructor() {
-    // private readonly cacheManager: Cache, // @Inject(CACHE_MANAGER)
+  constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), //
       secretOrKey: process.env.ACCESSTOKEN_KEY,
@@ -15,6 +14,13 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, 'access') {
 
   async validate(req, payload) {
     console.log('payload: ', payload);
+    const accessToken = req.headers['authorization'].replace('Bearer ', '');
+
+    const checkAccessToken = await this.cacheManager.get(
+      `accessToken:${accessToken}`,
+    );
+    if (checkAccessToken)
+      throw new UnauthorizedException('다시 로그인해주세요 ');
 
     return {
       email: payload.email,

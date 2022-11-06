@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { CacheModule, Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { CrewBoardModule } from './apis/crewBoards/crewBoard.module';
 // import { AppController } from './app.controller';
@@ -9,9 +9,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './apis/users/user.module';
 import { AuthModule } from './apis/auth/auth.module';
 import { ImageModule } from './apis/Images/image.module';
+import { PhoneModule } from './apis/phone/phone.module';
+import { RedisClientOptions } from 'redis';
+import * as redisStore from 'cache-manager-redis-store';
 
 @Module({
   imports: [
+    PhoneModule,
     CrewBoardModule,
     UserModule,
     AuthModule,
@@ -45,6 +49,11 @@ import { ImageModule } from './apis/Images/image.module';
       entities: [__dirname + '/apis/**/*.entity.*'],
       synchronize: true,
       logging: true,
+    }),
+    CacheModule.register<RedisClientOptions>({
+      store: redisStore,
+      url: 'redis://my-redis:6379',
+      isGlobal: true,
     }),
   ],
   // controllers: [AppController],
