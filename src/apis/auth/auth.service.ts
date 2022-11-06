@@ -24,25 +24,25 @@ export class AuthService {
       { secret: process.env.REFRESHTOKEN_KEY, expiresIn: '2w' },
     );
 
-    // const allowedOrigins = [
-    //   'http://localhost:3000',
-    //   'https://develop.wetrekking.kr',
-    // ];
-    // const origin = req.headers.origin;
-    // if (allowedOrigins.includes(origin)) {
-    //   res.setHeader('Access-Control-Allow-Origin', origin);
-    // }
-    // res.setHeader('Access-Control-Allow-Credentials', 'true');
-    // res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT');
-    // res.setHeader(
-    //   'Access-Control-Allow-Headers',
-    //   'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers',
-    // );
-    // res.setHeader(
-    //   'Set-Cookie',
-    //   `refreshToken=${refreshToken}; path=/; domain=.wetrekking.kr; SameSite=None; Secure; httpOnly;`,
-    // );
-    res.setHeader('Set-Cookie', `refreshToken=${refreshToken}; path=/;`);
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'https://develop.wetrekking.kr',
+    ];
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT');
+    res.setHeader(
+      'Access-Control-Allow-Headers',
+      'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers',
+    );
+    res.setHeader(
+      'Set-Cookie',
+      `refreshToken=${refreshToken}; path=/; domain=.wetrekking.kr; SameSite=None; Secure; httpOnly;`,
+    );
+    // res.setHeader('Set-Cookie', `refreshToken=${refreshToken}; path=/;`);
     return refreshToken;
   }
 
