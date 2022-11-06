@@ -1,4 +1,6 @@
 import {
+  CACHE_MANAGER,
+  Inject,
   UnauthorizedException,
   UnprocessableEntityException,
   UseGuards,
@@ -8,8 +10,10 @@ import { IContext } from 'src/commons/type/context';
 import { UserService } from '../users/user.service';
 import * as bcrypt from 'bcrypt';
 import { AuthService } from './auth.service';
-import { GqlAuthRefreshGuard } from 'src/commons/auth/gql-auth.guard';
-import { JwtAccessStrategy } from 'src/commons/auth/jwt-access.strategy';
+import {
+  GqlAuthAccessGuard,
+  GqlAuthRefreshGuard,
+} from 'src/commons/auth/gql-auth.guard';
 import * as jwt from 'jsonwebtoken';
 import { Cache } from 'cache-manager';
 
@@ -18,6 +22,7 @@ export class AuthResolver {
   constructor(
     private readonly userService: UserService, //
     private readonly authService: AuthService,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache, //
   ) {}
 
   // 로그인
@@ -53,44 +58,49 @@ export class AuthResolver {
   }
 
   // 로그아웃
+  @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => String)
-  logout(@Context() context: IContext) {
+  async logout(@Context() context: IContext) {
     try {
       const accessToken = context.req.headers['authorization'].replace(
-        'Bearer',
+        'Bearer  ',
         '',
       );
       const refreshToken = context.req.headers['cookie'].replace(
         'refreshToken=',
         '',
       );
-      jwt.verify(accessToken, 'myAccessKey');
-      jwt.verify(refreshToken, 'myRefreshToken');
 
-      // await this.cacheManager.set(
-      //   `accessToken:${accessToken}`,
-      //   'accessToken',
+      const accessTtl = jwt.verify(accessToken, 'myAccessKey');
 
-      //   {
-      //     ttl:
-      //       jwt.verify(accessToken, 'myAccessKey')['exp'] -
-      //       jwt.verify(accessToken, 'myAccessKey')['iat'],
-      //   },
-      // );
+      const refreshTtl = jwt.verify(refreshToken, 'myRefreshKey');
 
-      // await this.cacheManager.set(
-      //   `refreshToken:${refreshToken}`,
-      //   'refreshToken',
-      //   {
-      //     ttl:
-      //       jwt.verify(refreshToken, 'myRefreshKey')['exp'] -
-      //       jwt.verify(refreshToken, 'myRefreshKey')['iat'],
-      //   },
-      // );
-      // console.log('##############');
-      // return '로그아웃에 성공하였습니다';
+      const now = new Date().getTime();
+      const accessTokenTtl =
+        accessTtl['exp'] - Number(String(now).slice(0, -3));
+      const refreshTokenTtl =
+        refreshTtl['exp'] - Number(String(now).slice(0, -3));
+
+      await this.cacheManager.set(
+        `accessToken:${accessToken}`,
+        'accessToken',
+
+        {
+          ttl: accessTokenTtl,
+        },
+      );
+
+      await this.cacheManager.set(
+        `refreshToken:${refreshToken}`,
+        'refreshToken',
+        {
+          ttl: refreshTokenTtl,
+        },
+      );
+
+      return '로그아웃에 성공하였습니다';
     } catch (error) {
-      throw new UnauthorizedException('실패');
+      throw new UnauthorizedException();
     }
   }
 

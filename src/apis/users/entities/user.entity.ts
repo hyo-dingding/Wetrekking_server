@@ -30,6 +30,9 @@ export class User {
   @Field(() => String)
   nickname: string;
 
+  @Field(() => String)
+  birth: string;
+
   @Column()
   @Field(() => String)
   phone: string;
