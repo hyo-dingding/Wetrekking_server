@@ -13,6 +13,7 @@ import { RedisClientOptions } from 'redis';
 import * as redisStore from 'cache-manager-redis-store';
 import { FileModule } from './apis/files/file.module';
 import { CrewBoardImageModule } from './apis/crewBoardImages/crewBoardImage.module';
+import { ReviewBoardModule } from './apis/reviewBoards/reviewBoard.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { CrewBoardImageModule } from './apis/crewBoardImages/crewBoardImage.modu
     CrewBoardImageModule,
     FileModule,
     PhoneModule,
+    ReviewBoardModule,
     UserModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,

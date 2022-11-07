@@ -9,7 +9,7 @@ export class ReviewBoardResolver {
   constructor(private readonly reviewBoardService: ReviewBoardService) {}
 
   @Query(() => [ReviewBoard])
-  fetchReviewBoard() {
+  fetchReviewBoards() {
     return this.reviewBoardService.findAll();
   }
 
