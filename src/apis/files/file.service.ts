@@ -4,32 +4,33 @@ import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class FileService {
-  async upload({ file }) {
-    const waitedImages = await Promise.all(file);
+  async upload({ files }) {
+    const waitedFiles = await Promise.all(files);
+    console.log(waitedFiles);
 
+    const uuid = uuidv4();
+    const bucket = process.env.STORAGE_BUCKET;
     const storage = new Storage({
       projectId: process.env.STORAGE_PROJECT_ID,
       keyFilename: process.env.STORAGE_KEY_FILE_NAME,
-    }).bucket(process.env.STORAGE_BUCKET);
+    }).bucket(bucket);
 
-    const result = [];
-    await Promise.all(
-      waitedImages.map(async (el) => {
-        const url = await new Promise((resolve, reject) => {
-          const fname = `${uuidv4()}`;
-          el.createReadStream()
-            .pipe(storage.file(el.filename).createWriteStream())
-            .on('finish', async () => {
-              resolve(
-                `https://storage.googleapis.com/${fname}${process.env.STORAGE_BUCKET}/${el.filename}`,
-              );
-            })
-            .on('error', () => reject('실패!!'));
-        });
-        result.push(url);
-      }),
+    const result = await Promise.all(
+      waitedFiles.map(
+        (el) =>
+          new Promise((resolve, reject) => {
+            el.createReadStream()
+              .pipe(storage.file(el.filename).createWriteStream())
+              .on('finish', () =>
+                resolve(
+                  `https://storage.googleapis.com/${bucket}/${uuid}${el.filename}`,
+                ),
+              )
+              .on('error', () => reject(console.log('실패')));
+          }),
+      ),
     );
-
+    console.log(result);
     return result;
   }
 }
