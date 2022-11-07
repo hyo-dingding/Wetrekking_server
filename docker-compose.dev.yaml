@@ -12,3 +12,8 @@ services:
       - ./.env.dev
     ports:
       - 3000:3000
+
+  my-redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
