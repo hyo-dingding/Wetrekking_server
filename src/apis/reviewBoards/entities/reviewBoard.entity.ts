@@ -10,22 +10,26 @@ export class ReviewBoard {
 
   @Column()
   @Field(() => String)
+  title: string;
+
+  @Column()
+  @Field(() => String)
   review: string;
 
   @Column()
   @Field(() => Int)
   star: number;
 
-  @Column()
+  @Column({ default: 0 })
   @Field(() => Float)
   like: number;
 
   // @ManyToOne(()=>User)
-  @Column() // 연결 전 임시
-  @Field(() => String)
-  userId: string;
+  // @Column() // 연결 전 임시
+  // @Field(() => String)
+  // userId: string;
 
-  @ManyToOne(() => CrewBoard)
-  @Field(() => String)
-  crewBoardId: string;
+  // @ManyToOne(() => CrewBoard)
+  // @Field(() => String)
+  // crewBoardId: string;
 }
