@@ -52,7 +52,7 @@ export class UserResolver {
     // redis에서 phone.values 값과  유저가 적은 phoneToken이 일치 하지 않으면 에러
     const redisPhoneToken = await this.cacheManager.get(phone);
     if (redisPhoneToken !== phoneToken) {
-      throw new Error('휴대폰 인증이 올바르지 않습니다.');
+      throw new Error('핸드폰 인증이 올바르지 않습니다.');
     }
     // userRepository 에서 해당 정보 객체로 받아오기
     const findEmail = await this.userService.findOne({ phone });
@@ -130,6 +130,35 @@ export class UserResolver {
     return '사용가능한 이메일입니다.';
   }
 
+  // 소셜로그인 추가정보 업데이트
+  @UseGuards(GqlAuthAccessGuard)
+  @Mutation(() => User)
+  async socialCreateUser(
+    @Context() context: IContext,
+    // @Args('nickname') nickname: string, //
+    // @Args('phone') phone: string,
+    // @Args('birth') birth: string,
+    @Args('phoneToken') phoneToken: string,
+    // @Args('gender') gender: string,
+    @Args('updateUserInput') updateUserInput: UpdateUserInput,
+  ) {
+    const email = context.req.user.email;
+    const user = await this.userService.findOne({ email });
+
+    // redis에서 phone.values 값과  유저가 적은 phoneToken이 일치 하지 않으면 에러
+    const redisPhoneToken = await this.cacheManager.get(user.phone);
+    if (redisPhoneToken !== phoneToken) {
+      throw new Error('핸드폰 인증이 올바르지 않습니다.');
+    }
+
+    // userRepository 에서 해당 정보 객체로 받아오기
+    // user null값부분 업데이트하기
+    return this.userService.update({
+      email,
+      updateUserInput,
+    });
+  }
+
   // 회원가입
   @Mutation(() => User)
   async createUser(
@@ -144,22 +173,23 @@ export class UserResolver {
       createUserInput,
     });
   }
-
+  // 유저 업데이트
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => User)
   updateUser(
-    @Args('userId') userId: string, //
+    @Args('email') email: string, //
     @Args('updateUserInput') updateUserInput: UpdateUserInput,
   ) {
-    return this.userService.update({ userId, updateUserInput });
+    return this.userService.update({ email, updateUserInput });
   }
 
+  // 유저 삭제
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => Boolean)
   deleteUser(
     // email로 삭제 할지
-    @Args('userId') userId: string, //
+    @Args('email') email: string, //
   ) {
-    return this.userService.delete({ userId });
+    return this.userService.delete({ email });
   }
 }
