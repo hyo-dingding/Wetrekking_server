@@ -22,7 +22,7 @@ export class CrewBoardImageResolver {
 
   @Mutation(() => [CrewBoardImage])
   async uploadCrewBoaredImage(
-    @Args('imgUrl') imgUrl: [string],
+    @Args('imgUrl') imgUrl: string[],
     @Args('crewBoardId') crewBoardId: string,
   ) {
     this.crewBoardImageService.delete({ crewBoardId });
