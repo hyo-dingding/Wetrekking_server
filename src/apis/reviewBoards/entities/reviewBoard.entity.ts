@@ -1,3 +1,4 @@
+import { float } from '@elastic/elasticsearch/lib/api/types';
 import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
 import { CrewBoard } from 'src/apis/crewBoards/entities/crewBoard.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
@@ -18,11 +19,11 @@ export class ReviewBoard {
   review: string;
 
   @Column()
-  @Field(() => Int)
+  @Field(() => Float)
   star: number;
 
   @Column({ default: 0 })
-  @Field(() => Float)
+  @Field(() => Int)
   like: number;
 
   // @ManyToOne(()=>User)
