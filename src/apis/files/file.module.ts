@@ -1,11 +1,11 @@
-// import { Module } from '@nestjs/common';
-// import { FileResolver } from './file.resolver';
-// import { FileService } from './file.service';
+import { Module } from '@nestjs/common';
+import { FileResolver } from './file.resolver';
+import { FileService } from './file.service';
 
-// @Module({
-//   providers: [
-//     FileResolver, //
-//     FileService,
-//   ],
-// })
-// export class FileModule {}
+@Module({
+  providers: [
+    FileResolver, //
+    FileService,
+  ],
+})
+export class FileModule {}

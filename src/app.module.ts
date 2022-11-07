@@ -8,18 +8,20 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './apis/users/user.module';
 import { AuthModule } from './apis/auth/auth.module';
-import { ImageModule } from './apis/Images/image.module';
 import { PhoneModule } from './apis/phone/phone.module';
 import { RedisClientOptions } from 'redis';
 import * as redisStore from 'cache-manager-redis-store';
+import { FileModule } from './apis/files/file.module';
+import { CrewBoardImageModule } from './apis/crewBoardImages/crewBoardImage.module';
 
 @Module({
   imports: [
-    PhoneModule,
-    CrewBoardModule,
-    UserModule,
     AuthModule,
-    ImageModule,
+    CrewBoardModule,
+    CrewBoardImageModule,
+    FileModule,
+    PhoneModule,
+    UserModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'src/commons/graghql/schema.gql',
