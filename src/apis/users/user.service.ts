@@ -37,22 +37,23 @@ export class UserService {
     return result;
   }
 
-  async update({ userId, updateUserInput }) {
+  async update({ email, updateUserInput }) {
     const origin = await this.userRepository.findOne({
-      where: { id: userId },
+      where: { email },
     });
 
     const result = this.userRepository.save({
       ...origin,
-      id: userId,
+      email: email,
       ...updateUserInput,
     });
+    console.log(result);
 
     return result;
   }
 
-  async delete({ userId }) {
-    const result = await this.userRepository.softDelete({ id: userId });
+  async delete({ email }) {
+    const result = await this.userRepository.softDelete({ email: email });
     return result.affected ? true : false;
   }
 }

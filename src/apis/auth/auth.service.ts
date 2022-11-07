@@ -63,9 +63,10 @@ export class AuthService {
       // User.push(createUserInput);
     }
     // console.log(user);
-    // this.setRefreshToken({ user, res, req });
+    this.setRefreshToken({ user, res, req });
     // console.log(user);
-    //redirect 페이지 이동 다시 내페이지로 다시옴.
+    // redirect 페이지 이동 다시 내페이지로 다시옴.
+    // 추가정보 입력하는 url로 이동하기
     res.redirect('http://127.0.0.1:5500/frentend.html');
 
     //  소셜로그인 완료 후 Redirect 되면 nickname, phone, gender 입력하게 하기

@@ -21,9 +21,9 @@ export class JwtGoogleStrategy extends PassportStrategy(Strategy, 'google') {
       password: profile.id,
       name: profile.displayName,
       // 아래는 google에서 제공해주는 값이 아님
-      nickname: '딩딩',
-      phone: '01022223333',
-      gender: '여',
+      // nickname: '딩딩',
+      // phone: '01022223333',
+      // gender: '여',
     };
   }
 }
