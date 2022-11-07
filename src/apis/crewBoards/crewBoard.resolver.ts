@@ -52,7 +52,7 @@ export class CrewBoardResolver {
   createCrewBoard(
     @Args('createCrewBoardInput') createCrewBoardInput: CreateCrewBoardInput,
   ) {
-    return this.crewBoardService.create({ createCrewBoardInput });
+    this.crewBoardService.create({ createCrewBoardInput });
   }
 
   @Mutation(() => CrewBoard)
