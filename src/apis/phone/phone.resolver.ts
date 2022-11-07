@@ -24,13 +24,12 @@ export class PhoneResolver {
       const phoneToken = this.phoneService.createToken();
 
       // 핸드폰 sms 보내기
-      const smsToken = this.phoneService.sendToTokenPhone({
-        phone,
-        phoneToken,
-      });
+      // const smsToken = this.phoneService.sendToTokenPhone({
+      //   phone,
+      //   phoneToken,
+      // });
       await this.cacheManager.set(phone, phoneToken, { ttl: 800 });
       this.cacheManager.get(phone).then((res) => console.log(res));
-      console.log(smsToken);
 
       return '인증번호 전송 완료 되었습니다';
     } catch (error) {

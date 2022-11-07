@@ -13,7 +13,7 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, 'access') {
   }
 
   async validate(req, payload) {
-    console.log('payload: ', payload);
+    // console.log('payload: ', payload);
     const accessToken = req.headers['authorization'].replace('Bearer ', '');
 
     const checkAccessToken = await this.cacheManager.get(
