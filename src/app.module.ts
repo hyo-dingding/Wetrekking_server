@@ -14,6 +14,7 @@ import * as redisStore from 'cache-manager-redis-store';
 import { FileModule } from './apis/files/file.module';
 import { CrewBoardImageModule } from './apis/crewBoardImages/crewBoardImage.module';
 import { ReviewBoardModule } from './apis/reviewBoards/reviewBoard.module';
+import { CrewCommentModule } from './apis/crewComments/crewComment.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ReviewBoardModule } from './apis/reviewBoards/reviewBoard.module';
     PhoneModule,
     ReviewBoardModule,
     UserModule,
+    CrewCommentModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'src/commons/graghql/schema.gql',
