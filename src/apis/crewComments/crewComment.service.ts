@@ -25,7 +25,7 @@ export class CrewCommentService {
       },
       relations: ['crewBoard', 'user'],
       order: {
-        comment: 'ASC',
+        createdAt: 'ASC',
       },
       take: 9,
       skip: page ? (page - 1) * 9 : 0,
