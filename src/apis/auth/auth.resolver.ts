@@ -41,16 +41,16 @@ export class AuthResolver {
 
     // 3. 일치하는 유저가 있지만 비밀번호가 틀렸다면?
     const isAuth = await bcrypt.compare(password, user.password);
-
     if (!isAuth)
       throw new UnprocessableEntityException('비밀번호가 틀렸습니다.');
 
     // 4. RefreshToken(=JWT)을 만들어서 frontend 브라우저 쿠키에 저장해서 보내주기
-    this.authService.setRefreshToken({
+    const refreshToken = this.authService.setRefreshToken({
       user,
       res: context.res,
       req: context.req,
     });
+    console.log(refreshToken);
 
     // 4. 일치하는 유저도 있고 비번도 맞았다면?
     // -> accessToken(=> JWT)을 만들어서 브라우저에 전달하기
@@ -61,26 +61,28 @@ export class AuthResolver {
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => String)
   async logout(@Context() context: IContext) {
+    const accessToken = context.req.headers['authorization'].replace(
+      'Bearer ',
+      '',
+    );
+    const refreshToken = context.req.headers['cookie'].replace(
+      'refreshToken=',
+      '',
+    );
+    const verifiedAccess = jwt.verify(accessToken, process.env.ACCESSTOKEN_KEY);
+    const verifiedRefresh = jwt.verify(
+      refreshToken,
+      process.env.REFRESHTOKEN_KEY,
+    );
+
+    const now = new Date().getTime();
+    const accessTokenTtl =
+      verifiedAccess['exp'] - Number(String(now).slice(0, -3));
+    const refreshTokenTtl =
+      verifiedRefresh['exp'] - Number(String(now).slice(0, -3));
+
     try {
-      const accessToken = context.req.headers['authorization'].replace(
-        'Bearer  ',
-        '',
-      );
-      const refreshToken = context.req.headers['cookie'].replace(
-        'refreshToken=',
-        '',
-      );
-
-      const accessTtl = jwt.verify(accessToken, 'myAccessKey');
-
-      const refreshTtl = jwt.verify(refreshToken, 'myRefreshKey');
-
-      const now = new Date().getTime();
-      const accessTokenTtl =
-        accessTtl['exp'] - Number(String(now).slice(0, -3));
-      const refreshTokenTtl =
-        refreshTtl['exp'] - Number(String(now).slice(0, -3));
-
+      verifiedAccess;
       await this.cacheManager.set(
         `accessToken:${accessToken}`,
         'accessToken',
@@ -90,6 +92,7 @@ export class AuthResolver {
         },
       );
 
+      verifiedRefresh;
       await this.cacheManager.set(
         `refreshToken:${refreshToken}`,
         'refreshToken',
@@ -97,11 +100,11 @@ export class AuthResolver {
           ttl: refreshTokenTtl,
         },
       );
-
-      return '로그아웃에 성공하였습니다';
     } catch (error) {
       throw new UnauthorizedException();
     }
+
+    return '로그아웃에 성공하였습니다';
   }
 
   @UseGuards(GqlAuthRefreshGuard)
