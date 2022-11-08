@@ -1,7 +1,12 @@
-import { float } from '@elastic/elasticsearch/lib/api/types';
 import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
-import { CrewBoard } from 'src/apis/crewBoards/entities/crewBoard.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { CrewUserList } from 'src/apis/crewUserList/entities/crweUserListList.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 @ObjectType()
@@ -18,7 +23,7 @@ export class ReviewBoard {
   @Field(() => String)
   review: string;
 
-  @Column()
+  @Column({ type: 'decimal', precision: 2, scale: 1 })
   @Field(() => Float)
   star: number;
 
@@ -26,12 +31,16 @@ export class ReviewBoard {
   @Field(() => Int)
   like: number;
 
-  // @ManyToOne(()=>User)
-  // @Column() // 연결 전 임시
-  // @Field(() => String)
-  // userId: string;
+  // @ManyToOne(() => User)
+  // @Field(() => User)
+  // userId: User;
 
   // @ManyToOne(() => CrewBoard)
-  // @Field(() => String)
-  // crewBoardId: string;
+  // @Field(() => CrewBoard)
+  // crewBoardId: CrewBoard;
+
+  @JoinColumn()
+  @OneToOne(() => CrewUserList)
+  @Field(() => CrewUserList)
+  crewUserList: CrewUserList;
 }
