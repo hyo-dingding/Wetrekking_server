@@ -48,8 +48,8 @@ export class AuthResolver {
     // 4. RefreshToken(=JWT)을 만들어서 frontend 브라우저 쿠키에 저장해서 보내주기
     this.authService.setRefreshToken({
       user,
-      res: context.res,
       req: context.req,
+      res: context.res,
     });
 
     // 4. 일치하는 유저도 있고 비번도 맞았다면?

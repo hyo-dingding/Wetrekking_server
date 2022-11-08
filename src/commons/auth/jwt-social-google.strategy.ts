@@ -1,6 +1,9 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-google-oauth20';
 
+// const random = String(Math.floor(Math.random() * 100000000)).padStart(6, '0');
+// const randomPhoneNumber = `010${random}`;
+
 export class JwtGoogleStrategy extends PassportStrategy(Strategy, 'google') {
   constructor() {
     super({
@@ -10,6 +13,7 @@ export class JwtGoogleStrategy extends PassportStrategy(Strategy, 'google') {
       scope: ['email', 'profile'],
     });
   }
+
   validate(accessToken, refreshToken, profile) {
     console.log(accessToken);
     console.log(refreshToken); // 안나옴
@@ -20,10 +24,11 @@ export class JwtGoogleStrategy extends PassportStrategy(Strategy, 'google') {
       email: profile.emails[0].value,
       password: profile.id,
       name: profile.displayName,
-      // 아래는 google에서 제공해주는 값이 아님
-      // nickname: '딩딩',
-      // phone: '01022223333',
-      // gender: '여',
+
+      // 임의로 입력하고 로그인 후 수정하게 하기
+      nickname: profile.emails[0].value,
+      phone: '00000000000',
+      gender: '임시',
     };
   }
 }

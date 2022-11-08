@@ -133,7 +133,7 @@ export class UserResolver {
   // 소셜로그인 추가정보 업데이트
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => User)
-  async socialCreateUser(
+  async socialUpdateUser(
     @Context() context: IContext,
     // @Args('nickname') nickname: string, //
     // @Args('phone') phone: string,
@@ -143,10 +143,12 @@ export class UserResolver {
     @Args('updateUserInput') updateUserInput: UpdateUserInput,
   ) {
     const email = context.req.user.email;
-    const user = await this.userService.findOne({ email });
+    console.log(email);
+
+    // const user = await this.userService.findOne({ email });
 
     // redis에서 phone.values 값과  유저가 적은 phoneToken이 일치 하지 않으면 에러
-    const redisPhoneToken = await this.cacheManager.get(user.phone);
+    const redisPhoneToken = await this.cacheManager.get(updateUserInput.phone);
     if (redisPhoneToken !== phoneToken) {
       throw new Error('핸드폰 인증이 올바르지 않습니다.');
     }
