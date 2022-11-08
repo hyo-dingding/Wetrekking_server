@@ -92,33 +92,36 @@ export class CrewCommentService {
   }
 
   // 대댓글 생성
-  async createSub({ createSubCrewCommentInput, boardId }) {
+  async createSub({ createSubCrewCommentInput }) {
     const { subComment, parentId } = createSubCrewCommentInput;
 
-    // const board = await this.crewCommentRepository.find({
-    //   where: { id: parentId },
-    //   relations: ['crewBoard', 'user'],
-    // });
-    // console.log('a: ', board);
+    const board = await this.crewCommentRepository.findOne({
+      where: { id: parentId },
+      relations: ['crewBoard', 'user'],
+    });
+    // console.log('a: ', board.crewBoard.id);
 
     return await this.crewCommentRepository.save({
       ...createSubCrewCommentInput,
       comment: subComment,
       subCrewComment: parentId,
-      crewBoard: { id: boardId },
+      crewBoard: { id: board.crewBoard.id },
     });
   }
 
   // 대댓글 수정
   async updateSub({ updateSubCrewCommentInput }) {
-    const { parentId, subComment } = updateSubCrewCommentInput;
+    const { comment, parentId } = updateSubCrewCommentInput;
+
     const findSubComment = await this.crewCommentRepository.findOne({
-      where: { subCrewComment: parentId },
+      where: { subCrewComment: { id: parentId } },
+      relations: ['crewBoard', 'user'],
     });
+    console.log(findSubComment);
 
     return await this.crewCommentRepository.save({
       ...findSubComment,
-      comment: subComment,
+      comment: comment,
     });
   }
 
