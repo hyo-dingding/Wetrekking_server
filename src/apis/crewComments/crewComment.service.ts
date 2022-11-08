@@ -18,7 +18,7 @@ export class CrewCommentService {
     private readonly crewBoardRepository: Repository<CrewBoard>,
   ) {}
 
-  async findAll({ boardId }) {
+  async findAll({ page, boardId }) {
     return await this.crewCommentRepository.find({
       where: {
         crewBoard: { id: boardId },
@@ -27,6 +27,8 @@ export class CrewCommentService {
       order: {
         comment: 'ASC',
       },
+      take: 9,
+      skip: page ? (page - 1) * 9 : 0,
     });
   }
 
@@ -76,18 +78,20 @@ export class CrewCommentService {
     return result.affected ? true : false;
   }
   // 대댓글 조회
-  async findSubAll({ boardId, commentId }) {
+  async findSubAll({ page, boardId, commentId }) {
     return await this.crewCommentRepository.find({
       where: {
         crewBoard: {
           id: boardId,
         },
-        subCrewComment: commentId,
+        subCrewComment: { id: commentId },
       },
       relations: ['crewBoard', 'user'],
       order: {
         comment: 'ASC',
       },
+      take: 9,
+      skip: page ? (page - 1) * 9 : 0,
     });
   }
 
