@@ -8,8 +8,13 @@ import { ReviewBoardService } from './reviewBoard.service';
 export class ReviewBoardResolver {
   constructor(private readonly reviewBoardService: ReviewBoardService) {}
 
+  @Query(() => ReviewBoard)
+  fetchReviewBoard(@Args('reviewBoardId') reviewBoardId: string) {
+    return this.reviewBoardService.findOneById({ reviewBoardId });
+  }
+
   @Query(() => [ReviewBoard])
-  fetchReviewBoard() {
+  fetchReviewBoards() {
     return this.reviewBoardService.findAll();
   }
 
