@@ -16,6 +16,9 @@ import { CrewBoardImageModule } from './apis/crewBoardImages/crewBoardImage.modu
 import { ReviewBoardModule } from './apis/reviewBoards/reviewBoard.module';
 import { CrewCommentModule } from './apis/crewComments/crewComment.module';
 import { PickModule } from './apis/pick/pick.module';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ChatModule } from './apis/chat/chat.modeult';
+import { ReviewCommentModule } from './apis/reviewComments/reviewComment.module';
 
 @Module({
   imports: [
@@ -28,6 +31,8 @@ import { PickModule } from './apis/pick/pick.module';
     ReviewBoardModule,
     UserModule,
     CrewCommentModule,
+    ChatModule,
+    ReviewCommentModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'src/commons/graghql/schema.gql',
@@ -61,6 +66,13 @@ import { PickModule } from './apis/pick/pick.module';
     CacheModule.register<RedisClientOptions>({
       store: redisStore,
       url: 'redis://my-redis:6379',
+      isGlobal: true,
+    }),
+    MongooseModule.forRoot(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedToPology: true,
+    }),
+    ConfigModule.forRoot({
       isGlobal: true,
     }),
   ],

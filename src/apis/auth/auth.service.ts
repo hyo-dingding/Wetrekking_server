@@ -18,7 +18,7 @@ export class AuthService {
     );
   }
 
-  setRefreshToken({ user, res, req }) {
+  setRefreshToken({ user, req, res }) {
     const refreshToken = this.jwtService.sign(
       { email: user.email, sub: user.id },
       { secret: process.env.REFRESHTOKEN_KEY, expiresIn: '2w' },
@@ -42,7 +42,8 @@ export class AuthService {
       'Set-Cookie',
       `refreshToken=${refreshToken}; path=/; domain=.wetrekking.kr; SameSite=None; Secure; httpOnly;`,
     );
-    // res.setHeader('Set-Cookie', `refreshToken=${refreshToken}; path=/;`);
+    
+    // res.setHeader('Set-Cookie', `refreshToken=${refreshToken}; path=/;`);  // 개발 환경
     return refreshToken;
   }
 
@@ -63,11 +64,12 @@ export class AuthService {
       // User.push(createUserInput);
     }
     // console.log(user);
+
     this.setRefreshToken({ user, res, req });
     // console.log(user);
     // redirect 페이지 이동 다시 내페이지로 다시옴.
     // 추가정보 입력하는 url로 이동하기
-    res.redirect('http://127.0.0.1:5500/frentend.html');
+    res.redirect('http://127.0.0.1:5500/social-login.html');
 
     //  소셜로그인 완료 후 Redirect 되면 nickname, phone, gender 입력하게 하기
   }

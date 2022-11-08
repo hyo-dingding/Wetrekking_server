@@ -18,15 +18,17 @@ export class CrewCommentService {
     private readonly crewBoardRepository: Repository<CrewBoard>,
   ) {}
 
-  async findAll({ boardId }) {
+  async findAll({ page, boardId }) {
     return await this.crewCommentRepository.find({
       where: {
         crewBoard: { id: boardId },
       },
       relations: ['crewBoard', 'user'],
       order: {
-        comment: 'ASC',
+        createdAt: 'ASC',
       },
+      take: 9,
+      skip: page ? (page - 1) * 9 : 0,
     });
   }
 
@@ -76,49 +78,54 @@ export class CrewCommentService {
     return result.affected ? true : false;
   }
   // 대댓글 조회
-  async findSubAll({ boardId, commentId }) {
+  async findSubAll({ page, boardId, commentId }) {
     return await this.crewCommentRepository.find({
       where: {
         crewBoard: {
           id: boardId,
         },
-        subCrewComment: commentId,
+        subCrewComment: { id: commentId },
       },
       relations: ['crewBoard', 'user'],
       order: {
         comment: 'ASC',
       },
+      take: 9,
+      skip: page ? (page - 1) * 9 : 0,
     });
   }
 
   // 대댓글 생성
-  async createSub({ createSubCrewCommentInput, boardId }) {
+  async createSub({ createSubCrewCommentInput }) {
     const { subComment, parentId } = createSubCrewCommentInput;
 
-    // const board = await this.crewCommentRepository.find({
-    //   where: { id: parentId },
-    //   relations: ['crewBoard', 'user'],
-    // });
-    // console.log('a: ', board);
+    const board = await this.crewCommentRepository.findOne({
+      where: { id: parentId },
+      relations: ['crewBoard', 'user'],
+    });
+    // console.log('a: ', board.crewBoard.id);
 
     return await this.crewCommentRepository.save({
       ...createSubCrewCommentInput,
       comment: subComment,
       subCrewComment: parentId,
-      crewBoard: { id: boardId },
+      crewBoard: { id: board.crewBoard.id },
     });
   }
 
   // 대댓글 수정
   async updateSub({ updateSubCrewCommentInput }) {
-    const { parentId, subComment } = updateSubCrewCommentInput;
+    const { comment, parentId } = updateSubCrewCommentInput;
+
     const findSubComment = await this.crewCommentRepository.findOne({
-      where: { subCrewComment: parentId },
+      where: { subCrewComment: { id: parentId } },
+      relations: ['crewBoard', 'user'],
     });
+    console.log(findSubComment);
 
     return await this.crewCommentRepository.save({
       ...findSubComment,
-      comment: subComment,
+      comment: comment,
     });
   }
 

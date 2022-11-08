@@ -24,6 +24,8 @@ export class AuthController {
     @Req() req: Request & IOAuthUser, //
     @Res() res: Response,
   ) {
+    console.log('req:', req.user.email);
+
     this.authService.socialLogin({ req, res });
   }
 

@@ -4,7 +4,9 @@ import { Cache } from 'cache-manager';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 export class JwtAccessStrategy extends PassportStrategy(Strategy, 'access') {
-  constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {
+  constructor(
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache, //
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), //
       secretOrKey: process.env.ACCESSTOKEN_KEY,
