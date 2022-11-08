@@ -10,6 +10,12 @@ export class ReviewBoardService {
     private readonly reviewBoardRepository: Repository<ReviewBoard>,
   ) {}
 
+  findOneById({ reviewBoardId }) {
+    return this.reviewBoardRepository.findOne({
+      where: { id: reviewBoardId },
+    });
+  }
+
   findAll() {
     return this.reviewBoardRepository.find();
   }
