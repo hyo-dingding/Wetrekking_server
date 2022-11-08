@@ -22,7 +22,7 @@ export class CrewCommentResolver {
     @Args('boardId') boardId: string, //
     @Args('page', { nullable: true, type: () => Int }) page: number,
   ) {
-    return this.crewCommentService.findAll({ boardId });
+    return this.crewCommentService.findAll({ page, boardId });
   }
 
   //   @Query(() => CrewComment)
@@ -77,8 +77,9 @@ export class CrewCommentResolver {
   fetchCrewSubComments(
     @Args('commentId') commentId: string, //
     @Args('boardId') boardId: string,
+    @Args('page', { nullable: true, type: () => Int }) page: number,
   ) {
-    return this.crewCommentService.findSubAll({ boardId, commentId });
+    return this.crewCommentService.findSubAll({ page, boardId, commentId });
   }
 
   @Mutation(() => CrewComment)
