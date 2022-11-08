@@ -85,13 +85,11 @@ export class CrewCommentResolver {
   createCrewSubComment(
     @Args('createSubCrewCommentInput')
     createSubCrewCommentInput: CreateSubCrewCommentInput, //
-    @Args('boardId') boardId: string,
     @Context() context: IContext,
   ) {
     // const user = context.req.user.email;
     return this.crewCommentService.createSub({
       createSubCrewCommentInput,
-      boardId,
     });
   }
 
