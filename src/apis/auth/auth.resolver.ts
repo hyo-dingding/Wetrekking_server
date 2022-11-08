@@ -47,8 +47,8 @@ export class AuthResolver {
     // 4. RefreshToken(=JWT)을 만들어서 frontend 브라우저 쿠키에 저장해서 보내주기
     const refreshToken = this.authService.setRefreshToken({
       user,
-      res: context.res,
       req: context.req,
+      res: context.res,
     });
     console.log(refreshToken);
 
