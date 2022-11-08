@@ -17,6 +17,7 @@ import { ReviewBoardModule } from './apis/reviewBoards/reviewBoard.module';
 import { CrewCommentModule } from './apis/crewComments/crewComment.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ChatModule } from './apis/chat/chat.modeult';
+import { ReviewCommentModule } from './apis/reviewComments/reviewComment.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { ChatModule } from './apis/chat/chat.modeult';
     UserModule,
     CrewCommentModule,
     ChatModule,
+    ReviewCommentModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'src/commons/graghql/schema.gql',
