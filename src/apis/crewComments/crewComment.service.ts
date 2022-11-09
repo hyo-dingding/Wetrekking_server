@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CrewBoard } from '../crewBoards/entities/crewBoard.entity';
@@ -32,45 +32,59 @@ export class CrewCommentService {
     });
   }
 
-  //   findOne({ userId, boardId }) {
-  //     return this.crewCommentRepository.findOne();
-  //   }
+  async find({ commentId }) {
+    const result = await this.crewCommentRepository.findOne({
+      where: { id: commentId },
+      relations: ['crewBoard', 'user'],
+    });
 
-  async create({ createCrewCommentInput }) {
+    return result;
+  }
+
+  async create({ createCrewCommentInput, user }) {
     const { comment, boardId } = createCrewCommentInput;
 
-    // const findUser = await this.userRepository.findOne({
-    //   where: { email: user },
-    // });
+    const findUser = await this.userRepository.findOne({
+      where: { email: user },
+    });
+
     const findBoard = await this.crewBoardRepository.findOne({
       where: { id: boardId },
     });
 
     return await this.crewCommentRepository.save({
       comment,
-      // user: { id: findUser.id },
+      user: { id: findUser.id },
       crewBoard: { id: findBoard.id },
     });
   }
 
-  async update({ commentId, updateCrewCommentInput }) {
+  async update({ user, commentId, updateCrewCommentInput }) {
     const findComment = await this.crewCommentRepository.findOne({
       where: { id: commentId },
     });
 
-    // const findUser = await this.userRepository.findOne({
-    //   where: { email: user },
-    // });
+    const findUser = await this.userRepository.findOne({
+      where: { email: user },
+    });
+
+    if (user !== findUser.email)
+      throw new ConflictException('아이디가 일치하지 않습니다.');
 
     return await this.crewCommentRepository.save({
       ...findComment,
-      // user: findUser.id,
+      user: findUser.id,
       ...updateCrewCommentInput,
     });
   }
 
   async delete({ commentId, context }) {
-    // 오류 코드는 나중에
+    const user = context.req.user.email;
+    const comment = await this.find({ commentId });
+    const dbUser = comment.user.email;
+
+    if (user !== dbUser) throw new ConflictException('아이디가 다릅니다');
+
     const result = await this.crewCommentRepository.softDelete({
       id: commentId,
     });
@@ -96,26 +110,30 @@ export class CrewCommentService {
   }
 
   // 대댓글 생성
-  async createSub({ createSubCrewCommentInput }) {
+  async createSub({ user, createSubCrewCommentInput }) {
     const { subComment, parentId } = createSubCrewCommentInput;
 
     const board = await this.crewCommentRepository.findOne({
       where: { id: parentId },
       relations: ['crewBoard', 'user'],
     });
-    // console.log('a: ', board.crewBoard.id);
+
+    const findUser = await this.userRepository.findOne({
+      where: { email: user },
+    });
 
     return await this.crewCommentRepository.save({
       ...createSubCrewCommentInput,
       comment: subComment,
       subCrewComment: parentId,
       crewBoard: { id: board.crewBoard.id },
+      user: { id: findUser.id },
     });
   }
 
   // 대댓글 수정
-  async updateSub({ updateSubCrewCommentInput }) {
-    const { comment, parentId } = updateSubCrewCommentInput;
+  async updateSub({ user, updateSubCrewCommentInput }) {
+    const { subComment, parentId } = updateSubCrewCommentInput;
 
     const findSubComment = await this.crewCommentRepository.findOne({
       where: { subCrewComment: { id: parentId } },
@@ -123,15 +141,32 @@ export class CrewCommentService {
     });
     console.log(findSubComment);
 
+    const findUser = await this.userRepository.findOne({
+      where: { email: user },
+    });
+
+    if (user !== findUser.email)
+      throw new ConflictException('아이디가 일치하지 않습니다.');
+
     return await this.crewCommentRepository.save({
       ...findSubComment,
-      comment: comment,
+      comment: subComment,
+      ...updateSubCrewCommentInput,
     });
   }
 
   // 대댓글 삭제
 
-  async deleteSub({ commentId }) {
+  async deleteSub({ commentId, context }) {
+    const user = context.req.user.email;
+    const comment = await this.crewCommentRepository.findOne({
+      where: { subCrewComment: { id: commentId } },
+      relations: ['crewBoard', 'user'],
+    });
+
+    if (user !== comment.user.email)
+      throw new ConflictException('아이디가 다릅니다');
+
     const result = await this.crewCommentRepository.softDelete({
       subCrewComment: commentId,
     });

@@ -15,7 +15,7 @@ services:
       - ./.env.docker
 
   my-database:
-    platform: linux/x86_64
+    # platform: linux/x86_64
     image: mysql:latest
     command: --default-authentication-plugin=mysql_native_password
     environment:
