@@ -26,9 +26,7 @@ export class FileService {
                   .createWriteStream(),
               )
               .on('finish', () =>
-                resolve(
-                  `https://storage.googleapis.com/${bucket}/crewBoard/${uuid}${el.filename}`,
-                ),
+                resolve(`${bucket}/crewBoard/${uuid}${el.filename}`),
               )
               .on('error', () => reject(console.log('실패')));
           }),
