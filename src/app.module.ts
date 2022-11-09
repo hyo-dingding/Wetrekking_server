@@ -21,9 +21,11 @@ import { ReviewCommentModule } from './apis/reviewComments/reviewComment.module'
 import { PointPaymentModule } from './apis/pointsPayments/pointsPayments.module';
 import { CrewUserListModule } from './apis/crewUserList/crewUserList.module';
 import { DibModule } from './apis/Dib/dib.module';
+import { MountainModule } from './apis/mountains/mountain.module';
 
 @Module({
   imports: [
+    MountainModule,
     PointPaymentModule,
     DibModule,
     AuthModule,
