@@ -16,10 +16,9 @@ import { CrewBoardImageModule } from './apis/crewBoardImages/crewBoardImage.modu
 import { ReviewBoardModule } from './apis/reviewBoards/reviewBoard.module';
 import { CrewCommentModule } from './apis/crewComments/crewComment.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ChatModule } from './apis/chat/chat.modeult';
+import { ChatModule } from './apis/chat/chat.module';
 import { ReviewCommentModule } from './apis/reviewComments/reviewComment.module';
 import { PointPaymentModule } from './apis/pointsPayments/pointsPayments.module';
-import { PickModule } from './apis/pick/pick.module';
 import { CrewUserListModule } from './apis/crewUserList/crewUserList.module';
 import { DibModule } from './apis/Dib/dib.module';
 

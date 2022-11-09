@@ -28,11 +28,6 @@ export class UserResolver {
     return this.userService.findOne({ email });
   }
 
-  // @Query(() => User)
-  // fetchUsers(@Args('page', { defaultValue: 1 }) page: number) {
-  //   return this.userService.findAll({ page });
-  // }
-
   // 아이디 찾기
   @Query(() => String)
   async findUserEmail(
@@ -107,27 +102,27 @@ export class UserResolver {
   }
 
   // 이메일 중복 검증
-  @Query(() => String)
-  async fetchCheckEmail(
+  @Mutation(() => String)
+  async checkEmail(
     @Args('email') email: string, //
   ) {
     const findEmail = await this.userService.findOne({ email });
     if (findEmail) {
-      throw new Error('이미 등록된 이메일 입니다');
+      throw new Error('false');
     }
-    return '사용가능한 이메일입니다.';
+    return true;
   }
 
   // 닉네임 중복 검증
-  @Query(() => String)
-  async fetchCheckNickName(
+  @Mutation(() => String)
+  async checkNickName(
     @Args('nickname') nickname: string, //
   ) {
     const findNickName = await this.userService.findOne({ nickname });
     if (findNickName) {
-      throw new Error('이미 등록된 닉네임 입니다');
+      throw new Error('false');
     }
-    return '사용가능한 이메일입니다.';
+    return true;
   }
 
   // 소셜로그인 추가정보 업데이트
@@ -178,10 +173,17 @@ export class UserResolver {
   // 유저 업데이트
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => User)
-  updateUser(
+  async updateUser(
     @Args('email') email: string, //
     @Args('updateUserInput') updateUserInput: UpdateUserInput,
   ) {
+    if (updateUserInput.phone) {
+      const checkTokenTrue = await this.cacheManager.get(updateUserInput.phone);
+      if (!checkTokenTrue) {
+        throw new Error('휴대폰 인증이 올바르지 않습니다.');
+      }
+    }
+
     return this.userService.update({ email, updateUserInput });
   }
 

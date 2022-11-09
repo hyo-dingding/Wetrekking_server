@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CrewBoard } from '../crewBoards/entities/crewBoard.entity';
 import { User } from '../users/entities/user.entity';
-import { Dib, Pick } from './entities/dib.entity';
-import { DibResolver, PickResolver } from './dib.resolver';
-import { DibService, PickService } from './dib.service';
+import { Dib } from './entities/dib.entity';
+import { DibResolver } from './dib.resolver';
+import { DibService } from './dib.service';
 
 @Module({
   imports: [
