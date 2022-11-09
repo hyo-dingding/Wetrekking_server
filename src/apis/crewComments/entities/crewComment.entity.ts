@@ -42,9 +42,7 @@ export class CrewComment {
   @Field(() => User)
   user: User;
 
-  @ManyToOne(() => CrewComment, {
-    cascade: true,
-  })
+  @ManyToOne(() => CrewComment)
   @Field(() => CrewComment)
   subCrewComment: CrewComment;
 }

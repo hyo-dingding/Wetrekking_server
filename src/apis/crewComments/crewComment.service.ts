@@ -113,6 +113,8 @@ export class CrewCommentService {
 
     if (user !== dbUser) throw new ConflictException('아이디가 다릅니다');
 
+    // await this.crewCommentRepository.removeAll;
+
     const result = await this.crewCommentRepository.softDelete({
       id: commentId,
     });
@@ -226,5 +228,12 @@ export class CrewCommentService {
     });
 
     return result.affected ? true : false;
+  }
+
+  async removeSubAll({ commentId }) {
+    const deleteSub = await this.crewCommentRepository.find({
+      where: { subCrewComment: { id: commentId } },
+      relations: ['crewBoard', 'user'],
+    });
   }
 }
