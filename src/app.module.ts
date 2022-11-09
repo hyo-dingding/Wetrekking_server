@@ -20,11 +20,13 @@ import { ChatModule } from './apis/chat/chat.modeult';
 import { ReviewCommentModule } from './apis/reviewComments/reviewComment.module';
 import { PointPaymentModule } from './apis/pointsPayments/pointsPayments.module';
 import { PickModule } from './apis/pick/pick.module';
+import { CrewUserListModule } from './apis/crewUserList/crewUserList.module';
+import { DibModule } from './apis/Dib/dib.module';
 
 @Module({
   imports: [
     PointPaymentModule,
-    PickModule,
+    DibModule,
     AuthModule,
     CrewBoardModule,
     CrewBoardImageModule,
