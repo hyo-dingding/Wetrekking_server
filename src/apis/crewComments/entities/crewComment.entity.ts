@@ -24,15 +24,15 @@ export class CrewComment {
   comment: string;
 
   @CreateDateColumn()
-  @Field(() => String)
+  @Field(() => Date)
   createdAt: Date;
 
   @UpdateDateColumn()
-  @Field(() => String)
+  @Field(() => Date)
   updatedAt: Date;
 
   @DeleteDateColumn()
-  @Field(() => String)
+  @Field(() => Date)
   deletedAt: Date;
 
   @JoinTable()
