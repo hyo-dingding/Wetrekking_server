@@ -108,7 +108,7 @@ export class UserResolver {
   ) {
     const findEmail = await this.userService.findOne({ email });
     if (findEmail) {
-      throw new Error('false');
+      return false;
     }
     return true;
   }
@@ -120,7 +120,7 @@ export class UserResolver {
   ) {
     const findNickName = await this.userService.findOne({ nickname });
     if (findNickName) {
-      throw new Error('false');
+      return false;
     }
     return true;
   }
