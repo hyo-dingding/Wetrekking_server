@@ -1,4 +1,7 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { UseGuards } from '@nestjs/common';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { GqlAuthAccessGuard } from 'src/commons/auth/gql-auth.guard';
+import { IContext } from 'src/commons/type/context';
 import { CrewBoardService } from './crewBoard.service';
 import { CreateCrewBoardInput } from './dto/createCrewBoard.input';
 import { UpdateCrewBoardInput } from './dto/updateCrewBoard.input';
@@ -48,20 +51,28 @@ export class CrewBoardResolver {
     return await this.crewBoardService.findAllDivideNine();
   }
 
+  @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => CrewBoard)
-  createCrewBoard(
+  async createCrewBoard(
+    @Context() context: IContext,
     @Args('createCrewBoardInput') createCrewBoardInput: CreateCrewBoardInput,
   ) {
-    this.crewBoardService.create({ createCrewBoardInput });
+    const userId = context.req.user.id;
+
+    return await this.crewBoardService.create({
+      userId,
+      createCrewBoardInput,
+    });
   }
 
   @Mutation(() => CrewBoard)
   async createCrewBoardTEST(
     @Args('createCrewBoardInput') createCrewBoardInput: CreateCrewBoardInput,
   ) {
-    return await this.crewBoardService.create({ createCrewBoardInput });
+    return await this.crewBoardService.createTEST({ createCrewBoardInput });
   }
 
+  @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => CrewBoard)
   updateCrewBoard(
     @Args('crewBoardId') crewBoardId: string,
@@ -70,9 +81,9 @@ export class CrewBoardResolver {
     return this.crewBoardService.update({ crewBoardId, updateCrewBoardInput });
   }
 
-  @Mutation(() => String)
+  @UseGuards(GqlAuthAccessGuard)
+  @Mutation(() => Boolean)
   deleteCrewBoard(@Args('crewBoardId') crewBoardId: string) {
-    this.crewBoardService.delete({ crewBoardId });
-    return '게시글이 삭제 되었습니다.';
+    return this.crewBoardService.delete({ crewBoardId });
   }
 }

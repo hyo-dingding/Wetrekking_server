@@ -1,10 +1,13 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Mountain } from 'src/apis/mountains/entities/mountain.entity';
+import { User } from 'src/apis/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  //   ManyToOne,
+  JoinTable,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -55,18 +58,22 @@ export class CrewBoard {
   @Field(() => Int)
   peoples: number;
 
-  //   @ManyToOne(()=>Mountain)
-  //   @Field(() => String)
-  //   mountainId: string;
+  @JoinTable()
+  @ManyToOne(() => Mountain)
+  @Field(() => String)
+  mountain: string;
 
-  // @ManyToOne(()=>User)
-  // @Field(() => String)
-  // userId: string;
+  @JoinTable()
+  @ManyToOne(() => User)
+  @Field(() => String)
+  user: string;
 
   @CreateDateColumn()
+  @Field(() => Date)
   createdAt: Date;
 
   @UpdateDateColumn()
+  @Field(() => Date)
   updatedAt: Date;
 
   @DeleteDateColumn()

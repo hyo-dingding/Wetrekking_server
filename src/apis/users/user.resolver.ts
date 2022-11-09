@@ -23,9 +23,13 @@ export class UserResolver {
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
+  @UseGuards(GqlAuthAccessGuard)
   @Query(() => User)
-  fetchUser(@Args('email') email: string) {
-    return this.userService.findOne({ email });
+  fetchUser(
+    @Context() context: IContext, //
+  ) {
+    const id = context.req.user.id;
+    return this.userService.findOne({ id });
   }
 
   // 아이디 찾기
