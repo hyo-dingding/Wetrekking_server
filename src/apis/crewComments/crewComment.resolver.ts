@@ -24,12 +24,12 @@ export class CrewCommentResolver {
     return this.crewCommentService.findAll({ page, boardId });
   }
 
-  // @Query(() => CrewComment)
-  // fetchCrewComment(
-  //   @Args('userId') userId: string, //
-  // ) {
-  //   return this.crewCommentService.findOne({ userId });
-  // }
+  @Query(() => [CrewComment])
+  fetchCrewComment(
+    @Args('userId') userId: string, //
+  ) {
+    return this.crewCommentService.findUser({ userId });
+  }
 
   // 생성
   @UseGuards(GqlAuthAccessGuard)

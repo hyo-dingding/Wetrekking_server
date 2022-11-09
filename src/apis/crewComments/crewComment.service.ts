@@ -22,6 +22,7 @@ export class CrewCommentService {
     return await this.crewCommentRepository.find({
       where: {
         crewBoard: { id: boardId },
+        subCrewComment: { id: undefined },
       },
       relations: ['crewBoard', 'user'],
       order: {
@@ -30,6 +31,17 @@ export class CrewCommentService {
       take: 9,
       skip: page ? (page - 1) * 9 : 0,
     });
+  }
+
+  async findUser({ userId }) {
+    const result = await this.crewCommentRepository.find({
+      where: { user: { id: userId } },
+      relations: ['user'],
+      order: {
+        createdAt: 'ASC',
+      },
+    });
+    return result;
   }
 
   async find({ commentId }) {
