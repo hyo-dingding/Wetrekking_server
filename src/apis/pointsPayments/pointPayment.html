@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>결제하기</title>
+    <script
+      type="text/javascript"
+      src="https://code.jquery.com/jquery-1.12.4.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/axios/dist/axios.min.js"
+    ></script>
+    <script>
+      function mypayment() {
+        const myAmount = Number(document.getElementById('amount').value);
+
+        const IMP = window.IMP; // 생략 가능
+        IMP.init('imp86152678'); // Example: imp00000000
+        IMP.request_pay(
+          {
+            // param
+            pg: 'nice',
+            pay_method: 'card',
+            name: 'point',
+            amount: myAmount,
+            buyer_email: 'seogoo12@gmail.com',
+            buyer_name: '이석우',
+            buyer_tel: '010-2059-4334',
+            buyer_addr: '서울특별시 송파구 신천동',
+            buyer_postcode: '05510',
+            m_redirect_url: '', // 모바일 결제후 리다이렉트될 주소!!
+          },
+          async (rsp) => {
+            // callback
+            if (rsp.success) {
+              // 결제 성공시
+              console.log(rsp);
+
+              // DB에 저장
+              const data = await axios.post(
+                'http://localhost:3000/graphql',
+                {
+                  query: `
+                      mutation {
+                        createPointPayment(impUid: "${rsp.imp_uid}", amount: ${rsp.paid_amount}) {
+                            id
+                            impUid
+                            amount
+                            status
+                            createAt
+                        }
+                      }
+                    `,
+                },
+                {
+                  headers: {
+                    authorization:
+                      'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNlb2dvbzEyQGdhbWlsLmNvbSIsInN1YiI6ImNmM2MzNGE5LTliNjYtNGI2YS04ZDU1LTA2Yzk2NzZiZmM3NSIsImlhdCI6MTY2Nzk2NjA5NywiZXhwIjoxNjY3OTY5Njk3fQ.zVzP7Z5OxO8wJzpg-s0boAy19sfFrzOBjUVKne4b_uc',
+                  },
+                },
+              );
+              alert('결제 성공!!!! 쏴리질러!!!!!!!!');
+            } else {
+              // 결제 실패시
+              alert(`결제에 실패하였습니다. 에러 내용: ${rsp.error_msg}`);
+            }
+          },
+        );
+      }
+    </script>
+  </head>
+  <body>
+    결제할 금액: <input type="text" id="amount" />
+    <button onclick="mypayment()">결제하기</button>
+  </body>
+</html>
