@@ -2,21 +2,21 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CrewBoard } from '../crewBoards/entities/crewBoard.entity';
 import { User } from '../users/entities/user.entity';
-import { Pick } from './entities/pick.entity';
-import { PickResolver } from './pick.resolver';
-import { PickService } from './pick.service';
+import { Dib, Pick } from './entities/dib.entity';
+import { DibResolver, PickResolver } from './dib.resolver';
+import { DibService, PickService } from './dib.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      Pick, //
+      Dib, //
       User,
       CrewBoard,
     ]),
   ],
   providers: [
-    PickResolver, //
-    PickService,
+    DibResolver, //
+    DibService,
   ],
 })
-export class PickModule {}
+export class DibModule {}

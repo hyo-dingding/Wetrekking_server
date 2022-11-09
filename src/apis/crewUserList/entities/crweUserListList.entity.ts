@@ -10,15 +10,15 @@ export class CrewUserList {
   @Field(() => String)
   id: string;
 
-  @Column({ default: '수락 대기중' })
+  @Column({ default: '대기' })
   @Field(() => String)
   status: string;
 
   @ManyToOne(() => User)
   @Field(() => User)
-  userId: User;
+  user: User;
 
   @ManyToOne(() => CrewBoard)
   @Field(() => CrewBoard)
-  crewBoardId: CrewBoard;
+  crewBoard: CrewBoard;
 }

@@ -41,11 +41,13 @@ export class UserService {
     const origin = await this.userRepository.findOne({
       where: { email },
     });
+    const hashedPassword = await bcrypt.hash(updateUserInput.password, 10);
 
     const result = this.userRepository.save({
       ...origin,
       email: email,
       ...updateUserInput,
+      password: hashedPassword,
     });
     console.log(result);
 

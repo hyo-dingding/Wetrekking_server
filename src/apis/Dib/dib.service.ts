@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Pick } from './entities/pick.entity';
+import { Dib } from './entities/dib.entity';
 
 @Injectable()
-export class PickService {
+export class DibService {
   constructor(
-    @InjectRepository(Pick)
-    private readonly pickRepository: Repository<Pick>,
+    @InjectRepository(Dib)
+    private readonly DibRepository: Repository<Dib>,
   ) {}
 
   async findAll({ userId }) {
     const result = [];
-    const user = await this.pickRepository.find({
-      //   where: { user: userId },
+    const user = await this.DibRepository.find({
+      where: { user: { id: userId } },
       relations: ['user', 'crewBoard'],
     });
 
@@ -22,20 +22,20 @@ export class PickService {
   }
 
   findOne({ crewBoardId }) {
-    return this.pickRepository.findOne({
+    return this.DibRepository.findOne({
       where: { crewBoard: crewBoardId },
     });
   }
 
   create({ userId, crewBoardId }) {
-    return this.pickRepository.save({
+    return this.DibRepository.save({
       user: userId,
       crewBoard: crewBoardId,
     });
   }
 
   async delete({ crewBoardId }) {
-    return await this.pickRepository.delete({
+    return await this.DibRepository.delete({
       crewBoard: crewBoardId,
     });
   }

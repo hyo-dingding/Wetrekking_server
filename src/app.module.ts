@@ -15,17 +15,19 @@ import { FileModule } from './apis/files/file.module';
 import { CrewBoardImageModule } from './apis/crewBoardImages/crewBoardImage.module';
 import { ReviewBoardModule } from './apis/reviewBoards/reviewBoard.module';
 import { CrewCommentModule } from './apis/crewComments/crewComment.module';
-import { PickModule } from './apis/pick/pick.module';
+import { DibModule } from './apis/Dib/dib.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ChatModule } from './apis/chat/chat.modeult';
 import { ReviewCommentModule } from './apis/reviewComments/reviewComment.module';
+import { CrewUserListModule } from './apis/crewUserList/crewUserList.module';
 
 @Module({
   imports: [
-    PickModule,
+    DibModule,
     AuthModule,
     CrewBoardModule,
     CrewBoardImageModule,
+    CrewUserListModule,
     FileModule,
     PhoneModule,
     ReviewBoardModule,
