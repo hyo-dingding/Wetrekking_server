@@ -20,19 +20,21 @@ export class ReviewBoardImageResolver {
     return this.reviewBoardImageService.findAll();
   }
 
-  // @Mutation(() => [ReviewBoardImage])
-  // async uploadCrewBoaredImage(
-  //   @Args('imgUrl') imgUrl: string[],
-  //   @Args('crewBoardId') crewBoardId: string,
-  // ) {
-  //   this.crewBoardImageService.delete({ crewBoardId });
-  //   for (let i = 0; i < imgUrl.length; i++) {
-  //     await this.crewBoardImageService.upload({
-  //       imgUrl: imgUrl[i],
-  //       isMain: i === 0 ? true : false,
-  //       crewBoardId: crewBoardId,
-  //     });
-  //   }
-  //   return await this.crewBoardImageService.findByCrewBoardId({ crewBoardId });
-  // }
+  @Mutation(() => [ReviewBoardImage])
+  async uploadCrewBoaredImage(
+    @Args('imgUrl') imgUrl: string[],
+    @Args('reviewBoardId') reviewBoardId: string,
+  ) {
+    this.reviewBoardImageService.delete({ reviewBoardId });
+    for (let i = 0; i < imgUrl.length; i++) {
+      await this.reviewBoardImageService.upload({
+        imgUrl: imgUrl[i],
+        isMain: i === 0 ? true : false,
+        reviewBoardId: reviewBoardId,
+      });
+    }
+    return await this.reviewBoardImageService.findByReviewBoardId({
+      reviewBoardId,
+    });
+  }
 }

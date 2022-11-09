@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { FileService } from '../files/file.service';
-
 import { ReviewBoardImage } from './entities/reviewBoardImage.entity';
 import { ReviewBoardImageResolver } from './reviewBoardImage.resolver';
 import { ReviewBoardImageService } from './reviewBoardImage.service';
@@ -16,7 +14,6 @@ import { ReviewBoardImageService } from './reviewBoardImage.service';
   providers: [
     ReviewBoardImageResolver, //
     ReviewBoardImageService,
-    FileService,
   ],
 })
 export class ReviewBoardImageModule {}
