@@ -5,7 +5,7 @@ import { Entity, JoinTable, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 @ObjectType()
-export class Pick {
+export class Dib {
   @PrimaryGeneratedColumn('uuid')
   @Field(() => String)
   id: string;

@@ -15,7 +15,6 @@ import { FileModule } from './apis/files/file.module';
 import { CrewBoardImageModule } from './apis/crewBoardImages/crewBoardImage.module';
 import { ReviewBoardModule } from './apis/reviewBoards/reviewBoard.module';
 import { CrewCommentModule } from './apis/crewComments/crewComment.module';
-
 import { MongooseModule } from '@nestjs/mongoose';
 import { ChatModule } from './apis/chat/chat.modeult';
 import { ReviewCommentModule } from './apis/reviewComments/reviewComment.module';
@@ -29,6 +28,7 @@ import { PickModule } from './apis/pick/pick.module';
     AuthModule,
     CrewBoardModule,
     CrewBoardImageModule,
+    CrewUserListModule,
     FileModule,
     PhoneModule,
     ReviewBoardModule,

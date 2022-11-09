@@ -19,6 +19,7 @@ export class User {
   @Field(() => String)
   email: string;
 
+  // 플라이그라운드 에서 안보이게
   @Column()
   password: string;
 
