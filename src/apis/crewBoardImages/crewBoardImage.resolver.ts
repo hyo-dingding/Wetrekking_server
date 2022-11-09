@@ -21,7 +21,7 @@ export class CrewBoardImageResolver {
   }
 
   @Mutation(() => [CrewBoardImage])
-  async uploadCrewBoaredImage(
+  async uploadCrewBoardImage(
     @Args({ name: 'imgURL', type: () => [String] }) imgUrl: string[],
     @Args('crewBoardId') crewBoardId: string,
   ) {

@@ -6,6 +6,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinTable,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -23,25 +24,28 @@ export class CrewComment {
   comment: string;
 
   @CreateDateColumn()
-  @Field(() => Date)
+  @Field(() => String)
   createdAt: Date;
 
   @UpdateDateColumn()
-  @Field(() => Date)
+  @Field(() => String)
   updatedAt: Date;
 
   @DeleteDateColumn()
-  @Field(() => Date)
+  @Field(() => String)
   deletedAt: Date;
 
+  @JoinTable()
   @ManyToOne(() => CrewBoard)
   @Field(() => CrewBoard)
   crewBoard: CrewBoard;
 
+  @JoinTable()
   @ManyToOne(() => User)
   @Field(() => User)
   user: User;
 
+  @JoinTable()
   @ManyToOne(() => CrewComment)
   @Field(() => CrewComment)
   subCrewComment: CrewComment;
