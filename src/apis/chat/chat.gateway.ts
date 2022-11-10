@@ -11,7 +11,7 @@ import { Server } from 'socket.io';
 // 하지만 HTTP는 요청이 있어야만 응답을 보내주기 때문에 실시간이 안된다
 // 그래서 웹소켓이 필요하고 웹소켓 때문에 서버와 네트워크가 실시간으로 데이터를 주고 받을 수 있다.
 
-@WebSocketGateway({ namespace: 'chat' }) // namespace는 프론트에서 http://localhost:3000/chat 에서 'chat'에 해당하는 부분
+@WebSocketGateway(3001, { namespace: 'chat' }) // namespace는 프론트에서 http://localhost:3001/chat 에서 'chat'에 해당하는 부분
 export class ChatGateway {
   @WebSocketServer() // 이거는 socket.io의 io 역할
   server: Server;
