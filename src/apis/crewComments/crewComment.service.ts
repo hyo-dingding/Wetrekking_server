@@ -122,7 +122,7 @@ export class CrewCommentService {
     return result.affected ? true : false;
   }
   // 대댓글 조회
-  async findSubAll({ page, boardId }) {
+  async findSubAll({ page, commentId }) {
     // return await this.crewCommentRepository.find({
     //   where: {
     //     crewBoard: {
@@ -141,7 +141,7 @@ export class CrewCommentService {
       .createQueryBuilder('CrewComment')
       .leftJoinAndSelect('CrewComment.user', 'user')
       .leftJoinAndSelect('CrewComment.crewBoard', 'crewBoard')
-      .where('CrewComment.crewBoard = :id', { id: boardId })
+      .where('CrewComment.subCrewComment = :id', { id: commentId })
       .andWhere('CrewComment.subCrewCommentId IS NOT NULL')
       .orderBy('CrewComment.createdAt', 'DESC')
       .take(9)
