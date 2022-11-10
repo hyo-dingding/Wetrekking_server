@@ -77,10 +77,10 @@ export class CrewCommentResolver {
 
   @Query(() => [CrewComment])
   fetchCrewSubComments(
-    @Args('boardId') boardId: string,
+    @Args('commentId') commentId: string,
     @Args('page', { nullable: true, type: () => Int }) page: number,
   ) {
-    return this.crewCommentService.findSubAll({ page, boardId });
+    return this.crewCommentService.findSubAll({ page, commentId });
   }
 
   @Query(() => [CrewComment])
