@@ -37,7 +37,7 @@ export class UserService {
     return result;
   }
 
-  createSocail({ createSocialUserInput }) {
+  createSocial({ createSocialUserInput }) {
     const { ...user } = createSocialUserInput;
     return this.userRepository.save({ ...user });
   }

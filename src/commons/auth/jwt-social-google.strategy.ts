@@ -26,9 +26,10 @@ export class JwtGoogleStrategy extends PassportStrategy(Strategy, 'google') {
       name: profile.displayName,
 
       // 임의로 입력하고 로그인 후 수정하게 하기
-      nickname: profile.emails[0].value,
-      phone: '00000000000',
-      gender: '임시',
+      nickname: '',
+      phone: '',
+      gender: '',
+      birth: '',
     };
   }
 }

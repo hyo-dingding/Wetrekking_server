@@ -143,6 +143,7 @@ export class UserResolver {
     @Args('phoneToken') phoneToken: string,
     // @Args('gender') gender: string,
     @Args('updateUserInput') updateUserInput: UpdateUserInput,
+    // @Args('createSocialUserInput') createSocialUserInput: CreateSocialUserInput,
   ) {
     const userId = context.req.user.id;
     console.log(userId);

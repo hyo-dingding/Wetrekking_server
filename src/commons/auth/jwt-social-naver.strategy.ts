@@ -13,9 +13,6 @@ export class JwtNaverStrategy extends PassportStrategy(Strategy, 'naver') {
   validate(accessToken, refreshToken, profile) {
     console.log(accessToken);
     console.log(refreshToken);
-
-    console.log('aaa:', profile.displayName);
-
     console.log(profile);
 
     return {

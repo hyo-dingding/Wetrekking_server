@@ -31,8 +31,9 @@ export class JwtKakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
       password: kakao_account.email,
       name: profile.displayName,
       nickname: profile.username,
-      phone: '01022223333',
+      phone: '',
       gender: kakao_account.gender,
+      birthday: kakao_account.birthday,
     };
   }
 }
