@@ -12,7 +12,7 @@ export class CrewBoardImageService {
 
   async findByCrewBoardId({ crewBoardId }) {
     return await this.crewBoardImageRepository.find({
-      where: { crewBoardId },
+      where: { crewBoard: { id: crewBoardId } },
     });
   }
 
@@ -21,10 +21,14 @@ export class CrewBoardImageService {
   }
 
   upload({ imgUrl, isMain, crewBoardId }) {
-    return this.crewBoardImageRepository.save({ imgUrl, isMain, crewBoardId });
+    return this.crewBoardImageRepository.save({
+      imgUrl,
+      isMain,
+      crewBoard: crewBoardId,
+    });
   }
 
   delete({ crewBoardId }) {
-    this.crewBoardImageRepository.delete({ crewBoardId });
+    this.crewBoardImageRepository.delete({ crewBoard: crewBoardId });
   }
 }

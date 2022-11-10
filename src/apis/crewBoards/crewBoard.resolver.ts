@@ -2,6 +2,7 @@ import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GqlAuthAccessGuard } from 'src/commons/auth/gql-auth.guard';
 import { IContext } from 'src/commons/type/context';
+import { CrewBoardImageResolver } from '../crewBoardImages/crewBoardImage.resolver';
 import { CrewBoardService } from './crewBoard.service';
 import { CreateCrewBoardInput } from './dto/createCrewBoard.input';
 import { UpdateCrewBoardInput } from './dto/updateCrewBoard.input';
@@ -11,6 +12,7 @@ import { CrewBoard } from './entities/crewBoard.entity';
 export class CrewBoardResolver {
   constructor(
     private readonly crewBoardService: CrewBoardService, //
+    private readonly crewBoardImageResolver: CrewBoardImageResolver, //
   ) {}
 
   @Query(() => CrewBoard)
@@ -56,13 +58,19 @@ export class CrewBoardResolver {
   async createCrewBoard(
     @Context() context: IContext,
     @Args('createCrewBoardInput') createCrewBoardInput: CreateCrewBoardInput,
+    @Args({ name: 'imgURL', type: () => [String] }) imgUrl: string[],
   ) {
     const userId = context.req.user.id;
 
-    return await this.crewBoardService.create({
+    const result = await this.crewBoardService.create({
       userId,
       createCrewBoardInput,
     });
+
+    const crewBoardId = result.id;
+    await this.crewBoardImageResolver.uploadCrewBoardImage(imgUrl, crewBoardId);
+
+    return result;
   }
 
   @Mutation(() => CrewBoard)

@@ -151,13 +151,18 @@ export class CrewBoardService {
     const dateStandard = crewBoard.date + ' ' + dateTime24h;
 
     const checkVaildCrewBoard = await this.findAllByUserId({ userId });
-    if (checkVaildCrewBoard.length > 3) {
+    if (checkVaildCrewBoard.length >= 3) {
       throw new Error('게시글은 3개까지만 작성 가능합니다!!!!');
     }
 
     const user = await this.userRepository.findOne({
       where: { id: userId },
     });
+
+    if (user.point < 500) {
+      throw new Error('포인트가 부족합니다!!!!!');
+    }
+
     await this.userRepository.update(
       { id: userId },
       { point: user.point - 500 },
