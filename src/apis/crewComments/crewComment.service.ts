@@ -37,7 +37,7 @@ export class CrewCommentService {
       .leftJoinAndSelect('CrewComment.crewBoard', 'crewBoard')
       .where('CrewComment.crewBoard = :id', { id: boardId })
       .andWhere('CrewComment.subCrewCommentId IS NULL')
-      .orderBy('CrewComment.createdAt', 'ASC')
+      .orderBy('CrewComment.createdAt', 'DESC')
       .take(9)
       .skip(page ? (page - 1) * 9 : 0)
       .getMany();
@@ -54,7 +54,7 @@ export class CrewCommentService {
       .where('CrewComment.crewBoard = :id', { id: boardId })
       .where('CrewComment.user = :id', { id: userId })
       .andWhere('CrewComment.subCrewCommentId IS NULL')
-      .orderBy('CrewComment.createdAt', 'ASC')
+      .orderBy('CrewComment.createdAt', 'DESC')
       .getMany();
 
     return result;
@@ -143,7 +143,7 @@ export class CrewCommentService {
       .leftJoinAndSelect('CrewComment.crewBoard', 'crewBoard')
       .where('CrewComment.crewBoard = :id', { id: boardId })
       .andWhere('CrewComment.subCrewCommentId IS NOT NULL')
-      .orderBy('CrewComment.createdAt', 'ASC')
+      .orderBy('CrewComment.createdAt', 'DESC')
       .take(9)
       .skip(page ? (page - 1) * 9 : 0)
       .getMany();
@@ -159,7 +159,7 @@ export class CrewCommentService {
       .where('CrewComment.crewBoard = :id', { id: boardId })
       .where('CrewComment.user = :id', { id: userId })
       .andWhere('CrewComment.subCrewCommentId IS NOT NULL')
-      .orderBy('CrewComment.createdAt', 'ASC')
+      .orderBy('CrewComment.createdAt', 'DESC')
       .getMany();
 
     return result;
@@ -230,10 +230,10 @@ export class CrewCommentService {
     return result.affected ? true : false;
   }
 
-  async removeSubAll({ commentId }) {
-    const deleteSub = await this.crewCommentRepository.find({
-      where: { subCrewComment: { id: commentId } },
-      relations: ['crewBoard', 'user'],
-    });
-  }
+  // async removeSubAll({ commentId }) {
+  //   const deleteSub = await this.crewCommentRepository.find({
+  //     where: { subCrewComment: { id: commentId } },
+  //     relations: ['crewBoard', 'user'],
+  //   });
+  // }
 }

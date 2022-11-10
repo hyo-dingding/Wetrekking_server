@@ -24,7 +24,7 @@ export class ReviewCommentService {
         reviewBoard: { id: reviewBoardId },
       },
       relations: ['reviewBoard', 'user'],
-      order: { createdAt: 'ASC' },
+      order: { createdAt: 'DESC' },
       take: 9,
       skip: page ? (page - 1) * 9 : 0,
     });
