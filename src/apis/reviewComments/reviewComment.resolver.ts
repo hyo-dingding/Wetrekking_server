@@ -11,8 +11,6 @@ export class ReviewCommentResolver {
     private readonly reviewCommentService: ReviewCommentService, //
   ) {}
 
-  // 유저 나중에 추가
-
   @Query(() => [ReviewComment])
   fetchReviewComments(
     @Args('reviewBoardId') reviewBoardId: string, //
