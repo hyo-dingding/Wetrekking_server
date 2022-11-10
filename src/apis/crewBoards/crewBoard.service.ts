@@ -155,13 +155,10 @@ export class CrewBoardService {
       throw new Error('게시글은 3개까지만 작성 가능합니다!!!!');
     }
 
-    console.log('!!!!!!!!!!!!!');
-    console.log(userId);
     const user = await this.userRepository.findOne({
       where: { id: userId },
     });
-    console.log('@@@@@@@@@@@@@@');
-    console.log(user);
+
     if (user.point < 500) {
       throw new Error('포인트가 부족합니다!!!!!');
     }
