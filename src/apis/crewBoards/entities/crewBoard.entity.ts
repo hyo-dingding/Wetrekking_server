@@ -58,10 +58,10 @@ export class CrewBoard {
   @Field(() => Int)
   peoples: number;
 
-  // @JoinTable()
-  // @ManyToOne(() => Mountain)
-  // @Field(() => Mountain)
-  // mountain: Mountain;
+  @JoinTable()
+  @ManyToOne(() => Mountain)
+  @Field(() => Mountain)
+  mountain: Mountain;
 
   @JoinTable()
   @ManyToOne(() => User)

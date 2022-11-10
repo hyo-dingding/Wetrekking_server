@@ -22,6 +22,7 @@ export class ReviewBoardResolver {
   createReviewBoard(
     @Args('createReviewBoardInput')
     createReviewBoardInput: CreateReviewBoardInput,
+    @Args({ name: 'imgURL', type: () => [String] }) imgUrl: string[],
   ) {
     return this.reviewBoardService.create({ createReviewBoardInput });
   }
