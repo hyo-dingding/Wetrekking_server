@@ -80,7 +80,10 @@ export class UserResolver {
       throw new Error('휴대폰 인증이 올바르지 않습니다.');
     }
     // 랜덤 비밀번호 생성
-    const randomPassword = Math.random().toString(36).substring(2, 10);
+    const randomPassword = Math.random()
+      .toString(36)
+      .substring(2, 10)
+      .padStart(8, 'a1');
     await bcrypt.hash(randomPassword, 10);
 
     return randomPassword;
