@@ -60,13 +60,13 @@ export class CrewBoard {
 
   @JoinTable()
   @ManyToOne(() => Mountain)
-  @Field(() => String)
-  mountain: string;
+  @Field(() => Mountain)
+  mountain: Mountain;
 
   @JoinTable()
   @ManyToOne(() => User)
-  @Field(() => String)
-  user: string;
+  @Field(() => User)
+  user: User;
 
   @CreateDateColumn()
   @Field(() => Date)
