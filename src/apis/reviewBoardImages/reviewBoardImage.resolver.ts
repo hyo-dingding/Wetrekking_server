@@ -22,7 +22,7 @@ export class ReviewBoardImageResolver {
 
   @Mutation(() => [ReviewBoardImage])
   async uploadReviewBoaredImage(
-    @Args('imgUrl') imgUrl: string[],
+    @Args({ name: 'imgURL', type: () => [String] }) imgUrl: string[],
     @Args('reviewBoardId') reviewBoardId: string,
   ) {
     this.reviewBoardImageService.delete({ reviewBoardId });
