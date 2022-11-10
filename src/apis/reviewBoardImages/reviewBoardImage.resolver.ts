@@ -21,7 +21,7 @@ export class ReviewBoardImageResolver {
   }
 
   @Mutation(() => [ReviewBoardImage])
-  async uploadCrewBoaredImage(
+  async uploadReviewBoaredImage(
     @Args('imgUrl') imgUrl: string[],
     @Args('reviewBoardId') reviewBoardId: string,
   ) {
