@@ -5,7 +5,8 @@ import { Cache } from 'cache-manager';
 
 export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
   constructor(
-    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache, //
+    @Inject(CACHE_MANAGER)
+    private readonly cacheManager: Cache, //
   ) {
     super({
       jwtFromRequest: (req) => {

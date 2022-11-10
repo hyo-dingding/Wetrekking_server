@@ -80,7 +80,7 @@ export class UserResolver {
       throw new Error('휴대폰 인증이 올바르지 않습니다.');
     }
     // 랜덤 비밀번호 생성
-    const randomPassword = Math.random().toString(36).substring(2, 8);
+    const randomPassword = Math.random().toString(36).substring(2, 10);
     await bcrypt.hash(randomPassword, 10);
 
     return randomPassword;
@@ -196,8 +196,8 @@ export class UserResolver {
   @Mutation(() => Boolean)
   deleteUser(
     // email로 삭제 할지
-    @Args('email') email: string, //
+    @Args('userId') userId: string, //
   ) {
-    return this.userService.delete({ email });
+    return this.userService.delete({ userId });
   }
 }

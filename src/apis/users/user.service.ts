@@ -1,8 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UserService {
@@ -37,6 +37,11 @@ export class UserService {
     return result;
   }
 
+  createSocail({ createSocialUserInput }) {
+    const { ...user } = createSocialUserInput;
+    return this.userRepository.save({ ...user });
+  }
+
   async update({ userId, updateUserInput }) {
     const origin = await this.userRepository.findOne({
       where: { id: userId },
@@ -54,8 +59,13 @@ export class UserService {
     return result;
   }
 
-  async delete({ email }) {
-    const result = await this.userRepository.softDelete({ email: email });
+  async delete({ userId }) {
+    const result = await this.userRepository.softDelete({ id: userId });
+    return result.affected ? true : false;
+  }
+
+  async restore({ userId }) {
+    const result = await this.userRepository.restore({ id: userId });
     return result.affected ? true : false;
   }
 }
