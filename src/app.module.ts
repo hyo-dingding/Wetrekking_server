@@ -20,10 +20,16 @@ import { ChatModule } from './apis/chat/chat.module';
 import { ReviewCommentModule } from './apis/reviewComments/reviewComment.module';
 import { PointPaymentModule } from './apis/pointsPayments/pointsPayments.module';
 import { CrewUserListModule } from './apis/crewUserList/crewUserList.module';
-import { DibModule } from './apis/dib/dib.module';
+import { DibModule } from './apis/Dib/dib.module';
+import { MountainModule } from './apis/mountains/mountain.module';
+import { LikeModule } from './apis/likes/like.module';
+import { AppController } from './app.controller';
+
 
 @Module({
   imports: [
+    LikeModule,
+    MountainModule,
     PointPaymentModule,
     DibModule,
     AuthModule,
@@ -80,7 +86,7 @@ import { DibModule } from './apis/dib/dib.module';
       isGlobal: true,
     }),
   ],
-  // controllers: [AppController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}

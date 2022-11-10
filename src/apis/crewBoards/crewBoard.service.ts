@@ -71,13 +71,13 @@ export class CrewBoardService {
     return `${hour}:${dateTimeAMPM.split(' ')[0].split(':')[1]}`;
   }
 
-  changeDateTimeToAMPM(dateTime24h) {
-    const AMPM = dateTime24h.split(':')[0] / 12 >= 1 ? 'pm' : 'am';
-    return (
-      `${String(Number(dateTime24h.split(':')[0]) % 12).padStart(2, '0')}:` +
-      `${String(dateTime24h.split(':')[1]).padStart(2, '0')} ${AMPM}`
-    );
-  }
+  // changeDateTimeToAMPM(dateTime24h) {
+  //   const AMPM = dateTime24h.split(':')[0] / 12 >= 1 ? 'pm' : 'am';
+  //   return (
+  //     `${String(Number(dateTime24h.split(':')[0]) % 12).padStart(2, '0')}:` +
+  //     `${String(dateTime24h.split(':')[1]).padStart(2, '0')} ${AMPM}`
+  //   );
+  // }
 
   async findAllLatestFirst() {
     const newCrewBoard = [];
@@ -131,7 +131,18 @@ export class CrewBoardService {
     return newCrewBoard;
   }
 
-  async create({ createCrewBoardInput }) {
+  async create({ userId, createCrewBoardInput }) {
+    const { ...crewBoard } = createCrewBoardInput;
+    const dateTime24h = this.changeDateTimeTo24h(crewBoard.dateTime);
+    const dateStandard = crewBoard.date + ' ' + dateTime24h;
+    return await this.crewBoardRepository.save({
+      ...crewBoard,
+      dateStandard: dateStandard,
+      userId: userId,
+    });
+  }
+
+  async createTEST({ createCrewBoardInput }) {
     const { ...crewBoard } = createCrewBoardInput;
     const dateTime24h = this.changeDateTimeTo24h(crewBoard.dateTime);
     const dateStandard = crewBoard.date + ' ' + dateTime24h;

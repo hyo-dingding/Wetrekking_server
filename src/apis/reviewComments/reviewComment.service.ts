@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ReviewBoard } from '../reviewBoards/entities/reviewBoard.entity';
@@ -24,24 +24,29 @@ export class ReviewCommentService {
         reviewBoard: { id: reviewBoardId },
       },
       relations: ['reviewBoard', 'user'],
-      order: { createdAt: 'ASC' },
+      order: { createdAt: 'DESC' },
       take: 9,
       skip: page ? (page - 1) * 9 : 0,
     });
   }
 
-  async create({ reviewBoardId, reviewComment }) {
+  async create({ user, reviewBoardId, reviewComment }) {
     const findId = await this.reviewBoardRepository.findOne({
       where: { id: reviewBoardId },
+    });
+
+    const findUser = await this.userRepository.findOne({
+      where: { email: user },
     });
 
     return await this.reviewCommentRepository.save({
       reviewComment,
       reviewBoard: { id: findId.id },
+      user: { id: findUser.id },
     });
   }
 
-  async update({ reviewCommentId, updateComment }) {
+  async update({ user, reviewCommentId, updateComment }) {
     const findReview = await this.reviewCommentRepository.findOne({
       where: { id: reviewCommentId },
     });
@@ -53,10 +58,13 @@ export class ReviewCommentService {
     });
   }
 
-  async delete({ reviewCommentId }) {
-    const findReview = await this.reviewCommentRepository.findOne({
-      where: { id: reviewCommentId },
+  async delete({ user, reviewCommentId }) {
+    const findUser = await this.userRepository.findOne({
+      where: { email: user },
     });
+
+    if (user !== findUser.email)
+      throw new ConflictException('아이디가 맞지 않습니다.');
 
     const result = await this.reviewCommentRepository.softDelete({
       id: reviewCommentId,

@@ -26,9 +26,7 @@ export class FileService {
                   .createWriteStream(),
               )
               .on('finish', () =>
-                resolve(
-                  `https://storage.googleapis.com/${bucket}/crewBoard/${uuid}${el.filename}`,
-                ),
+                resolve(`${bucket}/crewBoard/${uuid}${el.filename}`),
               )
               .on('error', () => reject(console.log('실패')));
           }),
@@ -60,9 +58,7 @@ export class FileService {
                   .createWriteStream(),
               )
               .on('finish', () =>
-                resolve(
-                  `https://storage.googleapis.com/${bucket}/reviewBoard/${uuid}${el.filename}`,
-                ),
+                resolve(`${bucket}/reviewBoard/${uuid}${el.filename}`),
               )
               .on('error', () => reject(console.log('실패')));
           }),
@@ -80,18 +76,14 @@ export class FileService {
       keyFilename: process.env.STORAGE_KEY_FILE_NAME,
     }).bucket(bucket);
 
-    file
+    const result = file
       .createReadStream()
       .pipe(
         storage.file(`userProfile/${uuid}${file.filename}`).createWriteStream(),
       )
-      .on(
-        'finish',
-        () =>
-          `https://storage.googleapis.com/${bucket}/userProfile/${uuid}${file.filename}`,
-      )
+      .on('finish', () => `${bucket}/userProfile/${uuid}${file.filename}`)
       .on('error', () => console.log('실패'));
 
-    return `https://storage.googleapis.com/${bucket}/userProfile/${uuid}${file.filename}`;
+    return result;
   }
 }
