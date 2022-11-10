@@ -37,15 +37,15 @@ export class UserService {
     return result;
   }
 
-  async update({ email, updateUserInput }) {
+  async update({ userId, updateUserInput }) {
     const origin = await this.userRepository.findOne({
-      where: { email },
+      where: { id: userId },
     });
     const hashedPassword = await bcrypt.hash(updateUserInput.password, 10);
 
     const result = this.userRepository.save({
       ...origin,
-      email: email,
+      id: userId,
       ...updateUserInput,
       password: hashedPassword,
     });

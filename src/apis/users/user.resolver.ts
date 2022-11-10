@@ -32,8 +32,8 @@ export class UserResolver {
     return this.userService.findOne({ id });
   }
 
-  // 아이디 찾기
-  @Query(() => String)
+  // 아이디 찾기 (front 요청으로 query -> mutation 변경)
+  @Mutation(() => String)
   async findUserEmail(
     @Args('name') name: string, //
     @Args('phone') phone: string,
@@ -61,7 +61,7 @@ export class UserResolver {
   }
 
   // password 찾기(랜덤비밀번호 생성해서 반환하기)
-  @Query(() => String)
+  @Mutation(() => String) // (front 요청으로 query -> mutation 변경)
   async findUserPassword(
     @Args('name') name: string, //
     @Args('email') email: string,
@@ -141,8 +141,8 @@ export class UserResolver {
     // @Args('gender') gender: string,
     @Args('updateUserInput') updateUserInput: UpdateUserInput,
   ) {
-    const email = context.req.user.email;
-    console.log(email);
+    const userId = context.req.user.id;
+    console.log(userId);
 
     // const user = await this.userService.findOne({ email });
 
@@ -155,7 +155,7 @@ export class UserResolver {
     // userRepository 에서 해당 정보 객체로 받아오기
     // user null값부분 업데이트하기
     return this.userService.update({
-      email,
+      userId,
       updateUserInput,
     });
   }
@@ -178,7 +178,7 @@ export class UserResolver {
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => User)
   async updateUser(
-    @Args('email') email: string, //
+    @Args('userId') userId: string, //
     @Args('updateUserInput') updateUserInput: UpdateUserInput,
   ) {
     if (updateUserInput.phone) {
@@ -188,7 +188,7 @@ export class UserResolver {
       }
     }
 
-    return this.userService.update({ email, updateUserInput });
+    return this.userService.update({ userId, updateUserInput });
   }
 
   // 유저 삭제
