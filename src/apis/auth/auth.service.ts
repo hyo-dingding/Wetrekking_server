@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUserInput } from '../users/dto/createUser.input';
 import { UserService } from '../users/user.service';
 import * as bcrypt from 'bcrypt';
 
@@ -42,7 +41,7 @@ export class AuthService {
       'Set-Cookie',
       `refreshToken=${refreshToken}; path=/; domain=.wetrekking.kr; SameSite=None; Secure; httpOnly;`,
     );
-    
+
     // res.setHeader('Set-Cookie', `refreshToken=${refreshToken}; path=/;`);  // 개발 환경
     return refreshToken;
   }
@@ -53,13 +52,13 @@ export class AuthService {
 
     // 2. 회원가입이 안되있다면 자동회원가입
     if (!user) {
-      const createUserInput = { ...req.user };
+      const createSocialUserInput = { ...req.user };
 
-      createUserInput.password = await bcrypt.hash(
-        createUserInput.password,
+      createSocialUserInput.password = await bcrypt.hash(
+        createSocialUserInput.password,
         10,
       );
-      await this.userService.create({ createUserInput });
+      await this.userService.createSocail({ createSocialUserInput });
 
       // User.push(createUserInput);
     }
@@ -69,7 +68,7 @@ export class AuthService {
     // console.log(user);
     // redirect 페이지 이동 다시 내페이지로 다시옴.
     // 추가정보 입력하는 url로 이동하기
-    res.redirect('http://127.0.0.1:5500/social-login.html');
+    res.redirect('http://127.0.0.1:5500/src/apis/auth/social-login.html');
 
     //  소셜로그인 완료 후 Redirect 되면 nickname, phone, gender 입력하게 하기
   }
