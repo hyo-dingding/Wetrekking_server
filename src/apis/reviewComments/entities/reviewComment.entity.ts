@@ -22,14 +22,18 @@ export class ReviewComment {
   reviewComment: string;
 
   @CreateDateColumn()
+  @Field(() => Date)
   createdAt: Date;
 
   @DeleteDateColumn()
+  @Field(() => Date)
   deletedAt: Date;
 
   @ManyToOne(() => User)
+  @Field(() => User)
   user: User;
 
   @ManyToOne(() => ReviewBoard)
+  @Field(() => ReviewBoard)
   reviewBoard: ReviewBoard;
 }
