@@ -20,7 +20,7 @@ import { ChatModule } from './apis/chat/chat.module';
 import { ReviewCommentModule } from './apis/reviewComments/reviewComment.module';
 import { PointPaymentModule } from './apis/pointsPayments/pointsPayments.module';
 import { CrewUserListModule } from './apis/crewUserList/crewUserList.module';
-import { DibModule } from './apis/Dib/dib.module';
+import { DibModule } from './apis/dib/dib.module';
 
 @Module({
   imports: [
