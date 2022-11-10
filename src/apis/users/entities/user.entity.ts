@@ -31,6 +31,7 @@ export class User {
   @Field(() => String)
   nickname: string;
 
+  @Column()
   @Field(() => String)
   birth: string;
 
