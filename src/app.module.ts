@@ -24,9 +24,11 @@ import { DibModule } from './apis/dib/dib.module';
 import { MountainModule } from './apis/mountains/mountain.module';
 import { LikeModule } from './apis/likes/like.module';
 import { AppController } from './app.controller';
+import { ReviewBoardImageModule } from './apis/reviewBoardImages/reviewBoardImage.module';
 
 @Module({
   imports: [
+    ReviewBoardImageModule,
     LikeModule,
     MountainModule,
     PointPaymentModule,
