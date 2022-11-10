@@ -19,28 +19,44 @@ export class CrewCommentService {
   ) {}
 
   async findAll({ page, boardId }) {
-    return await this.crewCommentRepository.find({
-      where: {
-        crewBoard: { id: boardId },
-        subCrewComment: { id: undefined },
-      },
-      relations: ['crewBoard', 'user'],
-      order: {
-        createdAt: 'ASC',
-      },
-      take: 9,
-      skip: page ? (page - 1) * 9 : 0,
-    });
+    // const result = await this.crewCommentRepository.find({
+    //   where: {
+    //     crewBoard: { id: boardId },
+    //     subCrewComment: { id: null },
+    //   },
+    //   relations: ['crewBoard', 'user'],
+    //   order: {
+    //     createdAt: 'ASC',
+    //   },
+    //   take: 9,
+    //   skip: page ? (page - 1) * 9 : 0,
+    // });
+    const result = await this.crewCommentRepository
+      .createQueryBuilder('CrewComment')
+      .leftJoinAndSelect('CrewComment.user', 'user')
+      .leftJoinAndSelect('CrewComment.crewBoard', 'crewBoard')
+      .where('CrewComment.crewBoard = :id', { id: boardId })
+      .andWhere('CrewComment.subCrewCommentId IS NULL')
+      .orderBy('CrewComment.createdAt', 'ASC')
+      .take(9)
+      .skip(page ? (page - 1) * 9 : 0)
+      .getMany();
+
+    console.log(result);
+    return result;
   }
 
-  async findUser({ userId }) {
-    const result = await this.crewCommentRepository.find({
-      where: { user: { id: userId } },
-      relations: ['user'],
-      order: {
-        createdAt: 'ASC',
-      },
-    });
+  async findUser({ userId, boardId }) {
+    const result = await this.crewCommentRepository
+      .createQueryBuilder('CrewComment')
+      .leftJoinAndSelect('CrewComment.user', 'user')
+      .leftJoinAndSelect('CrewComment.crewBoard', 'crewBoard')
+      .where('CrewComment.crewBoard = :id', { id: boardId })
+      .where('CrewComment.user = :id', { id: userId })
+      .andWhere('CrewComment.subCrewCommentId IS NULL')
+      .orderBy('CrewComment.createdAt', 'ASC')
+      .getMany();
+
     return result;
   }
 
@@ -97,6 +113,8 @@ export class CrewCommentService {
 
     if (user !== dbUser) throw new ConflictException('아이디가 다릅니다');
 
+    // await this.crewCommentRepository.removeAll;
+
     const result = await this.crewCommentRepository.softDelete({
       id: commentId,
     });
@@ -104,21 +122,47 @@ export class CrewCommentService {
     return result.affected ? true : false;
   }
   // 대댓글 조회
-  async findSubAll({ page, boardId, commentId }) {
-    return await this.crewCommentRepository.find({
-      where: {
-        crewBoard: {
-          id: boardId,
-        },
-        subCrewComment: { id: commentId },
-      },
-      relations: ['crewBoard', 'user'],
-      order: {
-        comment: 'ASC',
-      },
-      take: 9,
-      skip: page ? (page - 1) * 9 : 0,
-    });
+  async findSubAll({ page, boardId }) {
+    // return await this.crewCommentRepository.find({
+    //   where: {
+    //     crewBoard: {
+    //       id: boardId,
+    //     },
+    //     subCrewComment: { id: commentId },
+    //   },
+    //   relations: ['crewBoard', 'user'],
+    //   order: {
+    //     comment: 'ASC',
+    //   },
+    //   take: 9,
+    //   skip: page ? (page - 1) * 9 : 0,
+    // });
+    const result = await this.crewCommentRepository
+      .createQueryBuilder('CrewComment')
+      .leftJoinAndSelect('CrewComment.user', 'user')
+      .leftJoinAndSelect('CrewComment.crewBoard', 'crewBoard')
+      .where('CrewComment.crewBoard = :id', { id: boardId })
+      .andWhere('CrewComment.subCrewCommentId IS NOT NULL')
+      .orderBy('CrewComment.createdAt', 'ASC')
+      .take(9)
+      .skip(page ? (page - 1) * 9 : 0)
+      .getMany();
+
+    return result;
+  }
+
+  async findSubUser({ userId, boardId }) {
+    const result = await this.crewCommentRepository
+      .createQueryBuilder('CrewComment')
+      .leftJoinAndSelect('CrewComment.user', 'user')
+      .leftJoinAndSelect('CrewComment.crewBoard', 'crewBoard')
+      .where('CrewComment.crewBoard = :id', { id: boardId })
+      .where('CrewComment.user = :id', { id: userId })
+      .andWhere('CrewComment.subCrewCommentId IS NOT NULL')
+      .orderBy('CrewComment.createdAt', 'ASC')
+      .getMany();
+
+    return result;
   }
 
   // 대댓글 생성
@@ -184,5 +228,12 @@ export class CrewCommentService {
     });
 
     return result.affected ? true : false;
+  }
+
+  async removeSubAll({ commentId }) {
+    const deleteSub = await this.crewCommentRepository.find({
+      where: { subCrewComment: { id: commentId } },
+      relations: ['crewBoard', 'user'],
+    });
   }
 }

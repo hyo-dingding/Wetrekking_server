@@ -24,11 +24,13 @@ export class CrewCommentResolver {
     return this.crewCommentService.findAll({ page, boardId });
   }
 
+  // 유저가 쓴거 조회
   @Query(() => [CrewComment])
-  fetchCrewComment(
+  fetchUserCrewComments(
     @Args('userId') userId: string, //
+    @Args('boardId') boardId: string,
   ) {
-    return this.crewCommentService.findUser({ userId });
+    return this.crewCommentService.findUser({ userId, boardId });
   }
 
   // 생성
@@ -75,11 +77,18 @@ export class CrewCommentResolver {
 
   @Query(() => [CrewComment])
   fetchCrewSubComments(
-    @Args('commentId') commentId: string, //
     @Args('boardId') boardId: string,
     @Args('page', { nullable: true, type: () => Int }) page: number,
   ) {
-    return this.crewCommentService.findSubAll({ page, boardId, commentId });
+    return this.crewCommentService.findSubAll({ page, boardId });
+  }
+
+  @Query(() => [CrewComment])
+  fetchUserCrewSubComments(
+    @Args('userId') userId: string, //
+    @Args('boardId') boardId: string,
+  ) {
+    return this.crewCommentService.findSubUser({ userId, boardId });
   }
 
   @UseGuards(GqlAuthAccessGuard)
