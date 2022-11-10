@@ -1,6 +1,12 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { CrewBoard } from 'src/apis/crewBoards/entities/crewBoard.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 @ObjectType()
@@ -11,13 +17,14 @@ export class CrewBoardImage {
 
   @Column()
   @Field(() => String)
-  url: string;
+  imgUrl: string;
 
   @Column()
   @Field(() => Boolean)
   isMain: boolean;
 
+  @JoinTable()
   @ManyToOne(() => CrewBoard)
   @Field(() => CrewBoard)
-  crewBoardId: CrewBoard;
+  crewBoard: CrewBoard;
 }
