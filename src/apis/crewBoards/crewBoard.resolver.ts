@@ -48,7 +48,7 @@ export class CrewBoardResolver {
 
   @Query(() => [[CrewBoard]])
   async fetchCrewBoardsTEST() {
-    return await this.crewBoardService.findAllDivideNine();
+    return await this.crewBoardService.findAllDivideNineForTest();
   }
 
   @UseGuards(GqlAuthAccessGuard)

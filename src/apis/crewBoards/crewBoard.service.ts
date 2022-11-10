@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { User } from '../users/entities/user.entity';
 import { CrewBoard } from './entities/crewBoard.entity';
 
 @Injectable()
@@ -8,26 +9,39 @@ export class CrewBoardService {
   constructor(
     @InjectRepository(CrewBoard)
     private readonly crewBoardRepository: Repository<CrewBoard>, //
+
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>, //
   ) {}
 
   findOneById({ crewBoardId }) {
     return this.crewBoardRepository.findOne({
       where: { id: crewBoardId },
+      relations: ['user', 'mountain'],
+    });
+  }
+
+  findAllByUserId({ userId }) {
+    return this.crewBoardRepository.find({
+      where: { user: { id: userId } },
     });
   }
 
   findAll() {
-    return this.crewBoardRepository.find();
+    return this.crewBoardRepository.find({
+      relations: ['user', 'mountain'],
+    });
   }
 
   findAllWithDeleted() {
     return this.crewBoardRepository.find({
       withDeleted: true,
+      relations: ['user', 'mountain'],
     });
   }
 
-  async findAllDivideNine() {
-    const crewBoard = await this.crewBoardRepository.find();
+  async findAllDivideNineForTest() {
+    const crewBoard = await this.findAll();
     const newCrewBoard = [];
 
     this.divideNine(crewBoard, newCrewBoard);
@@ -83,7 +97,7 @@ export class CrewBoardService {
     const newCrewBoard = [];
     const cutAlreadyDone = [];
     const today = new Date();
-    const crewBoard = await this.crewBoardRepository.find();
+    const crewBoard = await this.findAll();
 
     this.cutAlreadyDone(crewBoard, today, cutAlreadyDone);
     cutAlreadyDone.sort((a, b) => Number(b.createdAt) - Number(a.createdAt));
@@ -96,7 +110,7 @@ export class CrewBoardService {
     const newCrewBoard = [];
     const cutAlreadyDone = [];
     const today = new Date();
-    const crewBoard = await this.crewBoardRepository.find();
+    const crewBoard = await this.findAll();
 
     this.cutAlreadyDone(crewBoard, today, cutAlreadyDone);
 
@@ -114,7 +128,7 @@ export class CrewBoardService {
     const cutAlreadyDone = [];
     const pickedDate = [];
     const today = new Date();
-    const crewBoard = await this.crewBoardRepository.find();
+    const crewBoard = await this.findAll();
 
     this.cutAlreadyDone(crewBoard, today, cutAlreadyDone);
 
@@ -135,10 +149,24 @@ export class CrewBoardService {
     const { ...crewBoard } = createCrewBoardInput;
     const dateTime24h = this.changeDateTimeTo24h(crewBoard.dateTime);
     const dateStandard = crewBoard.date + ' ' + dateTime24h;
+
+    const checkVaildCrewBoard = await this.findAllByUserId({ userId });
+    if (checkVaildCrewBoard.length > 3) {
+      throw new Error('게시글은 3개까지만 작성 가능합니다!!!!');
+    }
+
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+    await this.userRepository.update(
+      { id: userId },
+      { point: user.point - 500 },
+    );
+
     return await this.crewBoardRepository.save({
       ...crewBoard,
       dateStandard: dateStandard,
-      userId: userId,
+      user: { id: userId },
     });
   }
 
@@ -146,6 +174,7 @@ export class CrewBoardService {
     const { ...crewBoard } = createCrewBoardInput;
     const dateTime24h = this.changeDateTimeTo24h(crewBoard.dateTime);
     const dateStandard = crewBoard.date + ' ' + dateTime24h;
+
     return await this.crewBoardRepository.save({
       ...crewBoard,
       dateStandard: dateStandard,
@@ -153,9 +182,7 @@ export class CrewBoardService {
   }
 
   async update({ crewBoardId, updateCrewBoardInput }) {
-    const crewBoard = await this.crewBoardRepository.findOne({
-      where: { id: crewBoardId },
-    });
+    const crewBoard = await this.findOneById({ crewBoardId });
     return this.crewBoardRepository.save({
       ...crewBoard,
       id: crewBoardId,
