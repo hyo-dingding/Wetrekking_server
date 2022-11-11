@@ -1,5 +1,6 @@
 import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
-import { CrewUserList } from 'src/apis/crewUserList/entities/crweUserListList.entity';
+import { CrewUserList } from 'src/apis/crewUserList/entities/crewUserListList.entity';
+
 import { User } from 'src/apis/users/entities/user.entity';
 import {
   Column,

@@ -2,8 +2,9 @@ import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GqlAuthAccessGuard } from 'src/commons/auth/gql-auth.guard';
 import { IContext } from 'src/commons/type/context';
+import { CrewBoard } from '../crewBoards/entities/crewBoard.entity';
 import { CrewUserListService } from './crewUserList.service';
-import { CrewUserList } from './entities/crweUserListList.entity';
+import { CrewUserList } from './entities/crewUserListList.entity';
 
 @Resolver()
 export class CrewUserListResolver {
@@ -22,6 +23,17 @@ export class CrewUserListResolver {
     const user = await this.crewUserListService.findAll({ userId });
 
     return user;
+  }
+
+  // 방장인 올린 게시글 조회
+  @UseGuards(GqlAuthAccessGuard)
+  @Query(() => [CrewBoard])
+  async fetchHostCrewList(
+    @Context() context: IContext, //
+  ) {
+    const userId = context.req.user.id;
+
+    return await this.crewUserListService.findHostList({ userId });
   }
 
   // 크루 리스트 추가
@@ -47,6 +59,7 @@ export class CrewUserListResolver {
     return '크루 신청이 취소 되었습니다.';
   }
 
+  // 크루 수락
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => CrewUserList)
   async acceptCrew(
@@ -58,6 +71,7 @@ export class CrewUserListResolver {
     });
   }
 
+  // 크루 거절
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => CrewUserList)
   async rejectCrew(

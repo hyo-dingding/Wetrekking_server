@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CrewUserList } from './entities/crweUserListList.entity';
+import { CrewBoard } from '../crewBoards/entities/crewBoard.entity';
+import { CrewUserList } from './entities/crewUserListList.entity';
 
 @Injectable()
 export class CrewUserListService {
   @InjectRepository(CrewUserList)
   private readonly crewUserListRepository: Repository<CrewUserList>;
+
+  @InjectRepository(CrewBoard)
+  private readonly crewBoardRepository: Repository<CrewBoard>; //
 
   async findAll({ userId }) {
     const result = [];
@@ -22,6 +26,13 @@ export class CrewUserListService {
     return await this.crewUserListRepository.find({
       where: { user: { id: userId }, status: '완료' },
       relations: ['user', 'crewBoard'],
+    });
+  }
+
+  async findHostList({ userId }) {
+    return await this.crewBoardRepository.find({
+      where: { user: { id: userId } },
+      relations: ['user'],
     });
   }
 
