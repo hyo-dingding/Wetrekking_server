@@ -12,7 +12,7 @@ export class ReviewBoardImageService {
 
   async findByReviewBoardId({ reviewBoardId }) {
     return await this.reviewBoardImageRepository.find({
-      where: { reviewBoardId },
+      where: { reviewBoard: { id: reviewBoardId } },
     });
   }
 
@@ -26,7 +26,7 @@ export class ReviewBoardImageService {
       await this.reviewBoardImageRepository.save({
         imgUrl: imgUrl[i],
         isMain: i === 0 ? true : false,
-        reviewBoardId: reviewBoardId,
+        reviewBoard: { id: reviewBoardId },
       });
       return await this.findByReviewBoardId({
         reviewBoardId,
@@ -35,6 +35,8 @@ export class ReviewBoardImageService {
   }
 
   delete({ reviewBoardId }) {
-    return this.reviewBoardImageRepository.delete({ reviewBoardId });
+    return this.reviewBoardImageRepository.delete({
+      reviewBoard: { id: reviewBoardId },
+    });
   }
 }
