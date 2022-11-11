@@ -19,5 +19,5 @@ export class ReviewBoardImage {
 
   @ManyToOne(() => ReviewBoard)
   @Field(() => ReviewBoard)
-  reviewBoardId: ReviewBoard;
+  reviewBoard: ReviewBoard;
 }
