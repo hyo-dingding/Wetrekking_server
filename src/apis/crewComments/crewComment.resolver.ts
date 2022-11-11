@@ -108,15 +108,16 @@ export class CrewCommentResolver {
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => CrewComment)
   updateCrewSubComment(
-    @Args('updateSubCrewCommentInput')
-    updateSubCrewCommentInput: UpdateSubCrewCommentInput, //
+    @Args('updateComment') updateComment: string, //
+    @Args('subCommentId') subCommentId: string,
     @Context() context: IContext,
   ) {
     const user = context.req.user.email;
 
     return this.crewCommentService.updateSub({
       user,
-      updateSubCrewCommentInput,
+      updateComment,
+      subCommentId,
     });
   }
 
