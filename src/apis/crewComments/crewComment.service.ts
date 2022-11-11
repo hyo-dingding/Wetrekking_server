@@ -224,8 +224,8 @@ export class CrewCommentService {
       relations: ['crewBoard', 'user'],
     });
 
-    if (user !== comment.user.email)
-      throw new ConflictException('아이디가 다릅니다');
+    // if (user !== comment.user.email)
+    //   throw new ConflictException('아이디가 다릅니다');
 
     const result = await this.crewCommentRepository.softDelete({
       subCrewComment: commentId,
