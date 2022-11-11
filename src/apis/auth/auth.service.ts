@@ -64,7 +64,7 @@ export class AuthService {
     }
     // console.log(user);
 
-    this.setRefreshToken({ user, res, req });
+    // this.setRefreshToken({ user, res, req });
     // console.log(user);
     // redirect 페이지 이동 다시 내페이지로 다시옴.
     // 추가정보 입력하는 url로 이동하기
