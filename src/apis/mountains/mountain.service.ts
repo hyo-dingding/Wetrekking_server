@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import axios from 'axios';
+// import axios from 'axios';
 import { Repository } from 'typeorm';
 import { Mountain } from './entities/mountain.entity';
 
@@ -11,25 +11,41 @@ export class MountainService {
     private readonly mountainRepository: Repository<Mountain>,
   ) {}
 
-  async findMountain() {
-    const mountainInfo = await axios({
-      url: 'http://apis.data.go.kr/1400000/service/cultureInfoService/mntInfoOpenAPI',
-      method: 'GET',
-      params: {
-        ServiceKey:
-          'aNXB1+3YRqxOxUCPE6Adxuaqb/ELwQ1hN/cJEtCrdiOwP2NVnyBfcQxtp8NmE8muyxDMha4fc67TCY0k//1skA==',
-        searchWrd: '산',
-        // searchWrd: `${mountain}`,
-      },
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).catch((err) => {
-      throw err;
+  // async findMountainOpenAPI() {
+  //   const mountainInfo = await axios({
+  //     url: 'http://apis.data.go.kr/1400000/service/cultureInfoService/mntInfoOpenAPI',
+  //     method: 'GET',
+  //     params: {
+  //       ServiceKey:
+  //         'aNXB1+3YRqxOxUCPE6Adxuaqb/ELwQ1hN/cJEtCrdiOwP2NVnyBfcQxtp8NmE8muyxDMha4fc67TCY0k//1skA==',
+  //       searchWrd: '산',
+  //       // searchWrd: `${mountain}`,
+  //     },
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //   }).catch((err) => {
+  //     throw err;
+  //   });
+  //   console.log(mountainInfo.data.response.body.items.item);
+  //   const result = mountainInfo.data.response.body.items.item;
+  //   return result;
+  // }
+
+  findMountain({ mountainId }) {
+    return this.mountainRepository.findOne({
+      where: { id: mountainId },
     });
-    console.log(mountainInfo.data.response.body.items.item);
-    const result = mountainInfo.data.response.body.items.item;
-    return result;
+  }
+
+  findMountains({ mountain }) {
+    return this.mountainRepository.find({
+      where: { mountain },
+    });
+  }
+
+  findAllMountains() {
+    return this.mountainRepository.find();
   }
 
   async create() {
