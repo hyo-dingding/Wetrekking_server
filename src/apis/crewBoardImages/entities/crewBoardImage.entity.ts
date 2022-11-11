@@ -16,8 +16,12 @@ export class CrewBoardImage {
   id: string;
 
   @Column()
-  @Field(() => [String])
-  imgUrl: string[];
+  @Field(() => String)
+  imgUrl: string;
+
+  @Column()
+  @Field(() => Boolean)
+  isMain: boolean;
 
   @JoinTable()
   @ManyToOne(() => CrewBoard)

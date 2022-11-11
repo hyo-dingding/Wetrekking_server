@@ -22,10 +22,14 @@ export class CrewBoardImageService {
 
   async upload({ imgUrl, crewBoardId }) {
     this.delete({ crewBoardId });
-    return await this.crewBoardImageRepository.save({
-      imgUrl: imgUrl,
-      crewBoardId: crewBoardId,
-    });
+    for (let i = 0; i < imgUrl.length; i++) {
+      await this.crewBoardImageRepository.save({
+        imgUrl: imgUrl[i],
+        isMain: i === 0 ? true : false,
+        crewBoardId: { id: crewBoardId },
+      });
+    }
+    return await this.findByCrewBoardId({ crewBoardId });
   }
 
   delete({ crewBoardId }) {
