@@ -126,6 +126,7 @@ export class CrewCommentResolver {
     @Context() context: IContext, //
     @Args('commentId') commentId: string,
   ) {
-    return this.crewCommentService.deleteSub({ commentId, context });
+    const userId = context.req.user.id;
+    return this.crewCommentService.deleteSub({ commentId, userId });
   }
 }

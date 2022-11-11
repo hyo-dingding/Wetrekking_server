@@ -217,18 +217,20 @@ export class CrewCommentService {
 
   // 대댓글 삭제
 
-  async deleteSub({ commentId, context }) {
-    const user = context.req.user.email;
-    const comment = await this.crewCommentRepository.findOne({
+  async deleteSub({ commentId, userId }) {
+    const comment = await this.crewCommentRepository.find({
       where: { subCrewComment: { id: commentId } },
       relations: ['crewBoard', 'user'],
     });
 
-    // if (user !== comment.user.email)
+    console.log(comment);
+
+    // if (user !== comment.userId)
     //   throw new ConflictException('아이디가 다릅니다');
 
     const result = await this.crewCommentRepository.softDelete({
       subCrewComment: commentId,
+      user: { id: userId },
     });
 
     return result.affected ? true : false;
