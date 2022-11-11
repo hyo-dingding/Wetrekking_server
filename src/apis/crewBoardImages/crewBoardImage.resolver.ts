@@ -25,14 +25,6 @@ export class CrewBoardImageResolver {
     @Args({ name: 'imgURL', type: () => [String] }) imgUrl: string[],
     @Args('crewBoardId') crewBoardId: string,
   ) {
-    this.crewBoardImageService.delete({ crewBoardId });
-    for (let i = 0; i < imgUrl.length; i++) {
-      await this.crewBoardImageService.upload({
-        imgUrl: imgUrl[i],
-        isMain: i === 0 ? true : false,
-        crewBoardId: crewBoardId,
-      });
-    }
-    return await this.crewBoardImageService.findByCrewBoardId({ crewBoardId });
+    return this.crewBoardImageService.upload({ imgUrl, crewBoardId });
   }
 }

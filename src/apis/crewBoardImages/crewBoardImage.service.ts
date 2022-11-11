@@ -20,12 +20,16 @@ export class CrewBoardImageService {
     return await this.crewBoardImageRepository.find({});
   }
 
-  upload({ imgUrl, isMain, crewBoardId }) {
-    return this.crewBoardImageRepository.save({
-      imgUrl,
-      isMain,
-      crewBoard: crewBoardId,
-    });
+  async upload({ imgUrl, crewBoardId }) {
+    this.delete({ crewBoardId });
+    for (let i = 0; i < imgUrl.length; i++) {
+      await this.crewBoardImageRepository.save({
+        imgUrl: imgUrl[i],
+        isMain: i === 0 ? true : false,
+        crewBoardId: crewBoardId,
+      });
+    }
+    return await this.findByCrewBoardId({ crewBoardId });
   }
 
   delete({ crewBoardId }) {

@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CrewBoardImageResolver } from '../crewBoardImages/crewBoardImage.resolver';
 import { CrewBoardImageService } from '../crewBoardImages/crewBoardImage.service';
 import { CrewBoardImage } from '../crewBoardImages/entities/crewBoardImage.entity';
 import { User } from '../users/entities/user.entity';
@@ -19,7 +18,6 @@ import { CrewBoard } from './entities/crewBoard.entity';
   providers: [
     CrewBoardResolver,
     CrewBoardService, //
-    CrewBoardImageResolver,
     CrewBoardImageService,
   ],
 })

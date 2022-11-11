@@ -2,7 +2,7 @@ import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GqlAuthAccessGuard } from 'src/commons/auth/gql-auth.guard';
 import { IContext } from 'src/commons/type/context';
-import { CrewBoardImageResolver } from '../crewBoardImages/crewBoardImage.resolver';
+import { CrewBoardImageService } from '../crewBoardImages/crewBoardImage.service';
 import { CrewBoardService } from './crewBoard.service';
 import { CreateCrewBoardInput } from './dto/createCrewBoard.input';
 import { UpdateCrewBoardInput } from './dto/updateCrewBoard.input';
@@ -12,7 +12,7 @@ import { CrewBoard } from './entities/crewBoard.entity';
 export class CrewBoardResolver {
   constructor(
     private readonly crewBoardService: CrewBoardService, //
-    private readonly crewBoardImageResolver: CrewBoardImageResolver, //
+    private readonly crewBoardImageService: CrewBoardImageService, //
   ) {}
 
   @Query(() => CrewBoard)
@@ -68,7 +68,7 @@ export class CrewBoardResolver {
     });
 
     const crewBoardId = result.id;
-    await this.crewBoardImageResolver.uploadCrewBoardImage(imgUrl, crewBoardId);
+    await this.crewBoardImageService.upload({ imgUrl, crewBoardId });
 
     return result;
   }

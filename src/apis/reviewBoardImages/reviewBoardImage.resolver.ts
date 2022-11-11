@@ -25,16 +25,6 @@ export class ReviewBoardImageResolver {
     @Args({ name: 'imgURL', type: () => [String] }) imgUrl: string[],
     @Args('reviewBoardId') reviewBoardId: string,
   ) {
-    this.reviewBoardImageService.delete({ reviewBoardId });
-    for (let i = 0; i < imgUrl.length; i++) {
-      await this.reviewBoardImageService.upload({
-        imgUrl: imgUrl[i],
-        isMain: i === 0 ? true : false,
-        reviewBoardId: reviewBoardId,
-      });
-    }
-    return await this.reviewBoardImageService.findByReviewBoardId({
-      reviewBoardId,
-    });
+    return this.reviewBoardImageService.upload({ imgUrl, reviewBoardId });
   }
 }

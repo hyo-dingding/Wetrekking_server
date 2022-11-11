@@ -1,9 +1,12 @@
 import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
 import { CrewUserList } from 'src/apis/crewUserList/entities/crweUserListList.entity';
+import { User } from 'src/apis/users/entities/user.entity';
 import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -31,13 +34,10 @@ export class ReviewBoard {
   @Field(() => Int)
   like: number;
 
-  // @ManyToOne(() => User)
-  // @Field(() => User)
-  // userId: User;
-
-  // @ManyToOne(() => CrewBoard)
-  // @Field(() => CrewBoard)
-  // crewBoardId: CrewBoard;
+  @JoinTable()
+  @ManyToOne(() => User)
+  @Field(() => User)
+  user: User;
 
   @JoinColumn()
   @OneToOne(() => CrewUserList)
