@@ -20,15 +20,21 @@ export class ReviewBoardImageService {
     return await this.reviewBoardImageRepository.find({});
   }
 
-  upload({ imgUrl, isMain, reviewBoardId }) {
-    return this.reviewBoardImageRepository.save({
-      imgUrl,
-      isMain,
-      reviewBoardId,
-    });
+  async upload({ imgUrl, reviewBoardId }) {
+    this.delete({ reviewBoardId });
+    for (let i = 0; i < imgUrl.length; i++) {
+      await this.reviewBoardImageRepository.save({
+        imgUrl: imgUrl[i],
+        isMain: i === 0 ? true : false,
+        reviewBoardId: reviewBoardId,
+      });
+      return await this.findByReviewBoardId({
+        reviewBoardId,
+      });
+    }
   }
 
   delete({ reviewBoardId }) {
-    this.reviewBoardImageRepository.delete({ reviewBoardId });
+    return this.reviewBoardImageRepository.delete({ reviewBoardId });
   }
 }
