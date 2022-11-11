@@ -68,7 +68,8 @@ export class AuthService {
     // console.log(user);
     // redirect 페이지 이동 다시 내페이지로 다시옴.
     // 추가정보 입력하는 url로 이동하기
-    res.redirect('http://127.0.0.1:5500/social-login.html');
+    // res.redirect('http://127.0.0.1:5500/src/apis/auth/social-login.html');
+    res.redirect('http://localhost:3000/social');
 
     //  소셜로그인 완료 후 Redirect 되면 nickname, phone, gender 입력하게 하기
   }

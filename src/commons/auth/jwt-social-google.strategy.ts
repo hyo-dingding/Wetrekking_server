@@ -21,7 +21,7 @@ export class JwtGoogleStrategy extends PassportStrategy(Strategy, 'google') {
 
     return {
       // req.user ={값이 이안에 들어감} 리턴된 값 넣어주기
-      email: profile.emails[0].value,
+      email: profile.email,
       password: profile.id,
       name: profile.displayName,
 
