@@ -19,10 +19,11 @@ export class JwtNaverStrategy extends PassportStrategy(Strategy, 'naver') {
       // req.user ={값이 이안에 들어감} 리턴된 값 넣어주기
       email: profile.email,
       password: profile.id,
-      name: profile.displayName,
+      name: profile.name,
       nickname: profile.nickname,
       phone: profile.mobile,
       gender: profile.gender,
+      birth: '',
       // age: profile.birthday.slice(2),
     };
   }
