@@ -119,6 +119,10 @@ export class CrewCommentService {
       id: commentId,
     });
 
+    await this.crewCommentRepository.softDelete({
+      subCrewComment: { id: commentId },
+    });
+
     return result.affected ? true : false;
   }
   // 대댓글 조회
@@ -220,8 +224,8 @@ export class CrewCommentService {
       relations: ['crewBoard', 'user'],
     });
 
-    if (user !== comment.user.email)
-      throw new ConflictException('아이디가 다릅니다');
+    // if (user !== comment.user.email)
+    //   throw new ConflictException('아이디가 다릅니다');
 
     const result = await this.crewCommentRepository.softDelete({
       subCrewComment: commentId,
