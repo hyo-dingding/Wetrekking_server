@@ -31,7 +31,7 @@ export class PhoneResolver {
       await this.cacheManager.set(phone, phoneToken, { ttl: 800 });
       this.cacheManager.get(phone).then((res) => console.log(res));
 
-      return '인증번호 전송 완료 되었습니다';
+      return `${phoneToken}`;
     } catch (error) {
       // user에 이미 핸드폰번호가 등록되있으면 에러 띄우기
       const checkUserPhone = this.userService.findOne({ phone });
