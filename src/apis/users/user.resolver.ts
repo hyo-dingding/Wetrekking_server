@@ -145,8 +145,8 @@ export class UserResolver {
     @Args('updateUserInput') updateUserInput: UpdateUserInput,
     // @Args('createSocialUserInput') createSocialUserInput: CreateSocialUserInput,
   ) {
-    const userId = context.req.user.id;
-    console.log(userId);
+    const email = context.req.user.email;
+    console.log(email);
 
     // const user = await this.userService.findOne({ email });
 
@@ -159,7 +159,7 @@ export class UserResolver {
     // userRepository 에서 해당 정보 객체로 받아오기
     // user null값부분 업데이트하기
     return this.userService.update({
-      userId,
+      email,
       updateUserInput,
     });
   }
@@ -182,7 +182,7 @@ export class UserResolver {
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => User)
   async updateUser(
-    @Args('userId') userId: string, //
+    @Args('email') email: string, //
     @Args('updateUserInput') updateUserInput: UpdateUserInput,
   ) {
     if (updateUserInput.phone) {
@@ -192,7 +192,7 @@ export class UserResolver {
       }
     }
 
-    return this.userService.update({ userId, updateUserInput });
+    return this.userService.update({ email, updateUserInput });
   }
 
   // 유저 삭제
