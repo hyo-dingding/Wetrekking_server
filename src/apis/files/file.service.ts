@@ -76,7 +76,7 @@ export class FileService {
       keyFilename: process.env.STORAGE_KEY_FILE_NAME,
     }).bucket(bucket);
 
-    const result = file
+    file
       .createReadStream()
       .pipe(
         storage.file(`userProfile/${uuid}${file.filename}`).createWriteStream(),
@@ -84,6 +84,6 @@ export class FileService {
       .on('finish', () => `${bucket}/userProfile/${uuid}${file.filename}`)
       .on('error', () => console.log('실패'));
 
-    return result;
+    return `${bucket}/userProfile/${uuid}${file.filename}`;
   }
 }
