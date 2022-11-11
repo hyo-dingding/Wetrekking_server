@@ -215,11 +215,11 @@ export class CrewCommentService {
 
   // 대댓글 삭제
 
-  async deleteSub({ commentId, userId }) {
-    const comment = await this.crewCommentRepository.find({
-      where: { subCrewComment: { id: commentId } },
-      relations: ['crewBoard', 'user'],
-    });
+  async deleteSub({ subCommentId, userId }) {
+    // const comment = await this.crewCommentRepository.find({
+    //   where: { subCrewComment: { id: commentId } },
+    //   relations: ['crewBoard', 'user'],
+    // });
 
     // console.log(comment);
 
@@ -227,7 +227,7 @@ export class CrewCommentService {
     //   throw new ConflictException('아이디가 다릅니다');
 
     const result = await this.crewCommentRepository.softDelete({
-      subCrewComment: { id: commentId },
+      id: subCommentId,
       user: { id: userId },
     });
 

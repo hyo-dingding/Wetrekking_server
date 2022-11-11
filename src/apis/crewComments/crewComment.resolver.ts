@@ -125,9 +125,9 @@ export class CrewCommentResolver {
   @Mutation(() => Boolean)
   deleteCrewSubComment(
     @Context() context: IContext, //
-    @Args('commentId') commentId: string,
+    @Args('subCommentId') subCommentId: string,
   ) {
     const userId = context.req.user.id;
-    return this.crewCommentService.deleteSub({ commentId, userId });
+    return this.crewCommentService.deleteSub({ subCommentId, userId });
   }
 }
