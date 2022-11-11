@@ -26,7 +26,7 @@ export class CrewBoardImageService {
       await this.crewBoardImageRepository.save({
         imgUrl: imgUrl[i],
         isMain: i === 0 ? true : false,
-        crewBoardId: crewBoardId,
+        crewBoardId: { id: crewBoardId },
       });
     }
     return await this.findByCrewBoardId({ crewBoardId });
