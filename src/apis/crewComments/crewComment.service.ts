@@ -119,6 +119,10 @@ export class CrewCommentService {
       id: commentId,
     });
 
+    await this.crewCommentRepository.softDelete({
+      subCrewComment: { id: commentId },
+    });
+
     return result.affected ? true : false;
   }
   // 대댓글 조회
