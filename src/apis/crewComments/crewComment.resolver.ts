@@ -108,15 +108,16 @@ export class CrewCommentResolver {
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => CrewComment)
   updateCrewSubComment(
-    @Args('updateSubCrewCommentInput')
-    updateSubCrewCommentInput: UpdateSubCrewCommentInput, //
+    @Args('updateComment') updateComment: string, //
+    @Args('subCommentId') subCommentId: string,
     @Context() context: IContext,
   ) {
     const user = context.req.user.email;
 
     return this.crewCommentService.updateSub({
       user,
-      updateSubCrewCommentInput,
+      updateComment,
+      subCommentId,
     });
   }
 
@@ -124,9 +125,9 @@ export class CrewCommentResolver {
   @Mutation(() => Boolean)
   deleteCrewSubComment(
     @Context() context: IContext, //
-    @Args('commentId') commentId: string,
+    @Args('subCommentId') subCommentId: string,
   ) {
     const userId = context.req.user.id;
-    return this.crewCommentService.deleteSub({ commentId, userId });
+    return this.crewCommentService.deleteSub({ subCommentId, userId });
   }
 }

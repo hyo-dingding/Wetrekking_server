@@ -192,11 +192,9 @@ export class CrewCommentService {
   }
 
   // 대댓글 수정
-  async updateSub({ user, updateSubCrewCommentInput }) {
-    const { subComment, parentId } = updateSubCrewCommentInput;
-
+  async updateSub({ user, subCommentId, updateComment }) {
     const findSubComment = await this.crewCommentRepository.findOne({
-      where: { subCrewComment: { id: parentId } },
+      where: { id: subCommentId },
       relations: ['crewBoard', 'user'],
     });
     console.log(findSubComment);
@@ -210,26 +208,26 @@ export class CrewCommentService {
 
     return await this.crewCommentRepository.save({
       ...findSubComment,
-      comment: subComment,
-      ...updateSubCrewCommentInput,
+      id: subCommentId,
+      comment: updateComment,
     });
   }
 
   // 대댓글 삭제
 
-  async deleteSub({ commentId, userId }) {
-    const comment = await this.crewCommentRepository.find({
-      where: { subCrewComment: { id: commentId } },
-      relations: ['crewBoard', 'user'],
-    });
+  async deleteSub({ subCommentId, userId }) {
+    // const comment = await this.crewCommentRepository.find({
+    //   where: { subCrewComment: { id: commentId } },
+    //   relations: ['crewBoard', 'user'],
+    // });
 
-    console.log(comment);
+    // console.log(comment);
 
     // if (user !== comment.userId)
     //   throw new ConflictException('아이디가 다릅니다');
 
     const result = await this.crewCommentRepository.softDelete({
-      subCrewComment: commentId,
+      id: subCommentId,
       user: { id: userId },
     });
 
