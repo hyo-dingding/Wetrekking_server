@@ -33,10 +33,11 @@ export class ReviewCommentService {
   async create({ user, reviewBoardId, reviewComment }) {
     const findId = await this.reviewBoardRepository.findOne({
       where: { id: reviewBoardId },
+      relations: ['user', 'reviewBoard'],
     });
 
     const findUser = await this.userRepository.findOne({
-      where: { email: user },
+      where: { id: user },
     });
 
     return await this.reviewCommentRepository.save({
@@ -49,7 +50,11 @@ export class ReviewCommentService {
   async update({ user, reviewCommentId, updateComment }) {
     const findReview = await this.reviewCommentRepository.findOne({
       where: { id: reviewCommentId },
+      relations: ['user', 'reviewBoard'],
     });
+
+    if (user !== findReview.user.id)
+      throw new ConflictException('아이디가 맞지 않습니다.');
 
     return await this.reviewCommentRepository.save({
       ...findReview,
@@ -59,11 +64,12 @@ export class ReviewCommentService {
   }
 
   async delete({ user, reviewCommentId }) {
-    const findUser = await this.userRepository.findOne({
-      where: { email: user },
+    const findReview = await this.reviewCommentRepository.findOne({
+      where: { id: reviewCommentId },
+      relations: ['user', 'reviewBoard'],
     });
 
-    if (user !== findUser.email)
+    if (user !== findReview.user.id)
       throw new ConflictException('아이디가 맞지 않습니다.');
 
     const result = await this.reviewCommentRepository.softDelete({
