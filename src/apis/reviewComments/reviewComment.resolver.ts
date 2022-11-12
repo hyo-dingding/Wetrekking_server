@@ -31,7 +31,7 @@ export class ReviewCommentResolver {
     @Args('reviewComment') reviewComment: string,
     @Context() context: IContext,
   ) {
-    const user = context.req.user.email;
+    const user = context.req.user.id;
     return this.reviewCommentService.create({
       user,
       reviewBoardId,
@@ -46,7 +46,7 @@ export class ReviewCommentResolver {
     @Args('updateComment') updateComment: string,
     @Context() context: IContext,
   ) {
-    const user = context.req.user.email;
+    const user = context.req.user.id;
     return this.reviewCommentService.update({
       user,
       reviewCommentId,
@@ -60,7 +60,7 @@ export class ReviewCommentResolver {
     @Args('reviewCommentId') reviewCommentId: string, //
     @Context() context: IContext,
   ) {
-    const user = context.req.user.email;
+    const user = context.req.user.id;
     return this.reviewCommentService.delete({ user, reviewCommentId });
   }
 }
