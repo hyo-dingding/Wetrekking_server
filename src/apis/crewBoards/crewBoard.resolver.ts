@@ -85,8 +85,16 @@ export class CrewBoardResolver {
   updateCrewBoard(
     @Args('crewBoardId') crewBoardId: string,
     @Args('updateCrewBoardInput') updateCrewBoardInput: UpdateCrewBoardInput,
+    @Args({ name: 'imgURL', type: () => [String] }) imgUrl: string[],
   ) {
-    return this.crewBoardService.update({ crewBoardId, updateCrewBoardInput });
+    const result = this.crewBoardService.update({
+      crewBoardId,
+      updateCrewBoardInput,
+    });
+    if (imgUrl) {
+      this.crewBoardImageService.upload({ imgUrl, crewBoardId });
+    }
+    return result;
   }
 
   @UseGuards(GqlAuthAccessGuard)

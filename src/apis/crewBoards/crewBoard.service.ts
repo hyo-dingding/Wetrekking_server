@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, UsingJoinColumnOnlyOnOneSideAllowedError } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { CrewBoard } from './entities/crewBoard.entity';
 
@@ -152,7 +152,8 @@ export class CrewBoardService {
 
     const checkVaildCrewBoard = await this.findAllByUserId({ userId });
     if (checkVaildCrewBoard.length >= 3) {
-      throw new Error('게시글은 3개까지만 작성 가능합니다!!!!');
+      // throw new Error('게시글은 3개까지만 작성 가능합니다!!!!');
+      console.log('게시글이 많지만 개발 중이기에 넘어가준다.');
     }
 
     const user = await this.userRepository.findOne({
@@ -160,12 +161,14 @@ export class CrewBoardService {
     });
 
     if (user.point < 500) {
-      throw new Error('포인트가 부족합니다!!!!!');
+      // throw new Error('포인트가 부족합니다!!!!!');
+      console.log('포인트가 부족하지만 개발 중이기에 넘어가준다.');
     }
 
     await this.userRepository.update(
       { id: userId },
-      { point: user.point - 500 },
+      // { point: user.point - 500 },
+      { point: user.point }, // 개발중으로 아직 포인트 안뻇어감
     );
 
     return await this.crewBoardRepository.save({
