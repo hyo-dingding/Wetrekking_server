@@ -22,8 +22,12 @@ export class MountainResolver {
 
   @Query(() => [Mountain])
   async fetchMountainsWithSearch(
-    @Args('search') search: string, //
+    @Args('search') search?: string, //
   ) {
+    if (!search) {
+      return this.mountainService.findAllMountains();
+    }
+
     const elasticResult = await this.elasticsearchService.search({
       index: 'mymountain',
       query: {
