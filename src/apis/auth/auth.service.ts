@@ -64,14 +64,13 @@ export class AuthService {
     }
     // console.log(user);
 
-    const aaa = this.setRefreshToken({ user, res, req });
-    console.log('!!!!!!!!');
-    console.log(aaa);
+    this.setRefreshToken({ user, res, req });
+
     // redirect 페이지 이동 다시 내페이지로 다시옴.
     // 추가정보 입력하는 url로 이동하기
-    // res.redirect('http://127.0.0.1:5500/src/apis/auth/social.html');
-    res.redirect('http://localhost:3000/social');
-
-    //  소셜로그인 완료 후 Redirect 되면 nickname, phone, gender 입력하게 하기
+    res.redirect(
+      'https://develop.wetrekking.kr/social?code=4%2F0AfgeXvv-n13dee-Uia1DROoJ5p0oOWAuqkgHCWdQfntDtywnn4vpOU2tmkDvxHTwiI7_qg&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&authuser=0&prompt=consent',
+    );
+    // res.redirect('http://localhost:3000/social');
   }
 }
