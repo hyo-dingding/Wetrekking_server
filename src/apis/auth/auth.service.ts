@@ -26,6 +26,7 @@ export class AuthService {
     const allowedOrigins = [
       'http://localhost:3000',
       'https://develop.wetrekking.kr',
+      'http://127.0.0.1:5500',
     ];
     const origin = req.headers.origin;
     if (allowedOrigins.includes(origin)) {
@@ -48,6 +49,7 @@ export class AuthService {
 
   async socialLogin({ req, res }) {
     // 1. 회원조회
+
     const user = await this.userService.findOne({ email: req.user.email });
 
     // 2. 회원가입이 안되있다면 자동회원가입
@@ -59,18 +61,11 @@ export class AuthService {
         10,
       );
       await this.userService.createSocial({ createSocialUserInput });
+      res.redirect('http://localhost:3000/social');
+    } else {
+      this.setRefreshToken({ user, res, req });
 
-      // User.push(createUserInput);
+      res.redirect('http://localhost:3000');
     }
-    // console.log(user);
-
-    this.setRefreshToken({ user, res, req });
-
-    // redirect 페이지 이동 다시 내페이지로 다시옴.
-    // 추가정보 입력하는 url로 이동하기
-    res.redirect(
-      'http://localhost:3000/social?code=4%2F0AfgeXvv-n13dee-Uia1DROoJ5p0oOWAuqkgHCWdQfntDtywnn4vpOU2tmkDvxHTwiI7_qg&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&authuser=0&prompt=consent',
-    );
-    // res.redirect('http://localhost:3000/social');
   }
 }

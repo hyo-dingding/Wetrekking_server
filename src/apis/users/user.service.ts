@@ -39,6 +39,7 @@ export class UserService {
 
   createSocial({ createSocialUserInput }) {
     const { ...user } = createSocialUserInput;
+
     return this.userRepository.save({ ...user });
   }
 
