@@ -1,12 +1,12 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 @ObjectType()
 export class Mountain {
   @PrimaryGeneratedColumn('uuid')
-  @Field(() => Int)
-  id: number;
+  @Field(() => String)
+  id: string;
 
   @Column()
   @Field(() => String)
