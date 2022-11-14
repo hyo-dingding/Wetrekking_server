@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, UsingJoinColumnOnlyOnOneSideAllowedError } from 'typeorm';
+import { Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { CrewBoard } from './entities/crewBoard.entity';
 
@@ -12,6 +13,8 @@ export class CrewBoardService {
 
     @InjectRepository(User)
     private readonly userRepository: Repository<User>, //
+
+    private readonly elasticsearchService: ElasticsearchService,
   ) {}
 
   findOneById({ crewBoardId }) {
@@ -123,26 +126,66 @@ export class CrewBoardService {
     return newCrewBoard;
   }
 
-  async findByDate({ startDate, endDate }) {
-    const newCrewBoard = [];
-    const cutAlreadyDone = [];
-    const pickedDate = [];
+  async findBySearch({ region, startDate, endDate, search }) {
+    // const newCrewBoard = [];
+    // const cutAlreadyDone = [];
+    // const pickedDate = [];
+    let crewBoard;
+    let newCrewBoard;
+    const result = [];
     const today = new Date();
-    const crewBoard = await this.findAll();
 
-    this.cutAlreadyDone(crewBoard, today, cutAlreadyDone);
+    if (search) {
+      crewBoard = await this.elasticsearchService.search({
+        index: 'myproduct_new',
+        query: {
+          match_phrase_prefix: {
+            name: search,
+          },
+        },
+      });
+      console.log(JSON.stringify(crewBoard, null, ' '));
+      newCrewBoard = crewBoard.hits.hits.map((el) => {
+        return el._source;
+      });
 
-    cutAlreadyDone.map((x) =>
-      Date.parse(startDate) <= Date.parse(x.date) &&
-      Date.parse(x.date) < Date.parse(endDate) + 86400000
-        ? pickedDate.push(x)
-        : x,
-    );
-    pickedDate.sort((a, b) => Number(a.dateStandard) - Number(b.dateStandard));
+      if (!result[0]) {
+        throw new Error(`검색어 [${search}]로 조회된 검색결과가 없습니다`);
+      }
+    } else {
+      crewBoard = await this.findAll();
+      newCrewBoard = [];
+    }
 
-    this.divideNine(pickedDate, newCrewBoard);
+    this.cutAlreadyDone(crewBoard, today, newCrewBoard);
 
-    return newCrewBoard;
+    if (region) {
+      newCrewBoard.filter((x) => x.mountain.address[0] === region);
+      console.log(newCrewBoard);
+    }
+
+    if (startDate) {
+      newCrewBoard.filter(
+        (x) =>
+          Date.parse(startDate) <= Date.parse(x.date) &&
+          Date.parse(x.date) < Date.parse(endDate) + 86400000,
+      );
+      console.log(newCrewBoard);
+    }
+
+    this.divideNine(newCrewBoard, result);
+
+    return result;
+
+    // cutAlreadyDone.map((x) =>
+    //   Date.parse(startDate) <= Date.parse(x.date) &&
+    //   Date.parse(x.date) < Date.parse(endDate) + 86400000
+    //     ? pickedDate.push(x)
+    //     : x,
+    // );
+    // pickedDate.sort((a, b) => Number(a.dateStandard) - Number(b.dateStandard));
+    // this.divideNine(pickedDate, newCrewBoard);
+    // return newCrewBoard;
   }
 
   async create({ userId, createCrewBoardInput }) {

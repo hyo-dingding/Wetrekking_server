@@ -41,11 +41,18 @@ export class CrewBoardResolver {
   }
 
   @Query(() => [[CrewBoard]])
-  async fetchCrewBoardsByDate(
-    @Args('startDate') startDate: string,
-    @Args('endDate') endDate: string,
+  async fetchCrewBoardsBySearch(
+    @Args('region') region?: string,
+    @Args('startDate') startDate?: string,
+    @Args('endDate') endDate?: string,
+    @Args('search') search?: string,
   ) {
-    return await this.crewBoardService.findByDate({ startDate, endDate });
+    await this.crewBoardService.findBySearch({
+      region,
+      startDate,
+      endDate,
+      search,
+    });
   }
 
   @Query(() => [[CrewBoard]])

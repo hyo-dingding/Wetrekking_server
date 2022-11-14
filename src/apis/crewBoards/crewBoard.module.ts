@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CrewBoardImageService } from '../crewBoardImages/crewBoardImage.service';
 import { CrewBoardImage } from '../crewBoardImages/entities/crewBoardImage.entity';
@@ -14,6 +15,9 @@ import { CrewBoard } from './entities/crewBoard.entity';
       CrewBoardImage,
       User,
     ]),
+    ElasticsearchModule.register({
+      node: 'http://elasticsearch:9200',
+    }),
   ],
   providers: [
     CrewBoardResolver,
