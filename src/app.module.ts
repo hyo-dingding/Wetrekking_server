@@ -25,9 +25,11 @@ import { MountainModule } from './apis/mountains/mountain.module';
 import { LikeModule } from './apis/likes/like.module';
 import { AppController } from './app.controller';
 import { ReviewBoardImageModule } from './apis/reviewBoardImages/reviewBoardImage.module';
+import { TrekkingModule } from './apis/trekking/trekking.module';
 
 @Module({
   imports: [
+    TrekkingModule,
     ReviewBoardImageModule,
     LikeModule,
     MountainModule,
