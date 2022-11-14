@@ -24,14 +24,15 @@ export class ReviewBoardService {
   }
 
   async create({ userId, crewUserListId, createReviewBoardInput }) {
-    const isReview = this.reviewBoardRepository.find({
+    const isReview = await this.reviewBoardRepository.find({
       where: {
         user: { id: userId },
         crewUserList: { id: crewUserListId },
       },
       relations: ['user', 'crewUserList'],
     });
-    if (isReview) {
+
+    if (isReview.length !== 0) {
       throw new Error('이미 리뷰가 존재합니다.');
     }
 

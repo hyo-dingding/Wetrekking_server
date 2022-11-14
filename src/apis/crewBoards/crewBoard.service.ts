@@ -188,10 +188,10 @@ export class CrewBoardService {
     // return newCrewBoard;
   }
 
-  async create({ userId, createCrewBoardInput }) {
+  async create({ userId, mountainId, createCrewBoardInput }) {
     const { ...crewBoard } = createCrewBoardInput;
     const dateTime24h = this.changeDateTimeTo24h(crewBoard.dateTime);
-    const dateStandard = crewBoard.date + ' ' + dateTime24h;
+    const deadline = crewBoard.date + ' ' + dateTime24h;
 
     const checkVaildCrewBoard = await this.findAllByUserId({ userId });
     if (checkVaildCrewBoard.length >= 3) {
@@ -216,8 +216,9 @@ export class CrewBoardService {
 
     return await this.crewBoardRepository.save({
       ...crewBoard,
-      dateStandard: dateStandard,
+      deadline: deadline,
       user: { id: userId },
+      mountain: { id: mountainId },
     });
   }
 
