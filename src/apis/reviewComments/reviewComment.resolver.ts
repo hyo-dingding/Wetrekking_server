@@ -42,8 +42,8 @@ export class ReviewCommentResolver {
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => ReviewComment)
   updateReviewComment(
-    @Args('reviewCommentId') reviewCommentId: string, //
-    @Args('updateComment') updateComment: string,
+    @Args('reviewCommentId', { nullable: true }) reviewCommentId: string, //
+    @Args('updateComment', { nullable: true }) updateComment: string,
     @Context() context: IContext,
   ) {
     const user = context.req.user.id;
