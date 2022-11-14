@@ -16,8 +16,8 @@ export class MountainResolver {
   }
 
   @Query(() => [Mountain])
-  fetchAllMountains(@Args('mountain') mountain: string) {
-    return this.mountainService.findMountains({ mountain });
+  fetchAllMountains() {
+    return this.mountainService.findAllMountains();
   }
 
   @Query(() => [Mountain])
@@ -25,7 +25,7 @@ export class MountainResolver {
     @Args('search') search: string, //
   ) {
     const elasticResult = await this.elasticsearchService.search({
-      index: 'mymountain_new',
+      index: 'mymountain',
       query: {
         match_phrase_prefix: {
           mountain: search,
