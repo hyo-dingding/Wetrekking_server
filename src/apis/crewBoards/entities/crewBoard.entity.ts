@@ -28,7 +28,7 @@ export class CrewBoard {
   description: string;
 
   @Column()
-  dateStandard: Date;
+  deadline: Date;
 
   @Column()
   @Field(() => String)
