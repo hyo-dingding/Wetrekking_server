@@ -21,9 +21,10 @@ export class DibService {
     return result;
   }
 
-  findOne({ crewBoardId }) {
-    return this.DibRepository.findOne({
-      where: { crewBoard: crewBoardId },
+  async findOne({ crewBoardId }) {
+    return await this.DibRepository.findOne({
+      where: { crewBoard: { id: crewBoardId } },
+      relations: ['crewBoard'],
     });
   }
 
