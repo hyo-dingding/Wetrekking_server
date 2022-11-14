@@ -61,11 +61,11 @@ export class AuthService {
         10,
       );
       await this.userService.createSocial({ createSocialUserInput });
-      res.redirect('http://localhost:3000/social');
+      res.redirect('http://localhost:3001/social');
     } else {
       this.setRefreshToken({ user, res, req });
 
-      res.redirect('http://localhost:3000');
+      res.redirect('http://localhost:3001');
     }
   }
 }
