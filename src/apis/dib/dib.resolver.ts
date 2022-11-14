@@ -6,6 +6,7 @@ import { CrewBoard } from '../crewBoards/entities/crewBoard.entity';
 
 import { Dib } from './entities/dib.entity';
 import { DibService } from './dib.service';
+import { check } from 'prettier';
 
 @Resolver()
 export class DibResolver {
@@ -25,24 +26,22 @@ export class DibResolver {
 
   // 찜하기(로그인 필수)
   @UseGuards(GqlAuthAccessGuard)
-  @Mutation(() => String)
+  @Mutation(() => Boolean)
   async createDib(
     @Context() context: IContext,
     @Args('crewBoardId') crewBoardId: string, //
   ) {
     const userId = context.req.user.id;
 
-    this.DibService.create({ userId, crewBoardId });
-    return '찜한 게시글이 추가 되었습니다.';
-  }
+    const checkDib = await this.DibService.findOne({ crewBoardId });
+    console.log(checkDib);
 
-  // 찜하기 취소
-  @UseGuards(GqlAuthAccessGuard)
-  @Mutation(() => String)
-  deleteDib(
-    @Args('crewBoardId') crewBoardId: string, //
-  ) {
-    this.DibService.delete({ crewBoardId });
-    return '찜한 게시글이 삭제 되었습니다.';
+    if (checkDib === null) {
+      this.DibService.create({ userId, crewBoardId });
+      return true;
+    } else {
+      this.DibService.delete({ crewBoardId });
+      return false;
+    }
   }
 }
