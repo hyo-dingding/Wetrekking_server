@@ -32,7 +32,7 @@ export class ReviewBoardResolver {
     @Args('createReviewBoardInput')
     createReviewBoardInput: CreateReviewBoardInput,
     @Args('crewUserListId') crewUserListId: string,
-    @Args({ name: 'imgURL', type: () => [String] }) imgUrl: string[],
+    @Args({ name: 'imgURL', type: () => [String] }) imgUrl?: string[],
   ) {
     const userId = context.req.user.id;
 
@@ -42,7 +42,7 @@ export class ReviewBoardResolver {
       createReviewBoardInput,
     });
     const reviewBoardId = result.id;
-    this.reviewBoardImageService.upload({ imgUrl, reviewBoardId });
+    await this.reviewBoardImageService.upload({ imgUrl, reviewBoardId });
 
     return result;
   }

@@ -59,7 +59,7 @@ export class CrewBoardService {
 
   cutAlreadyDone(array, today, newArray) {
     array.map((x) =>
-      Number(x.dateStandard) > Number(today) ? newArray.push(x) : x,
+      Number(x.deadline) > Number(today) ? newArray.push(x) : x,
     );
   }
 
@@ -117,9 +117,7 @@ export class CrewBoardService {
 
     this.cutAlreadyDone(crewBoard, today, cutAlreadyDone);
 
-    cutAlreadyDone.sort(
-      (a, b) => Number(a.dateStandard) - Number(b.dateStandard),
-    );
+    cutAlreadyDone.sort((a, b) => Number(a.deadline) - Number(b.deadline));
 
     this.divideNine(cutAlreadyDone, newCrewBoard);
 
@@ -183,7 +181,7 @@ export class CrewBoardService {
     //     ? pickedDate.push(x)
     //     : x,
     // );
-    // pickedDate.sort((a, b) => Number(a.dateStandard) - Number(b.dateStandard));
+    // pickedDate.sort((a, b) => Number(a.deadline) - Number(b.deadline));
     // this.divideNine(pickedDate, newCrewBoard);
     // return newCrewBoard;
   }
@@ -225,11 +223,11 @@ export class CrewBoardService {
   async createTEST({ createCrewBoardInput }) {
     const { ...crewBoard } = createCrewBoardInput;
     const dateTime24h = this.changeDateTimeTo24h(crewBoard.dateTime);
-    const dateStandard = crewBoard.date + ' ' + dateTime24h;
+    const deadline = crewBoard.date + ' ' + dateTime24h;
 
     return await this.crewBoardRepository.save({
       ...crewBoard,
-      dateStandard: dateStandard,
+      deadline: deadline,
     });
   }
 

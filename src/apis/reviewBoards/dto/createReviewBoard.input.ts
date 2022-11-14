@@ -10,7 +10,4 @@ export class CreateReviewBoardInput {
 
   @Field(() => Float)
   star: number;
-
-  @Field(() => String)
-  mountain?: string;
 }

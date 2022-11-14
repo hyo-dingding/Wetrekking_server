@@ -40,17 +40,19 @@ export class ReviewBoardService {
       where: { id: userId },
     });
 
+    const { ...reviewBoard } = createReviewBoardInput;
+    const result = this.reviewBoardRepository.save({
+      ...reviewBoard,
+      user: { id: userId },
+      crewUserList: { id: crewUserListId },
+    });
+
     await this.userRepository.update(
       { id: userId },
       { point: user.point + 100 },
     );
 
-    const { ...reviewBoard } = createReviewBoardInput;
-    return this.reviewBoardRepository.save({
-      ...reviewBoard,
-      user: { user: { id: userId } },
-      crewUserList: { crewUserList: { id: crewUserListId } },
-    });
+    return result;
   }
 
   async update({ reviewBoardId, updateReviewBoardInput }) {
