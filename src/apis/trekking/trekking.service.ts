@@ -33,7 +33,7 @@ export class TrekkingService {
     const emdCd =
       emdCdInfo.data.response.result.featureCollection.features[0].properties
         .emd_cd;
-    console.log(emdCd);
+    // console.log(emdCd);
     return emdCd;
   }
 
@@ -60,14 +60,22 @@ export class TrekkingService {
 
     const aaa = getTrekkingInfo.data.response.result.featureCollection.features;
     for (let i = 0; i < aaa.length; i++) {
-      www.push(aaa[i].geometry.coordinates);
+      // console.log(aaa[i].geometry.coordinates);
+      const data = aaa[i].geometry.coordinates[0];
+      console.log('before', data);
+      for (let j = 0; j < data.length; j++) {
+        const temp = data[j][1];
+        data[j][1] = data[j][0];
+        data[j][0] = temp;
+      }
+      console.log('after', data);
+      www.push(data);
     }
-
     const zzz = {
       mountainName,
-      xyz: www.flat().flat(),
+      xyz: www.flat(),
     };
-    console.log(zzz);
+    // console.log(zzz);
 
     return zzz;
   }
