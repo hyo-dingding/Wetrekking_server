@@ -3,6 +3,7 @@ import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GqlAuthAccessGuard } from 'src/commons/auth/gql-auth.guard';
 import { IContext } from 'src/commons/type/context';
 import { CrewBoardImageService } from '../crewBoardImages/crewBoardImage.service';
+import { DibService } from '../dib/dib.service';
 import { CrewBoardService } from './crewBoard.service';
 import { CreateCrewBoardInput } from './dto/createCrewBoard.input';
 import { UpdateCrewBoardInput } from './dto/updateCrewBoard.input';
@@ -13,6 +14,7 @@ export class CrewBoardResolver {
   constructor(
     private readonly crewBoardService: CrewBoardService, //
     private readonly crewBoardImageService: CrewBoardImageService, //
+    private readonly DibService: DibService,
   ) {}
 
   @Query(() => CrewBoard)
@@ -109,6 +111,8 @@ export class CrewBoardResolver {
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => Boolean)
   deleteCrewBoard(@Args('crewBoardId') crewBoardId: string) {
+    this.DibService.delete({ crewBoardId });
+    console.log(crewBoardId);
     return this.crewBoardService.delete({ crewBoardId });
   }
 }

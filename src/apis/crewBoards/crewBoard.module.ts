@@ -16,6 +16,7 @@ import { CrewBoard } from './entities/crewBoard.entity';
       CrewBoardImage,
       User,
       Mountain,
+
     ]),
     ElasticsearchModule.register({
       node: 'http://elasticsearch:9200',
@@ -25,6 +26,7 @@ import { CrewBoard } from './entities/crewBoard.entity';
     CrewBoardResolver,
     CrewBoardService, //
     CrewBoardImageService,
+    DibService,
   ],
 })
 export class CrewBoardModule {}
