@@ -35,6 +35,7 @@ export class MountainResolver {
           mountain: search,
         },
       },
+      size: 3000,
     });
 
     console.log(JSON.stringify(elasticResult, null, ' '));

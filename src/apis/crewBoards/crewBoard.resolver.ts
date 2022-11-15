@@ -68,11 +68,13 @@ export class CrewBoardResolver {
     @Context() context: IContext,
     @Args('createCrewBoardInput') createCrewBoardInput: CreateCrewBoardInput,
     @Args({ name: 'imgURL', type: () => [String] }) imgUrl: string[],
+    @Args('mountainId') mountainId: string,
   ) {
     const userId = context.req.user.id;
 
     const result = await this.crewBoardService.create({
       userId,
+      mountainId,
       createCrewBoardInput,
     });
 

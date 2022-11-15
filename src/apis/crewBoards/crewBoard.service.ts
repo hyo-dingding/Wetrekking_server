@@ -186,7 +186,7 @@ export class CrewBoardService {
     // return newCrewBoard;
   }
 
-  async create({ userId, createCrewBoardInput }) {
+  async create({ userId, mountainId, createCrewBoardInput }) {
     const { ...crewBoard } = createCrewBoardInput;
     const dateTime24h = this.changeDateTimeTo24h(crewBoard.dateTime);
     const deadline = crewBoard.date + ' ' + dateTime24h;
@@ -216,6 +216,7 @@ export class CrewBoardService {
       ...crewBoard,
       deadline: deadline,
       user: { id: userId },
+      mountain: { id: mountainId },
     });
   }
 
