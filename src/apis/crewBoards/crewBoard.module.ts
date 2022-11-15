@@ -3,6 +3,8 @@ import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CrewBoardImageService } from '../crewBoardImages/crewBoardImage.service';
 import { CrewBoardImage } from '../crewBoardImages/entities/crewBoardImage.entity';
+import { DibService } from '../dib/dib.service';
+import { Dib } from '../dib/entities/dib.entity';
 import { User } from '../users/entities/user.entity';
 import { CrewBoardResolver } from './crewBoard.resolver';
 import { CrewBoardService } from './crewBoard.service';
@@ -14,6 +16,7 @@ import { CrewBoard } from './entities/crewBoard.entity';
       CrewBoard, //
       CrewBoardImage,
       User,
+      Dib,
     ]),
     ElasticsearchModule.register({
       node: 'http://elasticsearch:9200',
@@ -23,6 +26,7 @@ import { CrewBoard } from './entities/crewBoard.entity';
     CrewBoardResolver,
     CrewBoardService, //
     CrewBoardImageService,
+    DibService,
   ],
 })
 export class CrewBoardModule {}

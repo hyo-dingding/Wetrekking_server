@@ -14,7 +14,7 @@ export class DibService {
     const result = [];
     const user = await this.DibRepository.find({
       where: { user: { id: userId } },
-      relations: ['user', 'crewBoard'],
+      relations: ['user', 'crewBoard', 'crewBoard.user'],
     });
 
     user.map((el) => (el.user.id === userId ? result.push(el) : el));
@@ -24,7 +24,7 @@ export class DibService {
   async findOne({ crewBoardId }) {
     return await this.DibRepository.findOne({
       where: { crewBoard: { id: crewBoardId } },
-      relations: ['crewBoard'],
+      relations: ['crewBoard', 'user', 'crewBoard.user'],
     });
   }
 

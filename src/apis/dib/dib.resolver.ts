@@ -21,6 +21,7 @@ export class DibResolver {
   ) {
     const userId = context.req.user.id;
     const DibList = await this.DibService.findAll({ userId });
+
     return DibList;
   }
 
