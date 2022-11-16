@@ -16,11 +16,14 @@ export class ReviewBoardService {
   findOneById({ reviewBoardId }) {
     return this.reviewBoardRepository.findOne({
       where: { id: reviewBoardId },
+      relations: ['user', 'crewUserList', 'crewUserList.crewBoard'],
     });
   }
 
   findAll() {
-    return this.reviewBoardRepository.find();
+    return this.reviewBoardRepository.find({
+      relations: ['user', 'crewUserList', 'crewUserList.crewBoard'],
+    });
   }
 
   async create({ userId, crewUserListId, createReviewBoardInput }) {
