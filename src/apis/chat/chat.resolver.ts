@@ -5,6 +5,7 @@ import { GqlAuthAccessGuard } from 'src/commons/auth/gql-auth.guard';
 import { IContext } from 'src/commons/type/context';
 import { Repository } from 'typeorm';
 import { CrewBoard } from '../crewBoards/entities/crewBoard.entity';
+import { CrewUserList } from '../crewUserList/entities/crewUserListList.entity';
 import { User } from '../users/entities/user.entity';
 import { ChatService } from './chat.service';
 import { Chat } from './schemas/chat.schema';
@@ -55,9 +56,10 @@ export class ChatResolver {
     return this.chatService.create({ boardId, roomName, user });
   }
 
-  // @Mutation(()=>Room)
-  // joinRoom(
-  //   @Context() context:IContext, //
-  //   @
-  // ) {}
+  // 채팅방 유저들 정보 얻어오기 - 분산 트랜잭션???????
+
+  @Query(() => [CrewUserList])
+  fetchChatUsers(@Args('boardId') boardId: string) {
+    return this.chatService.findChatUser({ boardId });
+  }
 }
