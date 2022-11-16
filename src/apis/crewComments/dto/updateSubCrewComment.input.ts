@@ -1,4 +1,4 @@
-import { InputType, PartialType } from '@nestjs/graphql';
+import { Field, InputType, OmitType, PartialType } from '@nestjs/graphql';
 import { CreateSubCrewCommentInput } from './createSubCrewComment.input';
 
 @InputType()
