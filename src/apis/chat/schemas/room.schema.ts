@@ -6,16 +6,11 @@ const options: SchemaOptions = {
   timestamps: true,
 };
 
-export type ChatDocument = Chat & Document;
+export type RoomDocument = Room & Document;
 
 @Schema(options)
 @ObjectType()
-export class Chat {
-  @Prop({ required: true })
-  @Field(() => String)
-  @IsString()
-  name: string;
-
+export class Room {
   @Prop()
   @Field(() => String)
   @IsString()
@@ -24,12 +19,12 @@ export class Chat {
   @Prop()
   @Field(() => String)
   @IsString()
-  message: string;
+  boardId: string;
 
-  // @Prop()
-  // @Field(() => String)
-  // @IsString()
-  // boardId: string;
+  @Prop()
+  @Field(() => String)
+  @IsString()
+  user: string;
 }
 
-export const ChatSchema = SchemaFactory.createForClass(Chat);
+export const RoomSchema = SchemaFactory.createForClass(Room);

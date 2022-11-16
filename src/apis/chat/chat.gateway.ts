@@ -1,45 +1,179 @@
 import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  UseGuards,
+} from '@nestjs/common';
+import { Context } from '@nestjs/graphql';
+import { InjectModel } from '@nestjs/mongoose';
+import { InjectRepository } from '@nestjs/typeorm';
+import {
   ConnectedSocket,
   MessageBody,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+  OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { Server } from 'socket.io';
+import mongoose from 'mongoose';
+import { Server, Socket } from 'socket.io';
+import { Repository } from 'typeorm';
+import { CrewUserList } from '../crewUserList/entities/crewUserListList.entity';
+import { User } from '../users/entities/user.entity';
+import { ChatService } from './chat.service';
+import { Room, RoomDocument } from './schemas/room.schema';
+@WebSocketGateway({
+  namespace: 'wetrekkingchat',
+  cors: {
+    origin: true,
+    credentials: true,
+  },
+})
+@Injectable()
+export class ChatGateway
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
+{
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
 
-// 웹에서 데이터를 주고 받을 땐 HTTP를 사용함
-// 하지만 HTTP는 요청이 있어야만 응답을 보내주기 때문에 실시간이 안된다
-// 그래서 웹소켓이 필요하고 웹소켓 때문에 서버와 네트워크가 실시간으로 데이터를 주고 받을 수 있다.
+    // @InjectRepository(CrewBoard)
+    // private readonly crewBoardRepository: Repository<CrewBoard>,
 
-@WebSocketGateway({ namespace: 'chat' }) // namespace는 프론트에서 http://localhost:3001/chat 에서 'chat'에 해당하는 부분
-export class ChatGateway {
-  @WebSocketServer() // 이거는 socket.io의 io 역할
-  server: Server;
+    @InjectRepository(CrewUserList)
+    private readonly crewUserListRepository: Repository<CrewUserList>,
+
+    private readonly chatService: ChatService,
+
+    @InjectModel(Room.name)
+    private readonly roomModel: mongoose.Model<RoomDocument>,
+  ) {}
+
+  @WebSocketServer() server: Server;
+  private logger: Logger = new Logger('ChatGateway');
 
   wsClients = [];
 
-  @SubscribeMessage('hihi')
-  connectSomeone(@MessageBody() data: string, @ConnectedSocket() client) {
-    const [name, room] = data;
-    console.log(`${name}님이 코드: ${room}방에 입장했습니다.`);
-    const comeOn = `${name}님이 입장했습니다.`;
-    this.server.emit('comeOn' + room, comeOn);
-    this.wsClients.push(client);
+  @SubscribeMessage('join')
+  async connectSomeone(
+    @MessageBody() data: string, //
+    @ConnectedSocket() client: Socket,
+  ) {
+    console.log('data: ', data);
+
+    const [name, roomName, boardId] = data;
+
+    if (name !== null) {
+      const user = await this.crewUserListRepository.findOne({
+        where: { crewBoard: { id: boardId }, status: '수락' },
+        relations: ['user', 'crewBoard'],
+      });
+
+      const findRoom = await this.roomModel.findOne({ boardId });
+
+      if (!findRoom) {
+        await this.roomModel.create({
+          boardId: user.crewBoard.id,
+          roomName,
+          user: user.user.name,
+        });
+      }
+
+      const welcome = `${user.user.name}님이 입장했습니다.`;
+      console.log(welcome);
+
+      this.server.emit('welcome' + roomName, welcome);
+      this.wsClients.push(client);
+
+      console.log(name, roomName);
+      // console.log('socket: ', client);
+
+      // console.log('c: ', client);
+    }
   }
 
-  broadcast(event, client, message: any) {
+  // @SubscribeMessage("message")
+  // connectSomeone(
+  //   @MessageBody() data: string //
+  // ) {
+  //   const [name, room] = data; // 채팅방 입장!
+  //   const receive = `${name}님이 입장했습니다.`;
+  //   this.server.emit("receive" + room, receive);
+  //   console.log(this.server, "server");
+  // }
+
+  private broadcast(event, client, message: any) {
     for (const c of this.wsClients) {
       if (client.id == c.id) {
         continue;
       }
       c.emit(event, message);
+      // console.log('e: ', event); // event는 방코드
+      // console.log('c: ', c); // client는 각종 정보들
     }
   }
+  @SubscribeMessage('send-chat')
+  async sendMessage(
+    @MessageBody() data: string, //
+    @ConnectedSocket() client,
+  ) {
+    console.log('data: ', data);
 
-  @SubscribeMessage('send')
-  sendMessage(@MessageBody() data: string, @ConnectedSocket() client) {
-    const [room, name, message] = data;
-    console.log(`${client.id} : ${data}`);
-    this.broadcast(room, client, [name, message]);
+    const [name, roomName, message] = data;
+
+    // const userName = await this.userRepository.findOne({
+    //   where: { name },
+    // });
+
+    this.broadcast(roomName, client, [name, message]);
+
+    this.chatService.saveMessage({
+      name,
+      roomName,
+      message,
+    });
+  }
+
+  //
+  // @SubscribeMessage('leave')
+  // async leaveChatRoom(
+  //   @MessageBody() data: string, //
+  //   @ConnectedSocket() client,
+  // ) {
+  //   const [name, room] = data;
+
+  //   const bye = `${name} 님이 나가셨습니다.`;
+  //   this.server.emit('bye' + room, bye);
+  // }
+
+  afterInit() {
+    this.logger.log(`===== Socket Server initialized =====`);
+  }
+
+  handleConnection(client: Socket) {
+    this.logger.log(`Client connected: ${client.id}`);
+  }
+
+  handleDisconnect(client: Socket) {
+    client.leave(client.id);
+    this.logger.log(`Client disconnected: ${client.id}`);
   }
 }
+
+// const validate = await this.crewUserListRepository
+//   .createQueryBuilder('crewUserList')
+//   .leftJoinAndSelect('crewUserList.user', 'user')
+//   .leftJoinAndSelect('crewUserList.crewBoard', 'crewBoard')
+//   .where('user.id = :userId', { userId: name })
+//   .andWhere('crewBoard.id = :boardId', { boardId: boardId })
+//   .getOne();
+
+// if (validate == null) {
+//   throw new NotFoundException(
+//     '해당 유저가 존재하지 않거나 현재 신청이 완료되지 않았습니다!!',
+//   );
+// }
+// name = validate.user.name;
+// room = validate.crewBoard.title;
