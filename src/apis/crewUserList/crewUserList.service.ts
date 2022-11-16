@@ -16,7 +16,7 @@ export class CrewUserListService {
     const result = [];
     const user = await this.crewUserListRepository.find({
       where: { user: { id: userId } },
-      relations: ['user', 'crewBoard'],
+      relations: ['user', 'crewBoard', 'crewBoard.user', 'crewBoard.muontain'],
     });
     user.map((el) => (el.user.id === userId ? result.push(el) : el));
     return result;
@@ -25,14 +25,14 @@ export class CrewUserListService {
   async findVisitToList({ userId }) {
     return await this.crewUserListRepository.find({
       where: { user: { id: userId }, status: '완료' },
-      relations: ['user', 'crewBoard'],
+      relations: ['user', 'crewBoard', 'crewBoard.user', 'crewBoard.mountain'],
     });
   }
 
   async findHostList({ userId }) {
     return await this.crewBoardRepository.find({
       where: { user: { id: userId } },
-      relations: ['user'],
+      relations: ['user', 'crewBoard', 'crewBoard.user', 'crewBoard.mountain'],
     });
   }
 

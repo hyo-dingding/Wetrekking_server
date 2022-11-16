@@ -52,9 +52,9 @@ export class MountainResolver {
   }
 
   @Mutation(() => String)
-  createMountain() {
-    const prevention = this.mountainService.findAllMountains();
-    if (prevention) return '이미 등록되어 있습니다.';
+  async createMountain() {
+    const prevention = await this.mountainService.findAllMountains();
+    if (prevention.length !== 0) return '이미 등록되어 있습니다.';
     this.mountainService.create();
     return '산 등록 완료!';
   }

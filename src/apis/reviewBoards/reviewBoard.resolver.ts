@@ -41,15 +41,17 @@ export class ReviewBoardResolver {
       crewUserListId,
       createReviewBoardInput,
     });
-    const reviewBoardId = result.id;
-    await this.reviewBoardImageService.upload({ imgUrl, reviewBoardId });
+    if (imgUrl) {
+      const reviewBoardId = result.id;
+      await this.reviewBoardImageService.upload({ imgUrl, reviewBoardId });
+    }
 
     return result;
   }
 
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => ReviewBoard)
-  updateReviewBoard(
+  async updateReviewBoard(
     @Args('reviewBoardId') reviewBoardId: string,
     @Args('updateReviewBoardInput')
     updateReviewBoardInput: UpdateReviewBoardInput,
@@ -61,7 +63,7 @@ export class ReviewBoardResolver {
     });
 
     if (imgUrl) {
-      this.reviewBoardImageService.upload({ imgUrl, reviewBoardId });
+      await this.reviewBoardImageService.upload({ imgUrl, reviewBoardId });
     }
     return result;
   }
