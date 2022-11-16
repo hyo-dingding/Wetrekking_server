@@ -51,7 +51,11 @@ import { TrekkingModule } from './apis/trekking/trekking.module';
       autoSchemaFile: 'src/commons/graghql/schema.gql',
       context: ({ req, res }) => ({ req, res }),
       cors: {
-        origin: ['http://localhost:3000', 'https://develop.wetrekking/graphql'],
+        origin: [
+          'http://localhost:3000',
+          'https://develop.wetrekking/graphql',
+          'https://wetrekking.kr',
+        ],
         credentials: true,
         exposedHeaders: ['Set-Cookie', 'Cookie'],
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],

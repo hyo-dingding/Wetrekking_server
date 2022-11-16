@@ -13,7 +13,11 @@ async function bootstrap() {
   // app.useGlobalPipes(new ValidationPipe());
 
   app.enableCors({
-    origin: ['http://localhost:3000', 'https://develop.wetrekking.kr'],
+    origin: [
+      'http://localhost:3000',
+      'https://develop.wetrekking.kr',
+      'https://wetrekking.kr',
+    ],
     credentials: true,
   });
   app.use(graphqlUploadExpress());
