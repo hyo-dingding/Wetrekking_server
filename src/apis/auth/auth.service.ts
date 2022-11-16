@@ -27,6 +27,7 @@ export class AuthService {
       'http://localhost:3000',
       'https://develop.wetrekking.kr',
       'http://127.0.0.1:5500',
+      'https://wetrekking.kr',
     ];
     const origin = req.headers.origin;
     if (allowedOrigins.includes(origin)) {
