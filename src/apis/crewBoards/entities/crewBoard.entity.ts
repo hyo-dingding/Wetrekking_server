@@ -7,6 +7,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -84,8 +85,7 @@ export class CrewBoard {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  // @JoinTable()
-  // @ManyToOne(() => CrewUserList, (crewUserList) => crewUserList.id)
-  // @Field(() => [CrewUserList])
-  // crewUserList: CrewUserList[];
+  // @ManyToOne(() => CrewUserList, (crewUserList) => crewUserList.user)
+  // @Field(() => [User])
+  // crewUserList: User[];
 }

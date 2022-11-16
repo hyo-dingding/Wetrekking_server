@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -36,6 +37,7 @@ export class PointPayment {
   @Field(() => POINT_PAYMENT_STATUS_ENUM)
   status: string;
 
+  @JoinTable()
   @ManyToOne(() => User)
   @Field(() => User)
   user: User;

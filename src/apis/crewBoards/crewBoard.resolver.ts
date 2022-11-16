@@ -3,7 +3,6 @@ import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GqlAuthAccessGuard } from 'src/commons/auth/gql-auth.guard';
 import { IContext } from 'src/commons/type/context';
 import { CrewBoardImageService } from '../crewBoardImages/crewBoardImage.service';
-import { CrewUserList } from '../crewUserList/entities/crewUserListList.entity';
 import { DibService } from '../dib/dib.service';
 import { CrewBoardService } from './crewBoard.service';
 import { CreateCrewBoardInput } from './dto/createCrewBoard.input';
@@ -56,7 +55,7 @@ export class CrewBoardResolver {
     @Args('endDate') endDate?: string,
     @Args('search') search?: string,
   ) {
-    await this.crewBoardService.findBySearch({
+    return await this.crewBoardService.findBySearch({
       region,
       startDate,
       endDate,
@@ -70,7 +69,7 @@ export class CrewBoardResolver {
   }
 
   @UseGuards(GqlAuthAccessGuard)
-  @Mutation(() => [CrewBoard, CrewUserList])
+  @Mutation(() => CrewBoard)
   async createCrewBoard(
     @Context() context: IContext,
     @Args('createCrewBoardInput') createCrewBoardInput: CreateCrewBoardInput,
@@ -87,7 +86,6 @@ export class CrewBoardResolver {
 
     const crewBoardId = result.id;
     await this.crewBoardImageService.upload({ imgUrl, crewBoardId });
-
     return result;
   }
 
@@ -104,7 +102,11 @@ export class CrewBoardResolver {
     @Args('crewBoardId') crewBoardId: string,
     @Args('updateCrewBoardInput') updateCrewBoardInput: UpdateCrewBoardInput,
     @Args({ name: 'imgURL', type: () => [String] }) imgUrl: string[],
+    @Args('mountainId') mountainId?: string,
   ) {
+    if (mountainId) {
+      updateCrewBoardInput['mountain'] = mountainId;
+    }
     const result = this.crewBoardService.update({
       crewBoardId,
       updateCrewBoardInput,

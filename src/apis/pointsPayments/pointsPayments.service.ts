@@ -16,6 +16,24 @@ export class PointPaymentService {
     private readonly dataSource: DataSource,
   ) {}
 
+  findById({ userId }) {
+    return this.pointPaymentRepository.findOne({
+      where: { id: userId },
+      relations: ['user'],
+    });
+  }
+
+  findAllbyId({ userId }) {
+    return this.pointPaymentRepository.find({
+      where: { id: userId },
+      relations: ['user'],
+    });
+  }
+
+  findAll() {
+    this.pointPaymentRepository.find();
+  }
+
   async create({ impUid, amount, _user, status }) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
