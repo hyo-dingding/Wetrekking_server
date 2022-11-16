@@ -29,12 +29,21 @@ import { Room, RoomDocument } from './schemas/room.schema';
   cors: {
     origin: [
       'http://localhost:3000',
-      'https://develop.wetrekking.kr',
+      'https://develop.wetrekking/graphql',
       'https://wetrekking.kr',
       'http://localhost:5501',
       'http://localhost:5500',
     ],
     credentials: true,
+    exposedHeaders: ['Set-Cookie', 'Cookie'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    allowedHeaders: [
+      'Access-Control-Allow-Headers',
+      'Authorization',
+      'X-Requested-With',
+      'Content-Type',
+      'Accept',
+    ],
   },
 })
 @Injectable()
