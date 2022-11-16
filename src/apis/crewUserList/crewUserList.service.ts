@@ -32,7 +32,7 @@ export class CrewUserListService {
   async findHostList({ userId }) {
     return await this.crewBoardRepository.find({
       where: { user: { id: userId } },
-      relations: ['user', 'crewBoard', 'crewBoard.user', 'crewBoard.mountain'],
+      relations: ['user', 'mountain'],
     });
   }
 
