@@ -91,6 +91,7 @@ export class ChatGateway
         .leftJoinAndSelect('crewUserList.crewBoard', 'crewBoard')
         .where('crewUserList.status = "수락"')
         .andWhere('crewBoard.id = :boardId', { boardId })
+        .andWhere('user.name = :name', { name })
         .getOne();
 
       console.log(user);
