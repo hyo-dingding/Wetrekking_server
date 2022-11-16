@@ -26,16 +26,24 @@ export class PointPaymentResolver {
     @Context() context: IContext, //
   ) {
     const userId = context.req.user.id;
-    return await this.pointPaymentService.findById({ userId });
+    const result = await this.pointPaymentService.findById({ userId });
+
+    if (!result) throw new Error('결제 내역이 없습니다!!!');
+
+    return result;
   }
 
   @UseGuards(GqlAuthAccessGuard)
   @Query(() => [PointPayment])
-  fetchPointPayments(
+  async fetchPointPayments(
     @Context() context: IContext, //
   ) {
     const userId = context.req.user.id;
-    this.pointPaymentService.findAllbyId({ userId });
+    const result = await this.pointPaymentService.findAllbyId({ userId });
+
+    if (result.length === 0) throw new Error('결제 내역이 없습니다!!!');
+
+    return result;
   }
 
   @UseGuards(GqlAuthAccessGuard)
@@ -51,13 +59,13 @@ export class PointPaymentResolver {
     // 1. accessToken 받아오기
     const iamportAccessToken =
       await this.iamportService.getIamportAccessToken();
-    console.log('!!!!!!!!!!!!', iamportAccessToken);
+
     // 2. accessToken 사용하여 조회
     const paymentData = await this.iamportService.getPaymentData(
       impUid,
       iamportAccessToken,
     );
-    console.log('@@@@@@@@@@', paymentData);
+
     // 3. 결제 금액/아이디 조회
     const { imp_uid } = paymentData.data.response;
     const amountToBePaid = amount;
@@ -67,7 +75,6 @@ export class PointPaymentResolver {
     const isAlreadyPayment = await this.pointPaymentService.findPaymentData({
       imp_uid,
     });
-    console.log('############', isAlreadyPayment);
 
     // 5. 결제 내역이 이미 있는경우 오류문구 반환
     if (isAlreadyPayment) {
