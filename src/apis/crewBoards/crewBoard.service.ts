@@ -33,7 +33,7 @@ export class CrewBoardService {
   findOneById({ crewBoardId }) {
     return this.crewBoardRepository.findOne({
       where: { id: crewBoardId },
-      relations: ['user', 'mountain', 'crewUserList'],
+      relations: ['user', 'mountain'],
     });
   }
 
