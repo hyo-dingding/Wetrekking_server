@@ -5,7 +5,7 @@ import { GqlAuthAccessGuard } from 'src/commons/auth/gql-auth.guard';
 import { IContext } from 'src/commons/type/context';
 import { Repository } from 'typeorm';
 import { CrewBoard } from '../crewBoards/entities/crewBoard.entity';
-import { CrewUserList } from '../crewUserList/entities/crewUserListList.entity';
+import { CrewUserList } from '../crewUserList/entities/crewUserList.entity';
 import { User } from '../users/entities/user.entity';
 import { ChatService } from './chat.service';
 import { Chat } from './schemas/chat.schema';
