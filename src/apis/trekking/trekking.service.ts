@@ -3,12 +3,20 @@ import { InjectModel } from '@nestjs/mongoose';
 import axios from 'axios';
 import mongoose from 'mongoose';
 import { Trekking, TrekkingDocument } from './schemas/trekking.schema';
+import * as fs from 'fs';
+import {
+  TrekkingInfo,
+  TrekkingInfoDocument,
+} from './schemas/trekkingInfo.schema';
 
 @Injectable()
 export class TrekkingService {
   constructor(
     @InjectModel(Trekking.name)
     private readonly trekkingModel: mongoose.Model<TrekkingDocument>, //
+
+    @InjectModel(TrekkingInfo.name)
+    private readonly trekkingInfoModel: mongoose.Model<TrekkingInfoDocument>,
   ) {}
 
   // 읍면동 코드 API
@@ -78,5 +86,52 @@ export class TrekkingService {
     // console.log(zzz);
 
     return zzz;
+  }
+
+  // async function searchTrekking() {
+  //   const mountain = [];
+  //   const file = fs.readFileSync('./src/apis/trekking/wetrekking.geojson');
+  //   const result = file.toString();
+  //   const aaa = JSON.parse(JSON.stringify(result));
+  //   const bbb = JSON.parse(aaa);
+  //   const ccc = bbb.features;
+
+  //   for (let i = 0; i < ccc.length; i++) {
+  //     mountain.push({
+  //       mountainName: ccc[i].properties['MNTN_NM'],
+  //       trekkingName: ccc[i].properties['PMNTN_NM'],
+  //       difficulty: ccc[i].properties['PMNTN_DFFL'],
+  //       coordinae: ccc[i].geometry.coordinates.flat(),
+  //     });
+  //     return mountain;
+  //   }
+  // }
+
+  async saveTrekking() {
+    const mountain = [];
+    const file = fs.readFileSync('./src/apis/trekking/wetrekking.geojson');
+    const result = file.toString();
+    const aaa = JSON.parse(JSON.stringify(result));
+    const bbb = JSON.parse(aaa);
+    const ccc = bbb.features;
+
+    // for (let i = 0; i < ccc.length; i++) {
+    //   mountain.push({
+    //     mountainName: ccc[i].properties['MNTN_NM'],
+    //     trekkingName: ccc[i].properties['PMNTN_NM'],
+    //     difficulty: ccc[i].properties['PMNTN_DFFL'],
+    //     coordinae: ccc[i].geometry.coordinates.flat(),
+    //   });
+    // }
+
+    for (let i = 0; i < ccc.length; i++) {
+      await this.trekkingInfoModel.create({
+        mountainName: ccc[i].properties['MNTN_NM'],
+        trekkingName: ccc[i].properties['PMNTN_NM'],
+        difficulty: ccc[i].properties['PMNTN_DFFL'],
+        coordinae: ccc[i].geometry.coordinates.flat(),
+      });
+    }
+    return '저장';
   }
 }

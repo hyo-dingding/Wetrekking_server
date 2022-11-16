@@ -181,10 +181,12 @@ type Query {
   fetchCrewSubComments(commentId: String!, page: Int): [CrewComment!]!
   fetchUserCrewSubComments(userId: String!, boardId: String!): [CrewComment!]!
   fetchLogs(roomName: String!): [Chat!]!
+  fetchChatUsers(boardId: String!): [CrewUserList!]!
   fetchReviewComments(reviewBoardId: String!, page: Int): [ReviewComment!]!
 }
 
 type Mutation {
+  createMongoDBTrekking: String!
   uploadReviewBoaredImage(imgURL: [String!]!, reviewBoardId: String!): [ReviewBoardImage!]!
   likeReviewBoard(reviewBoardId: String!): String!
   createMountain: String!

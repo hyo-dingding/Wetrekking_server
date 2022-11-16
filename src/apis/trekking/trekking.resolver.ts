@@ -1,4 +1,4 @@
-import { Args, Int, Query, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Trekking } from './schemas/trekking.schema';
 import { TrekkingService } from './trekking.service';
 
@@ -16,5 +16,10 @@ export class TrekkingResolver {
     const qqq = await this.trekkingService.getEmdCdInfo({ address });
 
     return this.trekkingService.getTrekkingInfo({ qqq, mountainName });
+  }
+
+  @Mutation(() => String)
+  async createMongoDBTrekking() {
+    return this.trekkingService.saveTrekking();
   }
 }

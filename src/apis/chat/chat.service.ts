@@ -62,4 +62,22 @@ export class ChatService {
 
     return result;
   }
+
+  async findChatUser({ boardId }) {
+    const findMongoRoom = await this.roomModel.findOne({ boardId });
+
+    if (!findMongoRoom) {
+      throw new Error('방이 존재하지 않습니다.');
+    }
+
+    const qqq = await this.crewUserListRepository
+      .createQueryBuilder('crewUserList')
+      .leftJoinAndSelect('crewUserList.user', 'user')
+      .leftJoinAndSelect('crewUserList.crewBoard', 'crewBoard')
+      .where('crewBoard.id = :boardId', { boardId })
+      .andWhere('crewUserList.status = "수락"')
+      .getMany();
+
+    return qqq;
+  }
 }

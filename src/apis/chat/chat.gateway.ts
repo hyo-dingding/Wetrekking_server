@@ -61,23 +61,33 @@ export class ChatGateway
     @MessageBody() data: string, //
     @ConnectedSocket() client: Socket,
   ) {
-    console.log('data: ', data);
-
     const [name, roomName, boardId] = data;
+
+    console.log('join: ', data);
+
+    // const findUser = await this.userRepository.find({
+
+    // })
 
     if (name !== null) {
       const user = await this.crewUserListRepository.findOne({
-        where: { crewBoard: { id: boardId }, status: '수락' },
+        where: {
+          crewBoard: { id: boardId },
+          status: '수락',
+          user: { name: name },
+        },
         relations: ['user', 'crewBoard'],
       });
 
-      const findRoom = await this.roomModel.findOne({ boardId });
+      console.log(user);
+
+      const findRoom = await this.roomModel.findOne({ boardId, roomName });
 
       if (!findRoom) {
         await this.roomModel.create({
           boardId: user.crewBoard.id,
           roomName,
-          user: user.user.name,
+          user: user.user.id,
         });
       }
 
@@ -87,10 +97,21 @@ export class ChatGateway
       this.server.emit('welcome' + roomName, welcome);
       this.wsClients.push(client);
 
-      console.log(name, roomName);
+      // console.log(name, roomName);
       // console.log('socket: ', client);
 
       // console.log('c: ', client);
+    }
+  }
+
+  private broadcast(event, client, message: any) {
+    for (const c of this.wsClients) {
+      if (client.id == c.id) {
+        continue;
+      }
+      c.emit(event, message);
+      // console.log('e: ', event); // event는 방코드
+      // console.log('c: ', c); // client는 각종 정보들
     }
   }
 
@@ -104,32 +125,22 @@ export class ChatGateway
   //   console.log(this.server, "server");
   // }
 
-  private broadcast(event, client, message: any) {
-    for (const c of this.wsClients) {
-      if (client.id == c.id) {
-        continue;
-      }
-      c.emit(event, message);
-      // console.log('e: ', event); // event는 방코드
-      // console.log('c: ', c); // client는 각종 정보들
-    }
-  }
   @SubscribeMessage('send-chat')
   async sendMessage(
     @MessageBody() data: string, //
-    @ConnectedSocket() client,
+    @ConnectedSocket() client: Socket,
   ) {
-    console.log('data: ', data);
-
-    const [name, roomName, message] = data;
+    const [roomName, name, message] = data;
+    console.log('send-chat', data);
 
     // const userName = await this.userRepository.findOne({
     //   where: { name },
     // });
 
+    // this.server.emit(roomName, [name, message]);
     this.broadcast(roomName, client, [name, message]);
 
-    this.chatService.saveMessage({
+    await this.chatService.saveMessage({
       name,
       roomName,
       message,
