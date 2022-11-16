@@ -4,7 +4,7 @@ import { GqlAuthAccessGuard } from 'src/commons/auth/gql-auth.guard';
 import { IContext } from 'src/commons/type/context';
 import { CrewBoard } from '../crewBoards/entities/crewBoard.entity';
 import { CrewUserListService } from './crewUserList.service';
-import { CrewUserList } from './entities/crewUserListList.entity';
+import { CrewUserList } from './entities/crewUserList.entity';
 
 @Resolver()
 export class CrewUserListResolver {

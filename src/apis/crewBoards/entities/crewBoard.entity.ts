@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { CrewUserList } from 'src/apis/crewUserList/entities/crewUserListList.entity';
+import { CrewUserList } from 'src/apis/crewUserList/entities/crewUserList.entity';
 import { Mountain } from 'src/apis/mountains/entities/mountain.entity';
 import { User } from 'src/apis/users/entities/user.entity';
 import {
@@ -7,6 +7,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -84,8 +85,7 @@ export class CrewBoard {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  // @JoinTable()
-  // @ManyToOne(() => CrewUserList, (crewUserList) => crewUserList.id)
-  // @Field(() => [CrewUserList])
-  // crewUserList: CrewUserList[];
+  // @ManyToOne(() => CrewUserList, (crewUserList) => crewUserList.user)
+  // @Field(() => [User])
+  // crewUserList: User[];
 }

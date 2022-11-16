@@ -3,7 +3,7 @@ import {
   UnprocessableEntityException,
   UseGuards,
 } from '@nestjs/common';
-import { Args, Context, Int, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Context, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GqlAuthAccessGuard } from 'src/commons/auth/gql-auth.guard';
 import { IContext } from 'src/commons/type/context';
 import { IamportService } from '../iamport/iamport.service';
@@ -19,6 +19,24 @@ export class PointPaymentResolver {
     private readonly pointPaymentService: PointPaymentService,
     private readonly iamportService: IamportService,
   ) {}
+
+  @UseGuards(GqlAuthAccessGuard)
+  @Query(() => PointPayment)
+  async fetchPointPayment(
+    @Context() context: IContext, //
+  ) {
+    const userId = context.req.user.id;
+    return await this.pointPaymentService.findById({ userId });
+  }
+
+  @UseGuards(GqlAuthAccessGuard)
+  @Query(() => [PointPayment])
+  fetchPointPayments(
+    @Context() context: IContext, //
+  ) {
+    const userId = context.req.user.id;
+    this.pointPaymentService.findAllbyId({ userId });
+  }
 
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => PointPayment)

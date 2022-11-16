@@ -3,7 +3,7 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CrewBoardImage } from '../crewBoardImages/entities/crewBoardImage.entity';
-import { CrewUserList } from '../crewUserList/entities/crewUserListList.entity';
+import { CrewUserList } from '../crewUserList/entities/crewUserList.entity';
 // import { CrewUserList } from '../crewUserList/entities/crewUserListList.entity';
 import { User } from '../users/entities/user.entity';
 import { CrewBoard } from './entities/crewBoard.entity';
@@ -29,7 +29,7 @@ export class CrewBoardService {
   findOneById({ crewBoardId }) {
     return this.crewBoardRepository.findOne({
       where: { id: crewBoardId },
-      relations: ['user', 'mountain'],
+      relations: ['user', 'mountain', 'crewUserList'],
     });
   }
 
@@ -174,7 +174,6 @@ export class CrewBoardService {
 
     if (region) {
       newCrewBoard.filter((x) => x.mountain.address[0] === region);
-      console.log(newCrewBoard);
     }
 
     if (startDate) {
@@ -183,11 +182,11 @@ export class CrewBoardService {
           Date.parse(startDate) <= Date.parse(x.date) &&
           Date.parse(x.date) < Date.parse(endDate) + 86400000,
       );
-      console.log(newCrewBoard);
     }
 
     this.divideNine(newCrewBoard, result);
 
+    console.log(result);
     return result;
 
     // cutAlreadyDone.map((x) =>
