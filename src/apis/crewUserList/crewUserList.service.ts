@@ -16,7 +16,7 @@ export class CrewUserListService {
     const result = [];
     const user = await this.crewUserListRepository.find({
       where: { user: { id: userId } },
-      relations: ['user', 'crewBoard', 'crewBoard.user', 'crewBoard.muontain'],
+      relations: ['user', 'crewBoard', 'crewBoard.user', 'crewBoard.mountain'],
     });
     user.map((el) => (el.user.id === userId ? result.push(el) : el));
     return result;

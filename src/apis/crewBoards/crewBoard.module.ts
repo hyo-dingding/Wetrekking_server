@@ -3,6 +3,7 @@ import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CrewBoardImageService } from '../crewBoardImages/crewBoardImage.service';
 import { CrewBoardImage } from '../crewBoardImages/entities/crewBoardImage.entity';
+import { CrewUserList } from '../crewUserList/entities/crewUserListList.entity';
 import { DibService } from '../dib/dib.service';
 import { Dib } from '../dib/entities/dib.entity';
 import { Mountain } from '../mountains/entities/mountain.entity';
@@ -17,6 +18,7 @@ import { CrewBoard } from './entities/crewBoard.entity';
       CrewBoard, //
       CrewBoardImage,
       User,
+      CrewUserList,
       Mountain,
       Dib,
     ]),

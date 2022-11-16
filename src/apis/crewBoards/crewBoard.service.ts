@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CrewBoardImage } from '../crewBoardImages/entities/crewBoardImage.entity';
+import { CrewUserList } from '../crewUserList/entities/crewUserListList.entity';
+// import { CrewUserList } from '../crewUserList/entities/crewUserListList.entity';
 import { User } from '../users/entities/user.entity';
 import { CrewBoard } from './entities/crewBoard.entity';
 
@@ -12,7 +15,13 @@ export class CrewBoardService {
     private readonly crewBoardRepository: Repository<CrewBoard>, //
 
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>, //
+    private readonly userRepository: Repository<User>,
+
+    @InjectRepository(CrewBoardImage)
+    private readonly crewBoardImageRepository: Repository<CrewBoardImage>,
+
+    @InjectRepository(CrewUserList)
+    private readonly crewUserListRepository: Repository<CrewUserList>,
 
     private readonly elasticsearchService: ElasticsearchService,
   ) {}
@@ -95,6 +104,12 @@ export class CrewBoardService {
   //     `${String(dateTime24h.split(':')[1]).padStart(2, '0')} ${AMPM}`
   //   );
   // }
+
+  // findAppliedCrewUserList() {
+  //   this.crewUserListRepository.find()
+  // }
+
+  // findAcceptedCrewUserList() {}
 
   async findAllLatestFirst() {
     const newCrewBoard = [];
@@ -212,12 +227,21 @@ export class CrewBoardService {
       { point: user.point }, // 개발중으로 아직 포인트 안뻇어감
     );
 
-    return await this.crewBoardRepository.save({
+    const result = await this.crewBoardRepository.save({
       ...crewBoard,
       deadline: deadline,
       user: { id: userId },
       mountain: { id: mountainId },
     });
+
+    const crewBoardId = result.id;
+    await this.crewUserListRepository.save({
+      user: userId,
+      crewBoard: crewBoardId,
+      status: '수락',
+    });
+
+    return result;
   }
 
   async createTEST({ createCrewBoardInput }) {
@@ -244,6 +268,7 @@ export class CrewBoardService {
     const result = await this.crewBoardRepository.softDelete({
       id: crewBoardId,
     });
+    this.crewBoardImageRepository.delete({ crewBoard: crewBoardId });
     return result.affected ? true : false;
   }
 }
