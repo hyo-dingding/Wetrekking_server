@@ -15,7 +15,13 @@ export class CrewBoardService {
     private readonly crewBoardRepository: Repository<CrewBoard>, //
 
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>, //
+    private readonly userRepository: Repository<User>,
+
+    @InjectRepository(CrewBoardImage)
+    private readonly crewBoardImageRepository: Repository<CrewBoardImage>,
+
+    @InjectRepository(CrewUserList)
+    private readonly crewUserListRepository: Repository<CrewUserList>,
 
     @InjectRepository(CrewUserList)
     private readonly crewUserListRepository: Repository<CrewUserList>,
@@ -154,6 +160,12 @@ export class CrewBoardService {
   //   );
   // }
 
+  // findAppliedCrewUserList() {
+  //   this.crewUserListRepository.find()
+  // }
+
+  // findAcceptedCrewUserList() {}
+
   async findAllLatestFirst() {
     const newCrewBoard = [];
     const cutAlreadyDone = [];
@@ -270,12 +282,21 @@ export class CrewBoardService {
       { point: user.point }, // 개발중으로 아직 포인트 안뻇어감
     );
 
-    return await this.crewBoardRepository.save({
+    const result = await this.crewBoardRepository.save({
       ...crewBoard,
       deadline: deadline,
       user: { id: userId },
       mountain: { id: mountainId },
     });
+
+    const crewBoardId = result.id;
+    await this.crewUserListRepository.save({
+      user: userId,
+      crewBoard: crewBoardId,
+      status: '수락',
+    });
+
+    return result;
   }
 
   async createTEST({ createCrewBoardInput }) {
@@ -302,6 +323,7 @@ export class CrewBoardService {
     const result = await this.crewBoardRepository.softDelete({
       id: crewBoardId,
     });
+    this.crewBoardImageRepository.delete({ crewBoard: crewBoardId });
     return result.affected ? true : false;
   }
 }

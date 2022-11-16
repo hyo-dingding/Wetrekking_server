@@ -3,6 +3,7 @@ import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GqlAuthAccessGuard } from 'src/commons/auth/gql-auth.guard';
 import { IContext } from 'src/commons/type/context';
 import { CrewBoardImageService } from '../crewBoardImages/crewBoardImage.service';
+import { CrewUserList } from '../crewUserList/entities/crewUserListList.entity';
 import { DibService } from '../dib/dib.service';
 import { CrewBoardService } from './crewBoard.service';
 import { CreateCrewBoardInput } from './dto/createCrewBoard.input';
@@ -69,7 +70,7 @@ export class CrewBoardResolver {
   }
 
   @UseGuards(GqlAuthAccessGuard)
-  @Mutation(() => CrewBoard)
+  @Mutation(() => [CrewBoard, CrewUserList])
   async createCrewBoard(
     @Context() context: IContext,
     @Args('createCrewBoardInput') createCrewBoardInput: CreateCrewBoardInput,

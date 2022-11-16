@@ -9,7 +9,6 @@ import {
   Entity,
   JoinTable,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -85,7 +84,8 @@ export class CrewBoard {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  // @OneToMany(() => CrewUserList)
-  // @Field(() => CrewUserList)
-  // crewUserList: CrewUserList;
+  // @JoinTable()
+  // @ManyToOne(() => CrewUserList, (crewUserList) => crewUserList.id)
+  // @Field(() => [CrewUserList])
+  // crewUserList: CrewUserList[];
 }

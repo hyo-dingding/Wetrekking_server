@@ -192,7 +192,7 @@ type Mutation {
   login(email: String!, password: String!): String!
   logout: String!
   restoreAccessToken: String!
-  createCrewBoard(createCrewBoardInput: CreateCrewBoardInput!, imgURL: [String!]!, mountainId: String!): CrewBoard!
+  createCrewBoard(createCrewBoardInput: CreateCrewBoardInput!, imgURL: [String!]!, mountainId: String!): [CrewBoard!]!
   createCrewBoardTEST(createCrewBoardInput: CreateCrewBoardInput!): CrewBoard!
   updateCrewBoard(crewBoardId: String!, updateCrewBoardInput: UpdateCrewBoardInput!, imgURL: [String!]!): CrewBoard!
   deleteCrewBoard(crewBoardId: String!): Boolean!

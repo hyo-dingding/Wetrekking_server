@@ -18,6 +18,7 @@ import { CrewBoard } from './entities/crewBoard.entity';
       CrewBoard, //
       CrewBoardImage,
       User,
+      CrewUserList,
       Mountain,
       Dib,
       CrewUserList,
