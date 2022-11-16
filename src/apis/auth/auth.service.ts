@@ -28,6 +28,8 @@ export class AuthService {
       'https://develop.wetrekking.kr',
       'http://127.0.0.1:5500',
       'https://wetrekking.kr',
+      'http://localhost:5501',
+      'http://localhost:5500',
     ];
     const origin = req.headers.origin;
     if (allowedOrigins.includes(origin)) {
