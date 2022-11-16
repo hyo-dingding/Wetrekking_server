@@ -6,7 +6,6 @@ import { CrewBoardImage } from '../crewBoardImages/entities/crewBoardImage.entit
 import { CrewUserList } from '../crewUserList/entities/crewUserList.entity';
 import { Dib } from '../dib/entities/dib.entity';
 import { User } from '../users/entities/user.entity';
-import { CrewBoardAndUser } from './dto/crewBoardAndUser.output';
 import { CrewBoard } from './entities/crewBoard.entity';
 
 @Injectable()
@@ -54,47 +53,50 @@ export class CrewBoardService {
       .createQueryBuilder('crewBoard')
       .leftJoinAndSelect('crewBoard.mountain', 'mountain')
       .getMany();
-    console.log(crewBoards);
-    const result = crewBoards.map(async (crewBoard) => {
-      const filteredList = await this.crewUserListRepository
-        .createQueryBuilder('crewUserList')
-        .leftJoinAndSelect('crewUserList.crewBoard', 'crewBoard')
-        .leftJoinAndSelect('crewUserList.user', 'user')
-        .where('crewBoard.id = :crewBoardId', {
-          crewBoardId: crewBoard.id,
-        })
-        .andWhere('crewUserList.status = "승인"')
-        .getMany();
+    // console.log(crewBoards);
+    const result = await Promise.all(
+      crewBoards.map(async (crewBoard) => {
+        const filteredList = await this.crewUserListRepository
+          .createQueryBuilder('crewUserList')
+          .leftJoinAndSelect('crewUserList.crewBoard', 'crewBoard')
+          .leftJoinAndSelect('crewUserList.user', 'user')
+          .where('crewBoard.id = :crewBoardId', {
+            crewBoardId: crewBoard.id,
+          })
+          .andWhere('crewUserList.status = "승인"')
+          .getMany();
 
-      const assignedUsers = [];
-      filteredList.map((el) => {
-        console.log(el.user);
-        assignedUsers.push(el.user);
-      });
+        const assignedUsers = [];
+        filteredList.map((el) => {
+          // console.log(el.user);
+          assignedUsers.push(el.user);
+        });
 
-      const filteredDib = await this.dibRepository
-        .createQueryBuilder('dib')
-        .leftJoinAndSelect('dib.user', 'user')
-        .leftJoinAndSelect('dib.crewBoard', 'crewBoard')
-        .where('crewBoard.id = :crewBoardId', { crewBoardId: crewBoard.id })
-        .getMany();
+        const filteredDib = await this.dibRepository
+          .createQueryBuilder('dib')
+          .leftJoinAndSelect('dib.user', 'user')
+          .leftJoinAndSelect('dib.crewBoard', 'crewBoard')
+          .where('crewBoard.id = :crewBoardId', { crewBoardId: crewBoard.id })
+          .getMany();
 
-      const dibUsers = [];
-      filteredDib.map((el) => {
-        console.log(el.user);
-        dibUsers.push(el.user);
-      });
-      console.log({
-        ...crewBoard,
-        assignedUsers,
-        dibUsers,
-      });
-      return {
-        ...crewBoard,
-        assignedUsers,
-        dibUsers,
-      };
-    });
+        const dibUsers = [];
+        filteredDib.map((el) => {
+          // console.log(el.user);
+          dibUsers.push(el.user);
+        });
+        console.log({
+          ...crewBoard,
+          assignedUsers,
+          dibUsers,
+        });
+        return {
+          ...crewBoard,
+          assignedUsers,
+          dibUsers,
+        };
+      }),
+    );
+    // console.log(result);
     return result;
   }
 
@@ -158,17 +160,11 @@ export class CrewBoardService {
   //   );
   // }
 
-  // findAppliedCrewUserList() {
-  //   this.crewUserListRepository.find()
-  // }
-
-  // findAcceptedCrewUserList() {}
-
   async findAllLatestFirst() {
     const newCrewBoard = [];
     const cutAlreadyDone = [];
     const today = new Date();
-    const crewBoard = await this.findAll();
+    const crewBoard = await this.findAllWithUsers();
 
     this.cutAlreadyDone(crewBoard, today, cutAlreadyDone);
     cutAlreadyDone.sort((a, b) => Number(b.createdAt) - Number(a.createdAt));
@@ -181,7 +177,7 @@ export class CrewBoardService {
     const newCrewBoard = [];
     const cutAlreadyDone = [];
     const today = new Date();
-    const crewBoard = await this.findAll();
+    const crewBoard = await this.findAllWithUsers();
 
     this.cutAlreadyDone(crewBoard, today, cutAlreadyDone);
 
@@ -219,7 +215,7 @@ export class CrewBoardService {
         throw new Error(`검색어 [${search}]로 조회된 검색결과가 없습니다`);
       }
     } else {
-      crewBoard = await this.findAll();
+      crewBoard = await this.findAllWithUsers();
       newCrewBoard = [];
     }
 

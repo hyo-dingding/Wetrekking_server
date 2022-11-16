@@ -164,8 +164,8 @@ type Query {
   fetchAllCrewBoards: [CrewBoard!]!
   fetchAllCrewBoardsWithUsers: [CrewBoardAndUser!]!
   fetchAllCrewBoardsWithDelete: [CrewBoard!]!
-  fetchCrewBoardsLatestFirst: [[CrewBoard!]!]!
-  fetchCrewBoardsDeadlineFirst: [[CrewBoard!]!]!
+  fetchCrewBoardsLatestFirst: [[CrewBoardAndUser!]!]!
+  fetchCrewBoardsDeadlineFirst: [[CrewBoardAndUser!]!]!
   fetchCrewBoardsBySearch(region: String!, startDate: String!, endDate: String!, search: String!): [[CrewBoard!]!]!
   fetchCrewBoardsTEST: [[CrewBoard!]!]!
   fetchBoardImage(crewBoardId: String!): [CrewBoardImage!]!
