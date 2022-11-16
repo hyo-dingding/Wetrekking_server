@@ -63,6 +63,25 @@ type Dib {
   crewBoard: CrewBoard!
 }
 
+type CrewBoardAndUser {
+  id: String!
+  title: String!
+  description: String!
+  date: String!
+  dateTime: String!
+  addressDetail: String!
+  address: String!
+  gender: String!
+  dues: Int!
+  peoples: Int!
+  thumbnail: String!
+  mountain: Mountain!
+  dibUsers: [User!]!
+  assignedUsers: [User!]!
+  createdAt: DateTime!
+  updatedAt: DateTime
+}
+
 type ReviewBoard {
   id: String!
   title: String!
@@ -141,6 +160,7 @@ type Query {
   fetchDibs: [Dib!]!
   fetchCrewBoard(crewBoardId: String!): CrewBoard!
   fetchAllCrewBoards: [CrewBoard!]!
+  fetchAllCrewBoardsWithUsers: [CrewBoardAndUser!]!
   fetchAllCrewBoardsWithDelete: [CrewBoard!]!
   fetchCrewBoardsLatestFirst: [[CrewBoard!]!]!
   fetchCrewBoardsDeadlineFirst: [[CrewBoard!]!]!

@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { CrewUserList } from 'src/apis/crewUserList/entities/crewUserListList.entity';
+import { CrewUserList } from 'src/apis/crewUserList/entities/crewUserList.entity';
 import { Mountain } from 'src/apis/mountains/entities/mountain.entity';
 import { User } from 'src/apis/users/entities/user.entity';
 import {
