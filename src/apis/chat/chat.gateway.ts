@@ -20,7 +20,7 @@ import {
 import mongoose from 'mongoose';
 import { Server, Socket } from 'socket.io';
 import { Repository } from 'typeorm';
-import { CrewUserList } from '../crewUserList/entities/crewUserListList.entity';
+import { CrewUserList } from '../crewUserList/entities/crewUserList.entity';
 import { User } from '../users/entities/user.entity';
 import { ChatService } from './chat.service';
 import { Room, RoomDocument } from './schemas/room.schema';

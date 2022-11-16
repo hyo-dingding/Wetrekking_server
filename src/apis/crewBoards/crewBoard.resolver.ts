@@ -6,6 +6,7 @@ import { CrewBoardImageService } from '../crewBoardImages/crewBoardImage.service
 import { DibService } from '../dib/dib.service';
 import { CrewBoardService } from './crewBoard.service';
 import { CreateCrewBoardInput } from './dto/createCrewBoard.input';
+import { CrewBoardAndUser } from './dto/crewBoardAndUser.output';
 import { UpdateCrewBoardInput } from './dto/updateCrewBoard.input';
 import { CrewBoard } from './entities/crewBoard.entity';
 
@@ -25,6 +26,11 @@ export class CrewBoardResolver {
   @Query(() => [CrewBoard])
   fetchAllCrewBoards() {
     return this.crewBoardService.findAll();
+  }
+
+  @Query(() => [CrewBoardAndUser])
+  async fetchAllCrewBoardsWithUsers() {
+    return await this.crewBoardService.findAllWithUsers();
   }
 
   @Query(() => [CrewBoard])

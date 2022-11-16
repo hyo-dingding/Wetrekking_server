@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CrewUserList } from '../crewUserList/entities/crewUserList.entity';
+import { Dib } from '../dib/entities/dib.entity';
 import { User } from '../users/entities/user.entity';
+import { CrewBoardAndUser } from './dto/crewBoardAndUser.output';
 import { CrewBoard } from './entities/crewBoard.entity';
 
 @Injectable()
@@ -13,6 +16,12 @@ export class CrewBoardService {
 
     @InjectRepository(User)
     private readonly userRepository: Repository<User>, //
+
+    @InjectRepository(CrewUserList)
+    private readonly crewUserListRepository: Repository<CrewUserList>,
+
+    @InjectRepository(Dib)
+    private readonly dibRepository: Repository<Dib>,
 
     private readonly elasticsearchService: ElasticsearchService,
   ) {}
@@ -34,6 +43,55 @@ export class CrewBoardService {
     return this.crewBoardRepository.find({
       relations: ['user', 'mountain'],
     });
+  }
+
+  async findAllWithUsers() {
+    const crewBoards = await this.crewBoardRepository
+      .createQueryBuilder('crewBoard')
+      .leftJoinAndSelect('crewBoard.mountain', 'mountain')
+      .getMany();
+    console.log(crewBoards);
+    const result = crewBoards.map(async (crewBoard) => {
+      const filteredList = await this.crewUserListRepository
+        .createQueryBuilder('crewUserList')
+        .leftJoinAndSelect('crewUserList.crewBoard', 'crewBoard')
+        .leftJoinAndSelect('crewUserList.user', 'user')
+        .where('crewBoard.id = :crewBoardId', {
+          crewBoardId: crewBoard.id,
+        })
+        .andWhere('crewUserList.status = "승인"')
+        .getMany();
+
+      const assignedUsers = [];
+      filteredList.map((el) => {
+        console.log(el.user);
+        assignedUsers.push(el.user);
+      });
+
+      const filteredDib = await this.dibRepository
+        .createQueryBuilder('dib')
+        .leftJoinAndSelect('dib.user', 'user')
+        .leftJoinAndSelect('dib.crewBoard', 'crewBoard')
+        .where('crewBoard.id = :crewBoardId', { crewBoardId: crewBoard.id })
+        .getMany();
+
+      const dibUsers = [];
+      filteredDib.map((el) => {
+        console.log(el.user);
+        dibUsers.push(el.user);
+      });
+      console.log({
+        ...crewBoard,
+        assignedUsers,
+        dibUsers,
+      });
+      return {
+        ...crewBoard,
+        assignedUsers,
+        dibUsers,
+      };
+    });
+    return result;
   }
 
   findAllWithDeleted() {

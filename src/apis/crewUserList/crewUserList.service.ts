@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CrewBoard } from '../crewBoards/entities/crewBoard.entity';
-import { CrewUserList } from './entities/crewUserListList.entity';
+import { CrewUserList } from './entities/crewUserList.entity';
 
 @Injectable()
 export class CrewUserListService {

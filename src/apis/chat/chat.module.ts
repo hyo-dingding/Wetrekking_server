@@ -3,7 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CrewBoardService } from '../crewBoards/crewBoard.service';
 import { CrewBoard } from '../crewBoards/entities/crewBoard.entity';
-import { CrewUserList } from '../crewUserList/entities/crewUserListList.entity';
+import { CrewUserList } from '../crewUserList/entities/crewUserList.entity';
 import { User } from '../users/entities/user.entity';
 import { ChatGateway } from './chat.gateway';
 import { ChatResolver } from './chat.resolver';

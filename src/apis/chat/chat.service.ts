@@ -9,7 +9,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Chat, ChatDocument } from './schemas/chat.schema';
 import mongoose from 'mongoose';
 import { Room, RoomDocument } from './schemas/room.schema';
-import { CrewUserList } from '../crewUserList/entities/crewUserListList.entity';
+import { CrewUserList } from '../crewUserList/entities/crewUserList.entity';
 
 @Injectable()
 export class ChatService {
