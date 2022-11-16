@@ -21,6 +21,7 @@ import { CrewBoard } from './entities/crewBoard.entity';
       CrewUserList,
       Mountain,
       Dib,
+      CrewUserList,
     ]),
     ElasticsearchModule.register({
       node: 'http://elasticsearch:9200',
