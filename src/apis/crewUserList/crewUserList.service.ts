@@ -42,6 +42,16 @@ export class CrewUserListService {
     });
   }
 
+  async findCrewList({ userId, crewBoardId }) {
+    return await this.crewUserListRepository.find({
+      where: {
+        crewBoard: { id: crewBoardId }, //
+        user: { id: userId },
+      },
+      relations: ['user', 'crewBoard'],
+    });
+  }
+
   async create({ userId, crewBoardId }) {
     const userList = await this.crewUserListRepository.save({
       user: userId,
