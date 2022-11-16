@@ -41,7 +41,7 @@ export class CrewCommentResolver {
     @Args('createCrewCommentInput')
     createCrewCommentInput: CreateCrewCommentInput,
   ) {
-    const user = context.req.user.email;
+    const user = context.req.user.id;
     return this.crewCommentService.create({ createCrewCommentInput, user });
   }
 
@@ -54,7 +54,7 @@ export class CrewCommentResolver {
     @Args('updateCrewCommentInput')
     updateCrewCommentInput: UpdateCrewCommentInput,
   ) {
-    const user = context.req.user.email;
+    const user = context.req.user.id;
 
     return this.crewCommentService.update({
       user,
@@ -98,7 +98,7 @@ export class CrewCommentResolver {
     createSubCrewCommentInput: CreateSubCrewCommentInput, //
     @Context() context: IContext,
   ) {
-    const user = context.req.user.email;
+    const user = context.req.user.id;
     return this.crewCommentService.createSub({
       user,
       createSubCrewCommentInput,
@@ -108,16 +108,17 @@ export class CrewCommentResolver {
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => CrewComment)
   updateCrewSubComment(
-    @Args('updateComment', { nullable: true }) updateComment: string, //
-    @Args('subCommentId', { nullable: true }) subCommentId: string,
+    @Args('subCommentId') subCommentId: string,
+    @Args('updateSubCrewCommentInput')
+    updateSubCrewCommentInput: UpdateSubCrewCommentInput, //
     @Context() context: IContext,
   ) {
-    const user = context.req.user.email;
+    const user = context.req.user.id;
 
     return this.crewCommentService.updateSub({
-      user,
-      updateComment,
       subCommentId,
+      updateSubCrewCommentInput,
+      user,
     });
   }
 

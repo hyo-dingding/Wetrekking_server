@@ -226,7 +226,7 @@ type Mutation {
   updateCrewComment(commentId: String!, updateCrewCommentInput: UpdateCrewCommentInput!): CrewComment!
   deleteCrewComment(commentId: String!): Boolean!
   createCrewSubComment(createSubCrewCommentInput: CreateSubCrewCommentInput!): CrewComment!
-  updateCrewSubComment(updateComment: String, subCommentId: String): CrewComment!
+  updateCrewSubComment(subCommentId: String!, updateSubCrewCommentInput: UpdateSubCrewCommentInput!): CrewComment!
   deleteCrewSubComment(subCommentId: String!): Boolean!
   createRoom(boardId: String!, roomName: String!): Room!
   createReviewComment(reviewBoardId: String!, reviewComment: String!): ReviewComment!
@@ -310,4 +310,9 @@ input UpdateCrewCommentInput {
 input CreateSubCrewCommentInput {
   subComment: String!
   parentId: String!
+}
+
+input UpdateSubCrewCommentInput {
+  subComment: String
+  parentId: String
 }

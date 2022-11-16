@@ -19,18 +19,6 @@ export class CrewCommentService {
   ) {}
 
   async findAll({ page, boardId }) {
-    // const result = await this.crewCommentRepository.find({
-    //   where: {
-    //     crewBoard: { id: boardId },
-    //     subCrewComment: { id: null },
-    //   },
-    //   relations: ['crewBoard', 'user'],
-    //   order: {
-    //     createdAt: 'ASC',
-    //   },
-    //   take: 9,
-    //   skip: page ? (page - 1) * 9 : 0,
-    // });
     const result = await this.crewCommentRepository
       .createQueryBuilder('CrewComment')
       .leftJoinAndSelect('CrewComment.user', 'user')
@@ -73,7 +61,7 @@ export class CrewCommentService {
     const { comment, boardId } = createCrewCommentInput;
 
     const findUser = await this.userRepository.findOne({
-      where: { email: user },
+      where: { id: user },
     });
 
     const findBoard = await this.crewBoardRepository.findOne({
@@ -93,10 +81,10 @@ export class CrewCommentService {
     });
 
     const findUser = await this.userRepository.findOne({
-      where: { email: user },
+      where: { id: user },
     });
 
-    if (user !== findUser.email)
+    if (user !== findUser.id)
       throw new ConflictException('아이디가 일치하지 않습니다.');
 
     return await this.crewCommentRepository.save({
@@ -109,7 +97,7 @@ export class CrewCommentService {
   async delete({ commentId, context }) {
     const user = context.req.user.email;
     const comment = await this.find({ commentId });
-    const dbUser = comment.user.email;
+    const dbUser = comment.user.id;
 
     if (user !== dbUser) throw new ConflictException('아이디가 다릅니다');
 
@@ -127,20 +115,6 @@ export class CrewCommentService {
   }
   // 대댓글 조회
   async findSubAll({ page, commentId }) {
-    // return await this.crewCommentRepository.find({
-    //   where: {
-    //     crewBoard: {
-    //       id: boardId,
-    //     },
-    //     subCrewComment: { id: commentId },
-    //   },
-    //   relations: ['crewBoard', 'user'],
-    //   order: {
-    //     comment: 'ASC',
-    //   },
-    //   take: 9,
-    //   skip: page ? (page - 1) * 9 : 0,
-    // });
     const result = await this.crewCommentRepository
       .createQueryBuilder('CrewComment')
       .leftJoinAndSelect('CrewComment.user', 'user')
@@ -179,7 +153,7 @@ export class CrewCommentService {
     });
 
     const findUser = await this.userRepository.findOne({
-      where: { email: user },
+      where: { id: user },
     });
 
     return await this.crewCommentRepository.save({
@@ -192,24 +166,23 @@ export class CrewCommentService {
   }
 
   // 대댓글 수정
-  async updateSub({ user, subCommentId, updateComment }) {
+  async updateSub({ subCommentId, updateSubCrewCommentInput, user }) {
+    const { subComment } = updateSubCrewCommentInput;
+
     const findSubComment = await this.crewCommentRepository.findOne({
       where: { id: subCommentId },
       relations: ['crewBoard', 'user'],
     });
-    console.log(findSubComment);
 
-    const findUser = await this.userRepository.findOne({
-      where: { email: user },
-    });
+    console.log(user);
 
-    if (user !== findUser.email)
+    if (user !== findSubComment.user.id)
       throw new ConflictException('아이디가 일치하지 않습니다.');
 
     return await this.crewCommentRepository.save({
       ...findSubComment,
       id: subCommentId,
-      comment: updateComment,
+      comment: subComment,
     });
   }
 
@@ -233,11 +206,4 @@ export class CrewCommentService {
 
     return result.affected ? true : false;
   }
-
-  // async removeSubAll({ commentId }) {
-  //   const deleteSub = await this.crewCommentRepository.find({
-  //     where: { subCrewComment: { id: commentId } },
-  //     relations: ['crewBoard', 'user'],
-  //   });
-  // }
 }
