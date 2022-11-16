@@ -85,14 +85,13 @@ export class ChatGateway
     // })
 
     if (name !== null) {
-      const user = await this.crewUserListRepository.findOne({
-        where: {
-          crewBoard: { id: boardId },
-          status: '수락',
-          user: { name: name },
-        },
-        relations: ['user', 'crewBoard'],
-      });
+      const user = await this.crewUserListRepository
+        .createQueryBuilder('crewUserList')
+        .leftJoinAndSelect('crewUserList.user', 'user')
+        .leftJoinAndSelect('crewUserList.crewBoard', 'crewBoard')
+        .where('user.status = "수락"')
+        .andWhere('crewBoard.id = :boardId', { boardId })
+        .getOne();
 
       console.log(user);
 
