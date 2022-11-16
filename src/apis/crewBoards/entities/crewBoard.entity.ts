@@ -27,8 +27,8 @@ export class CrewBoard {
   @Field(() => String)
   description: string;
 
-  // @Column()
-  // deadline: Date;
+  @Column()
+  deadline: Date;
 
   @Column()
   @Field(() => String)
