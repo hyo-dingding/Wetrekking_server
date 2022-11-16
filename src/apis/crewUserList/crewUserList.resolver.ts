@@ -49,7 +49,9 @@ export class CrewUserListResolver {
       userId,
     });
 
-    if (find.length !== 0) return '이미 신청한 게시글입니다.';
+    if (find.length !== 0) {
+      throw new Error('이미 신청한 게시글입니다.');
+    }
 
     await this.crewUserListService.create({ userId, crewBoardId });
     return ' 크루 리스트에 추가 되었습니다.';
