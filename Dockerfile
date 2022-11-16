@@ -1,10 +1,10 @@
 FROM node:16
 
-WORKDIR /myfolder/
-COPY ./package.json /myfolder/
-COPY ./yarn.lock /myfolder/
+WORKDIR /team-wetrekking/
+COPY ./package.json /team-wetrekking/
+COPY ./yarn.lock /team-wetrekking/
 RUN yarn install
 
-COPY . /myfolder/
+COPY . /team-wetrekking/
 
 CMD yarn start:dev

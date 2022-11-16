@@ -2,6 +2,24 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Mountain {
+  id: String!
+  mountain: String!
+  address: String!
+}
+
+type User {
+  id: String!
+  email: String!
+  name: String!
+  nickname: String!
+  birth: String!
+  phone: String!
+  gender: String!
+  profile_img: String
+  point: Int!
+}
+
 type CrewBoard {
   id: String!
   title: String!
@@ -13,56 +31,183 @@ type CrewBoard {
   gender: String!
   dues: Int!
   peoples: Int!
+  thumbnail: String!
+  mountain: Mountain!
+  user: User!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
-type User {
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type CrewBoardImage {
   id: String!
-  email: String!
-  name: String!
-  nickname: String!
-  phone: String!
-  gender: String!
-  profile_img: String
-  point: Int!
+  imgUrl: String!
+  isMain: Boolean!
+  crewBoard: CrewBoard!
 }
 
-type Image {
+type Dib {
+  id: String!
+  user: User!
+  crewBoard: CrewBoard!
+}
+
+type CrewUserList {
+  id: String!
+  status: String!
+  user: User!
+  crewBoard: CrewBoard!
+}
+
+type ReviewBoard {
+  id: String!
+  title: String!
+  review: String!
+  star: Float!
+  like: Int!
+  user: User!
+  crewUserList: CrewUserList!
+}
+
+type ReviewBoardImage {
   id: String!
   url: String!
   isMain: Boolean!
-  reviewBoardId: String!
-  crewBoardId: CrewBoard!
+  reviewBoard: ReviewBoard!
+}
+
+type CrewComment {
+  id: String!
+  comment: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  crewBoard: CrewBoard!
+  user: User!
+  subCrewComment: CrewComment!
+}
+
+type Chat {
+  name: String!
+  roomName: String!
+  message: String!
+}
+
+type Room {
+  roomName: String!
+  boardId: String!
+  user: String!
+}
+
+type ReviewComment {
+  id: String!
+  reviewComment: String!
+  createdAt: DateTime!
+  deletedAt: DateTime!
+  user: User!
+  reviewBoard: ReviewBoard!
+}
+
+type PointPayment {
+  id: String!
+  impUid: String!
+  amount: Int!
+  status: POINT_PAYMENT_STATUS_ENUM!
+  user: User!
+  createAt: DateTime!
+}
+
+enum POINT_PAYMENT_STATUS_ENUM {
+  PAYMENT
+  CANCEL
+}
+
+type Trekking {
+  mountainName: String!
+  xyz: [[Float!]!]!
 }
 
 type Query {
+  fetchTrekkingInfo(address: String!, mountainName: String!): Trekking!
+  fetchReviewBoardImage(reviewBoardId: String!): [ReviewBoardImage!]!
+  fetchAllReviewBoardImages: [ReviewBoardImage!]!
+  fetchMountain(mountainId: String!): Mountain!
+  fetchAllMountains: [Mountain!]!
+  fetchMountainsWithSearch(search: String!): [Mountain!]!
+  fetchDibs: [Dib!]!
   fetchCrewBoard(crewBoardId: String!): CrewBoard!
   fetchAllCrewBoards: [CrewBoard!]!
   fetchAllCrewBoardsWithDelete: [CrewBoard!]!
   fetchCrewBoardsLatestFirst: [[CrewBoard!]!]!
   fetchCrewBoardsDeadlineFirst: [[CrewBoard!]!]!
-  fetchCrewBoardsByDate(startDate: String!, endDate: String!): [[CrewBoard!]!]!
+  fetchCrewBoardsBySearch(region: String!, startDate: String!, endDate: String!, search: String!): [[CrewBoard!]!]!
   fetchCrewBoardsTEST: [[CrewBoard!]!]!
-  fetchUser(email: String!): User!
-  fetchCheckEmail(email: String!): User!
-  fetchCheckNickName(nickname: String!): User!
-  fetchCrewBoardImages: [Image!]!
-  fetchBoardImage(ImageId: String!): Image!
+  fetchBoardImage(crewBoardId: String!): [CrewBoardImage!]!
+  fetchAllCrewBoardImages: [CrewBoardImage!]!
+  fetchCrewUserList: [CrewUserList!]!
+  fetchHostCrewList: [CrewBoard!]!
+  fetchVisitList: [CrewUserList!]!
+  fetchReviewBoard(reviewBoardId: String!): ReviewBoard!
+  fetchReviewBoards: [ReviewBoard!]!
+  fetchUser: User!
+  fetchCrewComments(boardId: String!, page: Int): [CrewComment!]!
+  fetchUserCrewComments(userId: String!, boardId: String!): [CrewComment!]!
+  fetchCrewSubComments(commentId: String!, page: Int): [CrewComment!]!
+  fetchUserCrewSubComments(userId: String!, boardId: String!): [CrewComment!]!
+  fetchLogs(roomName: String!): [Chat!]!
+  fetchReviewComments(reviewBoardId: String!, page: Int): [ReviewComment!]!
 }
 
 type Mutation {
-  sendTokenToPhone(phone: String!): String!
-  checkTokenPhone(phone: String!, token: String!): String!
-  createCrewBoard(createCrewBoardInput: CreateCrewBoardInput!): CrewBoard!
-  createCrewBoardTEST(createCrewBoardInput: CreateCrewBoardInput!): CrewBoard!
-  updateCrewBoard(crewBoardId: String!, updateCrewBoardInput: UpdateCrewBoardInput!): CrewBoard!
-  deleteCrewBoard(crewBoardId: String!): String!
-  createUser(createUserInput: CreateUserInput!): User!
-  updateUser(userId: String!, updateUserInput: UpdateUserInput!): User!
-  deleteUser(userId: String!): Boolean!
+  uploadReviewBoaredImage(imgURL: [String!]!, reviewBoardId: String!): [ReviewBoardImage!]!
+  likeReviewBoard(reviewBoardId: String!): String!
+  createMountain: String!
+  createPointPayment(impUid: String!, amount: Int!): PointPayment!
+  cancelPointPayment(impUid: String!): PointPayment!
+  createDib(crewBoardId: String!): Boolean!
   login(email: String!, password: String!): String!
   logout: String!
   restoreAccessToken: String!
-  uploadCrewBoaredImage(image: [Upload!]!): String!
+  createCrewBoard(createCrewBoardInput: CreateCrewBoardInput!, imgURL: [String!]!, mountainId: String!): CrewBoard!
+  createCrewBoardTEST(createCrewBoardInput: CreateCrewBoardInput!): CrewBoard!
+  updateCrewBoard(crewBoardId: String!, updateCrewBoardInput: UpdateCrewBoardInput!, imgURL: [String!]!): CrewBoard!
+  deleteCrewBoard(crewBoardId: String!): Boolean!
+  uploadCrewBoardImage(imgURL: [String!]!, crewBoardId: String!): [CrewBoardImage!]!
+  createCrewUserList(crewBoardId: String!): String!
+  deleteCrewUserList(crewBoardId: String!): String!
+  acceptCrew(id: String!): CrewUserList!
+  rejectCrew(id: String!): CrewUserList!
+  finishCrew(id: String!): CrewUserList!
+  uploadFilesForCrewBoard(files: [Upload!]!): [String!]!
+  uploadFilesForReviewBoard(files: [Upload!]!): [String!]!
+  uploadFileForUserProfile(file: Upload!): String!
+  sendTokenToPhone(phone: String!): String!
+  checkTokenPhone(phone: String!, phoneToken: String!): String!
+  createReviewBoard(createReviewBoardInput: CreateReviewBoardInput!, crewUserListId: String!, imgURL: [String!]!): ReviewBoard!
+  updateReviewBoard(reviewBoardId: String!, updateReviewBoardInput: UpdateReviewBoardInput!, imgURL: [String!]!): ReviewBoard!
+  findUserEmail(name: String!, phone: String!, phoneToken: String!): String!
+  findUserPassword(name: String!, email: String!, phone: String!, phoneToken: String!): String!
+  updatePassword(password: String!): String!
+  checkEmail(email: String!): String!
+  checkNickName(nickname: String!): String!
+  socialUpdateUser(phoneToken: String!, updateUserInput: UpdateUserInput!): User!
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(email: String!, updateUserInput: UpdateUserInput!): User!
+  deleteUser(userId: String!): Boolean!
+  createCrewComment(createCrewCommentInput: CreateCrewCommentInput!): CrewComment!
+  updateCrewComment(commentId: String!, updateCrewCommentInput: UpdateCrewCommentInput!): CrewComment!
+  deleteCrewComment(commentId: String!): Boolean!
+  createCrewSubComment(createSubCrewCommentInput: CreateSubCrewCommentInput!): CrewComment!
+  updateCrewSubComment(updateComment: String, subCommentId: String): CrewComment!
+  deleteCrewSubComment(subCommentId: String!): Boolean!
+  createRoom(boardId: String!, roomName: String!): Room!
+  createReviewComment(reviewBoardId: String!, reviewComment: String!): ReviewComment!
+  updateReviewComment(reviewCommentId: String, updateComment: String): ReviewComment!
+  deleteReviewComment(reviewCommentId: String!): Boolean!
 }
 
 input CreateCrewBoardInput {
@@ -75,6 +220,7 @@ input CreateCrewBoardInput {
   description: String!
   gender: String!
   peoples: Int!
+  thumbnail: String!
 }
 
 input UpdateCrewBoardInput {
@@ -87,16 +233,22 @@ input UpdateCrewBoardInput {
   description: String
   gender: String
   peoples: Int
+  thumbnail: String
 }
 
-input CreateUserInput {
-  email: String!
-  password: String!
-  name: String!
-  nickname: String
-  phone: String
-  gender: String
-  profile_img: String
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input CreateReviewBoardInput {
+  title: String!
+  review: String!
+  star: Float!
+}
+
+input UpdateReviewBoardInput {
+  title: String
+  review: String
+  star: Float
 }
 
 input UpdateUserInput {
@@ -104,10 +256,34 @@ input UpdateUserInput {
   password: String
   name: String
   nickname: String
+  birth: String
   phone: String
   gender: String
   profile_img: String
 }
 
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
+input CreateUserInput {
+  email: String!
+  password: String!
+  name: String!
+  nickname: String
+  birth: String
+  phone: String
+  gender: String
+  profile_img: String
+}
+
+input CreateCrewCommentInput {
+  comment: String!
+  boardId: String!
+}
+
+input UpdateCrewCommentInput {
+  comment: String
+  boardId: String
+}
+
+input CreateSubCrewCommentInput {
+  subComment: String!
+  parentId: String!
+}
