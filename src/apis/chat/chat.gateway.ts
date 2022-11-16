@@ -27,7 +27,11 @@ import { Room, RoomDocument } from './schemas/room.schema';
 @WebSocketGateway({
   namespace: 'wetrekkingchat',
   cors: {
-    origin: true,
+    origin: [
+      'http://localhost:3000',
+      'https://develop.wetrekking.kr',
+      'https://wetrekking.kr',
+    ],
     credentials: true,
   },
 })
