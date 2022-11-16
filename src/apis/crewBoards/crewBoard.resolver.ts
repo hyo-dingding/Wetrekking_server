@@ -15,7 +15,7 @@ export class CrewBoardResolver {
   constructor(
     private readonly crewBoardService: CrewBoardService, //
     private readonly crewBoardImageService: CrewBoardImageService, //
-    private readonly DibService: DibService,
+    private readonly dibService: DibService,
   ) {}
 
   @Query(() => CrewBoard)
@@ -38,12 +38,12 @@ export class CrewBoardResolver {
     return this.crewBoardService.findAllWithDeleted();
   }
 
-  @Query(() => [[CrewBoard]])
-  fetchCrewBoardsLatestFirst() {
-    return this.crewBoardService.findAllLatestFirst();
+  @Query(() => [[CrewBoardAndUser]])
+  async fetchCrewBoardsLatestFirst() {
+    return this.crewBoardService.findAllDeadlineFirst();
   }
 
-  @Query(() => [[CrewBoard]])
+  @Query(() => [[CrewBoardAndUser]])
   fetchCrewBoardsDeadlineFirst() {
     return this.crewBoardService.findAllDeadlineFirst();
   }
@@ -120,7 +120,7 @@ export class CrewBoardResolver {
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => Boolean)
   deleteCrewBoard(@Args('crewBoardId') crewBoardId: string) {
-    this.DibService.delete({ crewBoardId });
+    this.dibService.delete({ crewBoardId });
     console.log(crewBoardId);
     return this.crewBoardService.delete({ crewBoardId });
   }
