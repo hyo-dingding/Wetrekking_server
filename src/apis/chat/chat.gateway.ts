@@ -89,7 +89,7 @@ export class ChatGateway
         .createQueryBuilder('crewUserList')
         .leftJoinAndSelect('crewUserList.user', 'user')
         .leftJoinAndSelect('crewUserList.crewBoard', 'crewBoard')
-        .where('user.status = "수락"')
+        .where('crewUserList.status = "수락"')
         .andWhere('crewBoard.id = :boardId', { boardId })
         .getOne();
 
