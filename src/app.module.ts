@@ -55,6 +55,8 @@ import { TrekkingModule } from './apis/trekking/trekking.module';
           'http://localhost:3000',
           'https://develop.wetrekking/graphql',
           'https://wetrekking.kr',
+          'http://localhost:5501',
+          'http://localhost:5500',
         ],
         credentials: true,
         exposedHeaders: ['Set-Cookie', 'Cookie'],

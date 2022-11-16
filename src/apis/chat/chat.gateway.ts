@@ -31,6 +31,8 @@ import { Room, RoomDocument } from './schemas/room.schema';
       'http://localhost:3000',
       'https://develop.wetrekking.kr',
       'https://wetrekking.kr',
+      'http://localhost:5501',
+      'http://localhost:5500',
     ],
     credentials: true,
   },
