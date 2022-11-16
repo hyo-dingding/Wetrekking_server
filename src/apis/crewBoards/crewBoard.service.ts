@@ -24,9 +24,6 @@ export class CrewBoardService {
     @InjectRepository(CrewUserList)
     private readonly crewUserListRepository: Repository<CrewUserList>,
 
-    @InjectRepository(CrewUserList)
-    private readonly crewUserListRepository: Repository<CrewUserList>,
-
     @InjectRepository(Dib)
     private readonly dibRepository: Repository<Dib>,
 
