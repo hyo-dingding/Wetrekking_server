@@ -11,16 +11,20 @@ export class TrekkingInfo {
   // mountainName: string;
 
   @Prop()
+  @Field(() => String)
   mountainName: string;
 
   @Prop()
+  @Field(() => String)
   trekkingName: string;
 
   @Prop()
+  @Field(() => String)
   difficulty: string;
 
   @Prop()
-  coordinate: number[];
+  @Field(() => [[Float]])
+  coordinate: number[][];
 }
 
 export const TrekkingInfoSchema = SchemaFactory.createForClass(TrekkingInfo);

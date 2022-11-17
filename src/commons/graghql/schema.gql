@@ -172,6 +172,7 @@ type Query {
   fetchBoardImage(crewBoardId: String!): [CrewBoardImage!]!
   fetchAllCrewBoardImages: [CrewBoardImage!]!
   fetchCrewUserList: [CrewUserList!]!
+  fetchApplyList(crewBoardId: String!): [CrewUserList!]!
   fetchHostCrewList: [CrewBoard!]!
   fetchVisitList: [CrewUserList!]!
   fetchReviewBoard(reviewBoardId: String!): ReviewBoard!
