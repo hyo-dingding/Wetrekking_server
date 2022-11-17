@@ -2,27 +2,23 @@ import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GqlAuthAccessGuard } from 'src/commons/auth/gql-auth.guard';
 import { IContext } from 'src/commons/type/context';
-import { CrewBoard } from '../crewBoards/entities/crewBoard.entity';
-
-import { Dib } from './entities/dib.entity';
 import { DibService } from './dib.service';
-import { check } from 'prettier';
+import { DibsWithCrewBoard } from './dto/dibsWithCrewBoard.output';
 
 @Resolver()
 export class DibResolver {
   constructor(
-    private readonly DibService: DibService, //
+    private readonly dibService: DibService, //
   ) {}
 
   @UseGuards(GqlAuthAccessGuard)
-  @Query(() => [Dib])
+  @Query(() => [DibsWithCrewBoard])
   async fetchDibs(
     @Context() context: IContext, //
   ) {
     const userId = context.req.user.id;
-    const DibList = await this.DibService.findAll({ userId });
-
-    return DibList;
+    const result = await this.dibService.findAll({ userId });
+    return result;
   }
 
   // 찜하기(로그인 필수)
@@ -34,14 +30,14 @@ export class DibResolver {
   ) {
     const userId = context.req.user.id;
 
-    const checkDib = await this.DibService.findOne({ crewBoardId });
+    const checkDib = await this.dibService.findOne({ userId, crewBoardId });
     console.log(checkDib);
 
     if (checkDib === null) {
-      this.DibService.create({ userId, crewBoardId });
+      this.dibService.create({ userId, crewBoardId });
       return true;
     } else {
-      this.DibService.delete({ crewBoardId });
+      this.dibService.delete({ crewBoardId });
       return false;
     }
   }

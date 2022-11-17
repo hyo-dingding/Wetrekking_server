@@ -85,11 +85,11 @@ export class CrewBoardService {
           // console.log(el.user);
           dibUsers.push(el.user);
         });
-        console.log({
-          ...crewBoard,
-          assignedUsers,
-          dibUsers,
-        });
+        // console.log({
+        //   ...crewBoard,
+        //   assignedUsers,
+        //   dibUsers,
+        // });
         return {
           ...crewBoard,
           assignedUsers,
