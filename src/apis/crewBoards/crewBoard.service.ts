@@ -64,7 +64,7 @@ export class CrewBoardService {
           .where('crewBoard.id = :crewBoardId', {
             crewBoardId: crewBoard.id,
           })
-          .andWhere('crewUserList.status = "수락")
+          .andWhere('crewUserList.status = "수락"')
           .getMany();
 
         const assignedUsers = [];
