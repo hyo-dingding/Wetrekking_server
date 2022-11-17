@@ -25,6 +25,23 @@ export class CrewUserListResolver {
     return user;
   }
 
+  @UseGuards(GqlAuthAccessGuard)
+  @Query(() => [CrewUserList])
+  async fetchApplyList(
+    @Context() context: IContext, //
+    @Args('crewBoardId') crewBoardId: string,
+  ) {
+    const result = await this.crewUserListService.findApplyToList({
+      crewBoardId,
+    });
+
+    if (result.length === 0) {
+      throw new Error('신청자가 없습니다.');
+    }
+
+    return result;
+  }
+
   // 방장인 올린 게시글 조회
   @UseGuards(GqlAuthAccessGuard)
   @Query(() => [CrewBoard])

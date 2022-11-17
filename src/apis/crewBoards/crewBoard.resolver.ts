@@ -40,7 +40,7 @@ export class CrewBoardResolver {
 
   @Query(() => [[CrewBoardAndUser]])
   async fetchCrewBoardsLatestFirst() {
-    return this.crewBoardService.findAllDeadlineFirst();
+    return this.crewBoardService.findAllLatestFirst();
   }
 
   @Query(() => [[CrewBoardAndUser]])
