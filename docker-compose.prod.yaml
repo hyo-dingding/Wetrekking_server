@@ -1,19 +1,15 @@
 version: '3.7'
 
 services:
-  team-wetrekking:
-    image: asia.gcr.io/wetrekking-367408/team-wetrekking-prod:1.0
+  wetrekking-prod:
+    image: asia.gcr.io/wetrekking-367408/team-wetrekking-prod:1.2
+    platform: linux/x86_64
     build:
       context: .
       dockerfile: Dockerfile.prod
-    volumes:
-      - ./src:/myfolder/src
-    env_file:
-      - ./.env.prod
+    # volumes:
+      # - ./src:/myfolder/src
+    # env_file:
+      # - ./.env.prod
     ports:
       - 3000:3000
-
-  my-redis:
-    image: redis:latest
-    ports:
-      - 6379:6379
