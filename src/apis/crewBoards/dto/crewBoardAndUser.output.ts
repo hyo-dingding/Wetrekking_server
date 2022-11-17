@@ -40,6 +40,9 @@ export class CrewBoardAndUser {
   @Field(() => Mountain)
   mountain: Mountain;
 
+  @Field(() => User)
+  user: User;
+
   @Field(() => [User])
   dibUsers: User[];
 
