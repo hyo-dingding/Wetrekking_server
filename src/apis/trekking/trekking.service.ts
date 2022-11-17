@@ -124,14 +124,21 @@ export class TrekkingService {
     //   });
     // }
 
-    for (let i = 0; i < ccc.length; i++) {
-      await this.trekkingInfoModel.create({
-        mountainName: ccc[i].properties['MNTN_NM'],
-        trekkingName: ccc[i].properties['PMNTN_NM'],
-        difficulty: ccc[i].properties['PMNTN_DFFL'],
-        coordinae: ccc[i].geometry.coordinates.flat(),
-      });
-    }
+    // for (let i = 0; i < ccc.length; i++) {
+    //   await this.trekkingInfoModel.create({
+    //     mountainName: ccc[i].properties['MNTN_NM'],
+    //     trekkingName: ccc[i].properties['PMNTN_NM'],
+    //     difficulty: ccc[i].properties['PMNTN_DFFL'],
+    //     coordinae: ccc[i].geometry.coordinates.flat(),
+    //   });
+    // }
+
+    await this.trekkingInfoModel.create({
+      mountainName: ccc[0].properties['MNTN_NM'],
+      trekkingName: ccc[0].properties['PMNTN_NM'],
+      difficulty: ccc[0].properties['PMNTN_DFFL'],
+      coordinae: ccc[0].geometry.coordinates.flat(),
+    });
     return '저장';
   }
 }

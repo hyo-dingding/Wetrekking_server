@@ -4,7 +4,6 @@ import {
   NotFoundException,
   UseGuards,
 } from '@nestjs/common';
-import { Context } from '@nestjs/graphql';
 import { InjectModel } from '@nestjs/mongoose';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
@@ -19,6 +18,7 @@ import {
 } from '@nestjs/websockets';
 import mongoose from 'mongoose';
 import { Server, Socket } from 'socket.io';
+
 import { Repository } from 'typeorm';
 import { CrewUserList } from '../crewUserList/entities/crewUserList.entity';
 import { User } from '../users/entities/user.entity';
@@ -29,7 +29,7 @@ import { Room, RoomDocument } from './schemas/room.schema';
   cors: {
     origin: [
       'http://localhost:3000',
-      'https://develop.wetrekking/graphql',
+      'https://develop.wetrekking.kr',
       'https://wetrekking.kr',
       'http://localhost:5501',
       'http://localhost:5500',
@@ -95,6 +95,7 @@ export class ChatGateway
         .getOne();
 
       console.log(user);
+      if (name !== user.user.name) throw new Error('이름이 일치하지 않습니다.');
 
       const findRoom = await this.roomModel.findOne({ boardId, roomName });
 
@@ -162,13 +163,12 @@ export class ChatGateway
     });
   }
 
-  //
   // @SubscribeMessage('leave')
   // async leaveChatRoom(
   //   @MessageBody() data: string, //
   //   @ConnectedSocket() client,
   // ) {
-  //   const [name, room] = data;
+  //   const [room, name] = data;
 
   //   const bye = `${name} 님이 나가셨습니다.`;
   //   this.server.emit('bye' + room, bye);
@@ -187,19 +187,3 @@ export class ChatGateway
     this.logger.log(`Client disconnected: ${client.id}`);
   }
 }
-
-// const validate = await this.crewUserListRepository
-//   .createQueryBuilder('crewUserList')
-//   .leftJoinAndSelect('crewUserList.user', 'user')
-//   .leftJoinAndSelect('crewUserList.crewBoard', 'crewBoard')
-//   .where('user.id = :userId', { userId: name })
-//   .andWhere('crewBoard.id = :boardId', { boardId: boardId })
-//   .getOne();
-
-// if (validate == null) {
-//   throw new NotFoundException(
-//     '해당 유저가 존재하지 않거나 현재 신청이 완료되지 않았습니다!!',
-//   );
-// }
-// name = validate.user.name;
-// room = validate.crewBoard.title;
