@@ -57,12 +57,6 @@ type CrewUserList {
   crewBoard: CrewBoard!
 }
 
-type Dib {
-  id: String!
-  user: User!
-  crewBoard: CrewBoard!
-}
-
 type CrewBoardAndUser {
   id: String!
   title: String!
@@ -146,6 +140,12 @@ enum POINT_PAYMENT_STATUS_ENUM {
   CANCEL
 }
 
+type DibsWithCrewBoard {
+  id: String!
+  user: User!
+  crewBoard: CrewBoardAndUser!
+}
+
 type Trekking {
   mountainName: String!
   xyz: [[Float!]!]!
@@ -160,7 +160,7 @@ type Query {
   fetchMountainsWithSearch(search: String!): [Mountain!]!
   fetchPointPayment: PointPayment!
   fetchPointPayments: [PointPayment!]!
-  fetchDibs: [Dib!]!
+  fetchDibs: [DibsWithCrewBoard!]!
   fetchCrewBoard(crewBoardId: String!): CrewBoard!
   fetchAllCrewBoards: [CrewBoard!]!
   fetchAllCrewBoardsWithUsers: [CrewBoardAndUser!]!
