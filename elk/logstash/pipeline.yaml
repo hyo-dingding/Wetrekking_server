@@ -1,6 +1,0 @@
-# - pipeline.id: id_mountain
-#   pipeline.workers: 1
-#   path.config: 'mountain.conf'
-# - pipeline.id: id_crewBoard
-#   pipeline.workers: 1
-#   path.config: 'crewBoard.conf'
