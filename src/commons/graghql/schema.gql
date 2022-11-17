@@ -76,6 +76,7 @@ type CrewBoardAndUser {
   peoples: Int!
   thumbnail: String!
   mountain: Mountain!
+  user: User!
   dibUsers: [User!]!
   assignedUsers: [User!]!
   createdAt: DateTime!

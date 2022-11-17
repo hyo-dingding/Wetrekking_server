@@ -52,6 +52,7 @@ export class CrewBoardService {
     const crewBoards = await this.crewBoardRepository
       .createQueryBuilder('crewBoard')
       .leftJoinAndSelect('crewBoard.mountain', 'mountain')
+      .leftJoinAndSelect('crewBoard.user', 'user')
       .getMany();
     // console.log(crewBoards);
     const result = await Promise.all(
