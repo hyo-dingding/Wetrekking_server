@@ -141,6 +141,31 @@ enum POINT_PAYMENT_STATUS_ENUM {
   CANCEL
 }
 
+type CrewBoardAndList {
+  id: String!
+  title: String!
+  description: String!
+  date: String!
+  dateTime: String!
+  addressDetail: String!
+  address: String!
+  gender: String!
+  dues: Int!
+  peoples: Int!
+  thumbnail: String!
+  mountain: Mountain!
+  user: User!
+  assignedUsers: [User!]!
+  createdAt: DateTime!
+  updatedAt: DateTime
+}
+
+type CrewUserListAndUser {
+  id: String!
+  user: User!
+  crewBoard: CrewBoardAndList!
+}
+
 type DibsWithCrewBoard {
   id: String!
   user: User!
@@ -178,7 +203,7 @@ type Query {
   fetchCrewUserList: [CrewUserList!]!
   fetchApplyList(crewBoardId: String!): [CrewUserList!]!
   fetchHostCrewList: [CrewBoard!]!
-  fetchVisitList: [CrewUserList!]!
+  fetchVisitList: [CrewUserListAndUser!]!
   fetchReviewBoard(reviewBoardId: String!): ReviewBoard!
   fetchReviewBoards: [ReviewBoard!]!
   fetchUser: User!
@@ -200,7 +225,7 @@ type Query {
 }
 
 type Mutation {
-  uploadReviewBoaredImage(imgURL: [String!]!, reviewBoardId: String!): [ReviewBoardImage!]!
+  uploadReviewBoardImage(imgURL: [String!]!, reviewBoardId: String!): [ReviewBoardImage!]!
   likeReviewBoard(reviewBoardId: String!): String!
   createMountain: String!
   createPointPayment(impUid: String!, amount: Int!): PointPayment!
@@ -226,6 +251,7 @@ type Mutation {
   checkTokenPhone(phone: String!, phoneToken: String!): String!
   createReviewBoard(createReviewBoardInput: CreateReviewBoardInput!, crewUserListId: String!, imgURL: [String!]!): ReviewBoard!
   updateReviewBoard(reviewBoardId: String!, updateReviewBoardInput: UpdateReviewBoardInput!, imgURL: [String!]!): ReviewBoard!
+  deleteReviewBoard(revewBoardId: String!): Boolean!
   findUserEmail(name: String!, phone: String!, phoneToken: String!): String!
   findUserPassword(name: String!, email: String!, phone: String!, phoneToken: String!): String!
   updatePassword(password: String!): String!

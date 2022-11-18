@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CrewBoardAndList } from '../crewBoards/dto/crewUserList.output';
 import { CrewBoard } from '../crewBoards/entities/crewBoard.entity';
+import { CrewUserListAndUser } from './dto/crewUserList.output';
 import { CrewUserList } from './entities/crewUserList.entity';
 
 @Injectable()
@@ -35,10 +37,64 @@ export class CrewUserListService {
   }
 
   async findVisitToList({ userId }) {
-    return await this.crewUserListRepository.find({
-      where: { user: { id: userId }, status: '완료' },
-      relations: ['user', 'crewBoard', 'crewBoard.user', 'crewBoard.mountain'],
+    const crewUserList = await this.crewUserListRepository
+      .createQueryBuilder('crewUserList')
+      .leftJoinAndSelect('crewUserList.crewBoard', 'crewBoard')
+      .leftJoinAndSelect('crewUserList.user', 'user')
+      .where('user.id = :userId', { userId })
+      .andWhere('crewUserList.status = "완료"')
+      .getMany();
+    console.log(CrewUserList);
+
+    const crewBoards = [];
+    await Promise.all(
+      crewUserList.map(async (crewBoard) => {
+        crewBoards.push(
+          await this.crewBoardRepository
+            .createQueryBuilder('crewBoard')
+            .leftJoinAndSelect('crewBoard.mountain', 'mountain')
+            .leftJoinAndSelect('crewBoard.user', 'user')
+            .where('crewBoard.id = :crewBoardId', {
+              crewBoardId: crewBoard.crewBoard.id,
+            })
+            .getMany(),
+        );
+      }),
+    );
+
+    const data: CrewBoardAndList[] = await Promise.all(
+      crewBoards.flat().map(async (crewBoard) => {
+        const filteredList = await this.crewUserListRepository
+          .createQueryBuilder('crewUserList')
+          .leftJoinAndSelect('crewUserList.crewBoard', 'crewBoard')
+          .leftJoinAndSelect('crewUserList.user', 'user')
+          .where('crewBoard.id = :crewBoardId', {
+            crewBoardId: crewBoard.id,
+          })
+          .andWhere('crewUserList.status = "완료"')
+          .getMany();
+
+        const assignedUsers = [];
+        filteredList.map((el) => {
+          assignedUsers.push(el.user);
+        });
+
+        return {
+          ...crewBoard,
+          assignedUsers,
+        };
+      }),
+    );
+    const result = [];
+    crewUserList.map((crewUserList, idx) => {
+      result.push({
+        id: crewUserList.id,
+        user: crewUserList.user,
+        crewBoard: { ...data[idx] },
+      });
     });
+    console.log(result);
+    return result;
   }
 
   async findHostList({ userId }) {
