@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import axios from 'axios';
 import mongoose from 'mongoose';
-import { Trekking, TrekkingDocument } from './schemas/trekking.schema';
 import * as fs from 'fs';
 import {
   TrekkingInfo,
@@ -12,11 +10,8 @@ import {
 @Injectable()
 export class TrekkingService {
   constructor(
-    @InjectModel(Trekking.name)
-    private readonly trekkingModel: mongoose.Model<TrekkingDocument>, //
-
     @InjectModel(TrekkingInfo.name)
-    private readonly trekkingInfoModel: mongoose.Model<TrekkingInfoDocument>,
+    private readonly trekkingInfoModel: mongoose.Model<TrekkingInfoDocument>, //
   ) {}
 
   // 읍면동 코드 API

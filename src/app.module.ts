@@ -90,6 +90,7 @@ import { TrekkingModule } from './apis/trekking/trekking.module';
     MongooseModule.forRoot(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedToPology: true,
+      maxPoolSize: 2000,
     }),
     ConfigModule.forRoot({
       isGlobal: true,

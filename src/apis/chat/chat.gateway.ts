@@ -20,6 +20,7 @@ import mongoose from 'mongoose';
 import { Server, Socket } from 'socket.io';
 
 import { Repository } from 'typeorm';
+import { CrewBoard } from '../crewBoards/entities/crewBoard.entity';
 import { CrewUserList } from '../crewUserList/entities/crewUserList.entity';
 import { User } from '../users/entities/user.entity';
 import { ChatService } from './chat.service';
@@ -46,7 +47,6 @@ import { Room, RoomDocument } from './schemas/room.schema';
     ],
   },
 })
-@Injectable()
 export class ChatGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
@@ -54,8 +54,8 @@ export class ChatGateway
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
 
-    // @InjectRepository(CrewBoard)
-    // private readonly crewBoardRepository: Repository<CrewBoard>,
+    @InjectRepository(CrewBoard)
+    private readonly crewBoardRepository: Repository<CrewBoard>,
 
     @InjectRepository(CrewUserList)
     private readonly crewUserListRepository: Repository<CrewUserList>,
@@ -84,40 +84,41 @@ export class ChatGateway
 
     // })
 
-    if (name !== null) {
-      const user = await this.crewUserListRepository
-        .createQueryBuilder('crewUserList')
-        .leftJoinAndSelect('crewUserList.user', 'user')
-        .leftJoinAndSelect('crewUserList.crewBoard', 'crewBoard')
-        .where('crewUserList.status = "수락"')
-        .andWhere('crewBoard.id = :boardId', { boardId })
-        .andWhere('user.name = :name', { name })
-        .getOne();
+    const user = await this.crewUserListRepository
+      .createQueryBuilder('crewUserList')
+      .leftJoinAndSelect('crewUserList.user', 'user')
+      .leftJoinAndSelect('crewUserList.crewBoard', 'crewBoard')
+      .where('crewUserList.status = "수락"')
+      .andWhere('crewBoard.id = :boardId', { boardId })
+      .andWhere('user.name = :name', { name })
+      .getOne();
 
-      console.log(user);
-      if (name !== user.user.name) throw new Error('이름이 일치하지 않습니다.');
+    console.log(user);
+    if (name !== user.user.name) throw new Error('이름이 일치하지 않습니다.');
 
-      const findRoom = await this.roomModel.findOne({ boardId, roomName });
+    const findRoom = await this.roomModel.findOne({ boardId, roomName });
+    const findBoard = await this.crewBoardRepository.findOne({
+      where: { id: boardId },
+    });
 
-      if (!findRoom) {
-        await this.roomModel.create({
-          boardId: user.crewBoard.id,
-          roomName,
-          user: user.user.id,
-        });
-      }
-
-      const welcome = `${user.user.name}님이 입장했습니다.`;
-      console.log(welcome);
-
-      this.server.emit('welcome' + roomName, welcome);
-      this.wsClients.push(client);
-
-      // console.log(name, roomName);
-      // console.log('socket: ', client);
-
-      // console.log('c: ', client);
+    if (!findRoom) {
+      await this.roomModel.create({
+        boardId: user.crewBoard.id,
+        roomName: findBoard.title,
+        user: user.user.id,
+      });
     }
+
+    const welcome = `${user.user.name}님이 입장했습니다.`;
+    console.log(welcome);
+
+    this.server.emit('welcome' + roomName, welcome);
+    this.wsClients.push(client);
+
+    // console.log(name, roomName);
+    // console.log('socket: ', client);
+
+    // console.log('c: ', client);
   }
 
   private broadcast(event, client, message: any) {
