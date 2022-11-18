@@ -15,8 +15,9 @@ export class CrewCommentResolver {
     private readonly crewCommentService: CrewCommentService, //
   ) {}
 
-  // 조회
-  @Query(() => [CrewComment])
+  @Query(() => [CrewComment], {
+    description: 'boardId에 해당하는 댓글 전체 조회',
+  })
   fetchCrewComments(
     @Args('boardId') boardId: string, //
     @Args('page', { nullable: true, type: () => Int }) page: number,
@@ -24,8 +25,9 @@ export class CrewCommentResolver {
     return this.crewCommentService.findAll({ page, boardId });
   }
 
-  // 유저가 쓴거 조회
-  @Query(() => [CrewComment])
+  @Query(() => [CrewComment], {
+    description: 'userId에 해당하는 댓글 전체 조회',
+  })
   fetchUserCrewComments(
     @Args('userId') userId: string, //
     @Args('boardId') boardId: string,
@@ -33,9 +35,8 @@ export class CrewCommentResolver {
     return this.crewCommentService.findUser({ userId, boardId });
   }
 
-  // 생성
   @UseGuards(GqlAuthAccessGuard)
-  @Mutation(() => CrewComment)
+  @Mutation(() => CrewComment, { description: '댓글 생성하기' })
   createCrewComment(
     @Context() context: IContext, //
     @Args('createCrewCommentInput')

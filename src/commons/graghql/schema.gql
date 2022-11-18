@@ -146,13 +146,15 @@ type DibsWithCrewBoard {
   crewBoard: CrewBoardAndUser!
 }
 
-type Trekking {
+type TrekkingInfo {
   mountainName: String!
-  xyz: [[Float!]!]!
+  trekkingName: String!
+  difficulty: String!
+  coordinate: [[Float!]!]!
 }
 
 type Query {
-  fetchTrekkingInfo(address: String!, mountainName: String!): Trekking!
+  fetchTrekkingCoordinate(mountainName: String!): [TrekkingInfo!]!
   fetchReviewBoardImage(reviewBoardId: String!): [ReviewBoardImage!]!
   fetchAllReviewBoardImages: [ReviewBoardImage!]!
   fetchMountain(mountainId: String!): Mountain!
@@ -188,7 +190,8 @@ type Query {
 }
 
 type Mutation {
-  createMongoDBTrekking: String!
+  """MongoDB에 산+등산로 좌표를 저장하기 위한 API, 누르지 마요 큰일나요"""
+  createMongoDBTrekking: [TrekkingInfo!]!
   uploadReviewBoaredImage(imgURL: [String!]!, reviewBoardId: String!): [ReviewBoardImage!]!
   likeReviewBoard(reviewBoardId: String!): String!
   createMountain: String!
