@@ -188,7 +188,11 @@ type Query {
 
   """userId에 해당하는 댓글 전체 조회"""
   fetchUserCrewComments(userId: String!, boardId: String!): [CrewComment!]!
+
+  """commentId에 해당하는 대댓글 조회하기"""
   fetchCrewSubComments(commentId: String!, page: Int): [CrewComment!]!
+
+  """userId와 boardId에 해당하는 대댓글 조회하기"""
   fetchUserCrewSubComments(userId: String!, boardId: String!): [CrewComment!]!
   fetchLogs(roomName: String!): [Chat!]!
   fetchChatUsers(boardId: String!): [CrewUserList!]!
@@ -234,10 +238,20 @@ type Mutation {
 
   """댓글 생성하기"""
   createCrewComment(createCrewCommentInput: CreateCrewCommentInput!): CrewComment!
+
+  """댓글 수정하기"""
   updateCrewComment(commentId: String!, updateCrewCommentInput: UpdateCrewCommentInput!): CrewComment!
+
+  """댓글 삭제하기"""
   deleteCrewComment(commentId: String!): Boolean!
+
+  """대댓글 생성하기"""
   createCrewSubComment(createSubCrewCommentInput: CreateSubCrewCommentInput!): CrewComment!
+
+  """대댓글 수정하기"""
   updateCrewSubComment(subCommentId: String!, updateSubCrewCommentInput: UpdateSubCrewCommentInput!): CrewComment!
+
+  """대댓글 삭제하기"""
   deleteCrewSubComment(subCommentId: String!): Boolean!
   createRoom(boardId: String!, roomName: String!): Room!
   createReviewComment(reviewBoardId: String!, reviewComment: String!): ReviewComment!

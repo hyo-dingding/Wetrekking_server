@@ -91,7 +91,7 @@ export class ChatGateway
     if (name !== user.user.name)
       throw new NotFoundException('이름이 일치하지 않습니다.');
 
-    const findRoom = await this.roomModel.findOne({ boardId, roomName });
+    const findRoom = await this.roomModel.findOne({ boardId });
     const findBoard = await this.crewBoardRepository.findOne({
       where: { id: boardId },
     });
@@ -151,6 +151,8 @@ export class ChatGateway
 
     // this.server.emit(roomName, [name, message]);
     this.broadcast(roomName, client, [name, message]);
+
+    // this.server.emit(roomName, [name, message]);
 
     await this.chatService.saveMessage({
       name,
