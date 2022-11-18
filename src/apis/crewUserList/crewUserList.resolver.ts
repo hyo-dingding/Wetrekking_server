@@ -31,13 +31,25 @@ export class CrewUserListResolver {
     @Context() context: IContext, //
     @Args('crewBoardId') crewBoardId: string,
   ) {
-    const result = await this.crewUserListService.findApplyToList({
+    const result = await this.crewUserListService.findApplyList({
       crewBoardId,
     });
 
     if (result.length === 0) {
       throw new Error('신청자가 없습니다.');
     }
+
+    return result;
+  }
+
+  @Query(() => [CrewUserList])
+  async fetchAcceptedList(
+    @Context() context: IContext, //
+    @Args('crewBoardId') crewBoardId: string,
+  ) {
+    const result = await this.crewUserListService.findAcceptedList({
+      crewBoardId,
+    });
 
     return result;
   }

@@ -22,13 +22,25 @@ export class CrewUserListService {
     return result;
   }
 
-  async findApplyToList({ crewBoardId }) {
+  async findApplyList({ crewBoardId }) {
     return await this.crewUserListRepository.find({
       where: {
         crewBoard: {
           id: crewBoardId,
         },
         status: '대기',
+      },
+      relations: ['user', 'crewBoard', 'crewBoard.user', 'crewBoard.mountain'],
+    });
+  }
+
+  async findAcceptedList({ crewBoardId }) {
+    return await this.crewUserListRepository.find({
+      where: {
+        crewBoard: {
+          id: crewBoardId,
+        },
+        status: '수락',
       },
       relations: ['user', 'crewBoard', 'crewBoard.user', 'crewBoard.mountain'],
     });
