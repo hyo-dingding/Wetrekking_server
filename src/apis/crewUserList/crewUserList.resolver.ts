@@ -22,7 +22,12 @@ export class CrewUserListResolver {
 
     const user = await this.crewUserListService.findAll({ userId });
 
-    return user;
+    const result = [];
+    const list = user.map((el) =>
+      el.crewBoard.user.id !== userId ? result.push(el) : el,
+    );
+
+    return result;
   }
 
   @UseGuards(GqlAuthAccessGuard)
