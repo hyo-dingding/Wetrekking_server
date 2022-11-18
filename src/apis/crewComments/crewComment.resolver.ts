@@ -48,7 +48,7 @@ export class CrewCommentResolver {
 
   // 수정
   @UseGuards(GqlAuthAccessGuard)
-  @Mutation(() => CrewComment)
+  @Mutation(() => CrewComment, { description: '댓글 수정하기' })
   updateCrewComment(
     @Context() context: IContext, //
     @Args('commentId') commentId: string,
@@ -66,7 +66,7 @@ export class CrewCommentResolver {
 
   // 삭제
   @UseGuards(GqlAuthAccessGuard)
-  @Mutation(() => Boolean)
+  @Mutation(() => Boolean, { description: '댓글 삭제하기' })
   deleteCrewComment(
     @Context() context: IContext, //
     @Args('commentId') commentId: string,
@@ -76,7 +76,9 @@ export class CrewCommentResolver {
 
   // 이 밑으로 대댓글
 
-  @Query(() => [CrewComment])
+  @Query(() => [CrewComment], {
+    description: 'commentId에 해당하는 대댓글 조회하기',
+  })
   fetchCrewSubComments(
     @Args('commentId') commentId: string,
     @Args('page', { nullable: true, type: () => Int }) page: number,
@@ -84,7 +86,9 @@ export class CrewCommentResolver {
     return this.crewCommentService.findSubAll({ page, commentId });
   }
 
-  @Query(() => [CrewComment])
+  @Query(() => [CrewComment], {
+    description: 'userId와 boardId에 해당하는 대댓글 조회하기',
+  })
   fetchUserCrewSubComments(
     @Args('userId') userId: string, //
     @Args('boardId') boardId: string,
@@ -93,7 +97,7 @@ export class CrewCommentResolver {
   }
 
   @UseGuards(GqlAuthAccessGuard)
-  @Mutation(() => CrewComment)
+  @Mutation(() => CrewComment, { description: '대댓글 생성하기' })
   createCrewSubComment(
     @Args('createSubCrewCommentInput')
     createSubCrewCommentInput: CreateSubCrewCommentInput, //
@@ -107,7 +111,7 @@ export class CrewCommentResolver {
   }
 
   @UseGuards(GqlAuthAccessGuard)
-  @Mutation(() => CrewComment)
+  @Mutation(() => CrewComment, { description: '대댓글 수정하기' })
   updateCrewSubComment(
     @Args('subCommentId') subCommentId: string,
     @Args('updateSubCrewCommentInput')
@@ -124,7 +128,7 @@ export class CrewCommentResolver {
   }
 
   @UseGuards(GqlAuthAccessGuard)
-  @Mutation(() => Boolean)
+  @Mutation(() => Boolean, { description: '대댓글 삭제하기' })
   deleteCrewSubComment(
     @Context() context: IContext, //
     @Args('subCommentId') subCommentId: string,

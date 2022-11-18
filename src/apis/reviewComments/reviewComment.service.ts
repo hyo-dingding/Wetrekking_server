@@ -33,8 +33,9 @@ export class ReviewCommentService {
   async create({ user, reviewBoardId, reviewComment }) {
     const findId = await this.reviewBoardRepository.findOne({
       where: { id: reviewBoardId },
-      relations: ['user', 'reviewBoard'],
     });
+
+    console.log(findId);
 
     const findUser = await this.userRepository.findOne({
       where: { id: user },

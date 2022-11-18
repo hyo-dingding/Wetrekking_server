@@ -1,6 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory, SchemaOptions } from '@nestjs/mongoose';
-import { IsString } from 'class-validate';
+import { IsDate, IsString } from 'class-validate';
 
 const options: SchemaOptions = {
   timestamps: true,
@@ -26,10 +26,9 @@ export class Chat {
   @IsString()
   message: string;
 
-  // @Prop()
-  // @Field(() => String)
-  // @IsString()
-  // boardId: string;
+  @Field(() => Date)
+  @IsDate()
+  createdAt: string;
 }
 
 export const ChatSchema = SchemaFactory.createForClass(Chat);
