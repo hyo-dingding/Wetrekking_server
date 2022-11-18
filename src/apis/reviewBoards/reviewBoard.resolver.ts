@@ -67,4 +67,12 @@ export class ReviewBoardResolver {
     }
     return result;
   }
+
+  @UseGuards(GqlAuthAccessGuard)
+  @Mutation(() => Boolean)
+  deleteReviewBoard(
+    @Args('revewBoardId') reviewBoardId: string, //
+  ) {
+    return this.reviewBoardService.delete({ reviewBoardId });
+  }
 }
