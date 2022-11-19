@@ -209,6 +209,7 @@ type Query {
   fetchAllCrewBoardImages: [CrewBoardImage!]!
   fetchCrewUserList: [CrewUserList!]!
   fetchApplyList(crewBoardId: String!): [CrewUserList!]!
+  fetchAcceptedList(crewBoardId: String!): [CrewUserList!]!
   fetchHostCrewList: [CrewBoard!]!
   fetchVisitList: [CrewUserListAndUser!]!
   fetchReviewBoard(reviewBoardId: String!): ReviewBoard!
@@ -232,8 +233,6 @@ type Query {
 }
 
 type Mutation {
-  """MongoDB에 산+등산로 좌표를 저장하기 위한 API, 누르지 마요 큰일나요"""
-  createMongoDBTrekking: String!
   uploadReviewBoardImage(imgURL: [String!]!, reviewBoardId: String!): [ReviewBoardImage!]!
   likeReviewBoard(reviewBoardId: String!): String!
   createMountain: String!

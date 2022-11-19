@@ -127,16 +127,6 @@ export class ChatGateway
     }
   }
 
-  // @SubscribeMessage("message")
-  // connectSomeone(
-  //   @MessageBody() data: string //
-  // ) {
-  //   const [name, room] = data; // 채팅방 입장!
-  //   const receive = `${name}님이 입장했습니다.`;
-  //   this.server.emit("receive" + room, receive);
-  //   console.log(this.server, "server");
-  // }
-
   @SubscribeMessage('send-chat')
   async sendMessage(
     @MessageBody() data: string, //
@@ -149,10 +139,8 @@ export class ChatGateway
     // const findRoomName = await this.roomModel.findOne({ boardId });
     // console.log(findRoomName);
 
-    // this.server.emit(roomName, [name, message]);
     this.broadcast(roomName, client, [name, message]);
-
-    // this.server.emit(roomName, [name, message]);
+    // this.server.emit(roomName, name, [message]);
 
     await this.chatService.saveMessage({
       name,
@@ -160,17 +148,6 @@ export class ChatGateway
       message,
     });
   }
-
-  // @SubscribeMessage('leave')
-  // async leaveChatRoom(
-  //   @MessageBody() data: string, //
-  //   @ConnectedSocket() client,
-  // ) {
-  //   const [room, name] = data;
-
-  //   const bye = `${name} 님이 나가셨습니다.`;
-  //   this.server.emit('bye' + room, bye);
-  // }
 
   afterInit() {
     this.logger.log(`===== Socket Server initialized =====`);

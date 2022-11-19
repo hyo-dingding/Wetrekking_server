@@ -26,11 +26,11 @@ export class TrekkingResolver {
     return this.trekkingService.findTrekking({ mountainName });
   }
 
-  @Mutation(() => String, {
-    description:
-      'MongoDB에 산+등산로 좌표를 저장하기 위한 API, 누르지 마요 큰일나요',
-  })
-  async createMongoDBTrekking() {
-    return this.trekkingService.saveTrekking();
-  }
+  // @Mutation(() => String, {
+  //   description:
+  //     'MongoDB에 산+등산로 좌표를 저장하기 위한 API, 누르지 마요 큰일나요',
+  // })
+  // async createMongoDBTrekking() {
+  //   return this.trekkingService.saveTrekking();
+  // }
 }
