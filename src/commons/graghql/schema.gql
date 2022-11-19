@@ -120,7 +120,7 @@ type Room {
 
 type ReviewComment {
   id: String!
-  reviewComment: String!
+  reviewComment: String
   createdAt: DateTime!
   deletedAt: DateTime!
   user: User!
@@ -172,6 +172,11 @@ type DibsWithCrewBoard {
   crewBoard: CrewBoardAndUser!
 }
 
+type Trekking {
+  mountainName: String!
+  coordinate: [[Float!]!]!
+}
+
 type TrekkingInfo {
   mountainName: String!
   trekkingName: String!
@@ -180,6 +185,8 @@ type TrekkingInfo {
 }
 
 type Query {
+  fetchTrekkingInfo(address: String!, mountainName: String!): Trekking!
+
   """산이름을 통해 좌표 반환"""
   fetchTrekkingCoordinate(mountainName: String!): [TrekkingInfo!]!
   fetchReviewBoardImage(reviewBoardId: String!): [ReviewBoardImage!]!
@@ -225,6 +232,8 @@ type Query {
 }
 
 type Mutation {
+  """MongoDB에 산+등산로 좌표를 저장하기 위한 API, 누르지 마요 큰일나요"""
+  createMongoDBTrekking: String!
   uploadReviewBoardImage(imgURL: [String!]!, reviewBoardId: String!): [ReviewBoardImage!]!
   likeReviewBoard(reviewBoardId: String!): String!
   createMountain: String!
@@ -281,7 +290,7 @@ type Mutation {
   deleteCrewSubComment(subCommentId: String!): Boolean!
   createRoom(boardId: String!, roomName: String!): Room!
   createReviewComment(reviewBoardId: String!, reviewComment: String!): ReviewComment!
-  updateReviewComment(reviewCommentId: String, updateComment: String): ReviewComment!
+  updateReviewComment(updateReviewCommentInput: updateReviewCommentInput!): ReviewComment!
   deleteReviewComment(reviewCommentId: String!): Boolean!
 }
 
@@ -366,4 +375,9 @@ input CreateSubCrewCommentInput {
 input UpdateSubCrewCommentInput {
   subComment: String
   parentId: String
+}
+
+input updateReviewCommentInput {
+  reviewCommentId: String
+  comment: String
 }

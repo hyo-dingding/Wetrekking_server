@@ -18,7 +18,7 @@ export class ReviewComment {
   id: string;
 
   @Column()
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   reviewComment: string;
 
   @CreateDateColumn()

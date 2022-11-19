@@ -35,8 +35,6 @@ export class ReviewCommentService {
       where: { id: reviewBoardId },
     });
 
-    console.log(findId);
-
     const findUser = await this.userRepository.findOne({
       where: { id: user },
     });
@@ -48,7 +46,9 @@ export class ReviewCommentService {
     });
   }
 
-  async update({ user, reviewCommentId, updateComment }) {
+  async update({ user, updateReviewCommentInput }) {
+    const { reviewCommentId, comment } = updateReviewCommentInput;
+
     const findReview = await this.reviewCommentRepository.findOne({
       where: { id: reviewCommentId },
       relations: ['user', 'reviewBoard'],
@@ -59,8 +59,8 @@ export class ReviewCommentService {
 
     return await this.reviewCommentRepository.save({
       ...findReview,
-      id: reviewCommentId,
-      reviewComment: updateComment,
+      id: findReview.id,
+      reviewComment: comment,
     });
   }
 
