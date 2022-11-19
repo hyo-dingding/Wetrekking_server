@@ -86,35 +86,32 @@ export class TrekkingService {
   }
 
   async findTrekking({ mountainName }) {
-    const findAll = await this.trekkingInfoModel.find(
-      { mountainName },
-      { size: { $gt: 3 } },
-    );
+    const findAll = await this.trekkingInfoModel.find({ mountainName });
 
     console.log(findAll);
 
     return findAll;
   }
 
-  async saveTrekking() {
-    const file = fs.readFileSync('./src/apis/trekking/13qq.geojson');
+  // async saveTrekking() {
+  //   const file = fs.readFileSync('./src/apis/trekking/13qq.geojson');
 
-    const result = file.toString();
-    const aaa = JSON.parse(JSON.stringify(result));
-    const bbb = JSON.parse(aaa);
-    const ccc = bbb.features;
-    let result123;
+  //   const result = file.toString();
+  //   const aaa = JSON.parse(JSON.stringify(result));
+  //   const bbb = JSON.parse(aaa);
+  //   const ccc = bbb.features;
+  //   let result123;
 
-    for (let i = 0; i < 1; i++) {
-      const a = ccc[i].geometry.coordinates.flat();
-      result123 = await this.trekkingInfoModel.create({
-        mountainName: ccc[i].properties['MNTN_NM'],
-        trekkingName: ccc[i].poperties['PMNTN_NM'],
-        difficulty: ccc[i].properties['PMNTN_DFFL'],
-        coordinate: a.map((el) => el.reverse()),
-      });
-    }
+  //   for (let i = 0; i < 1; i++) {
+  //     const a = ccc[i].geometry.coordinates.flat();
+  //     result123 = await this.trekkingInfoModel.create({
+  //       mountainName: ccc[i].properties['MNTN_NM'],
+  //       trekkingName: ccc[i].poperties['PMNTN_NM'],
+  //       difficulty: ccc[i].properties['PMNTN_DFFL'],
+  //       coordinate: a.map((el) => el.reverse()),
+  //     });
+  //   }
 
-    return '성공';
-  }
+  //   return '성공';
+  // }
 }
