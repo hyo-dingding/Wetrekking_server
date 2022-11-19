@@ -120,7 +120,7 @@ type Room {
 
 type ReviewComment {
   id: String!
-  reviewComment: String!
+  reviewComment: String
   createdAt: DateTime!
   deletedAt: DateTime!
   user: User!
@@ -147,6 +147,11 @@ type DibsWithCrewBoard {
   crewBoard: CrewBoardAndUser!
 }
 
+type Trekking {
+  mountainName: String!
+  coordinate: [[Float!]!]!
+}
+
 type TrekkingInfo {
   mountainName: String!
   trekkingName: String!
@@ -155,6 +160,8 @@ type TrekkingInfo {
 }
 
 type Query {
+  fetchTrekkingInfo(address: String!, mountainName: String!): Trekking!
+
   """산이름을 통해 좌표 반환"""
   fetchTrekkingCoordinate(mountainName: String!): [TrekkingInfo!]!
   fetchReviewBoardImage(reviewBoardId: String!): [ReviewBoardImage!]!
@@ -200,7 +207,9 @@ type Query {
 }
 
 type Mutation {
-  uploadReviewBoaredImage(imgURL: [String!]!, reviewBoardId: String!): [ReviewBoardImage!]!
+  """MongoDB에 산+등산로 좌표를 저장하기 위한 API, 누르지 마요 큰일나요"""
+  createMongoDBTrekking: String!
+  uploadReviewBoardImage(imgURL: [String!]!, reviewBoardId: String!): [ReviewBoardImage!]!
   likeReviewBoard(reviewBoardId: String!): String!
   createMountain: String!
   createPointPayment(impUid: String!, amount: Int!): PointPayment!
@@ -226,6 +235,7 @@ type Mutation {
   checkTokenPhone(phone: String!, phoneToken: String!): String!
   createReviewBoard(createReviewBoardInput: CreateReviewBoardInput!, crewUserListId: String!, imgURL: [String!]!): ReviewBoard!
   updateReviewBoard(reviewBoardId: String!, updateReviewBoardInput: UpdateReviewBoardInput!, imgURL: [String!]!): ReviewBoard!
+  deleteReviewBoard(revewBoardId: String!): Boolean!
   findUserEmail(name: String!, phone: String!, phoneToken: String!): String!
   findUserPassword(name: String!, email: String!, phone: String!, phoneToken: String!): String!
   updatePassword(password: String!): String!
@@ -255,7 +265,7 @@ type Mutation {
   deleteCrewSubComment(subCommentId: String!): Boolean!
   createRoom(boardId: String!, roomName: String!): Room!
   createReviewComment(reviewBoardId: String!, reviewComment: String!): ReviewComment!
-  updateReviewComment(reviewCommentId: String, updateComment: String): ReviewComment!
+  updateReviewComment(updateReviewCommentInput: updateReviewCommentInput!): ReviewComment!
   deleteReviewComment(reviewCommentId: String!): Boolean!
 }
 
@@ -340,4 +350,9 @@ input CreateSubCrewCommentInput {
 input UpdateSubCrewCommentInput {
   subComment: String
   parentId: String
+}
+
+input updateReviewCommentInput {
+  reviewCommentId: String
+  comment: String
 }

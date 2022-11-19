@@ -2,6 +2,7 @@ import { UseGuards } from '@nestjs/common';
 import { Args, Context, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GqlAuthAccessGuard } from 'src/commons/auth/gql-auth.guard';
 import { IContext } from 'src/commons/type/context';
+import { updateReviewCommentInput } from './dto/updateReviewCommentInput';
 import { ReviewComment } from './entities/reviewComment.entity';
 import { ReviewCommentService } from './reviewComment.service';
 
@@ -42,15 +43,14 @@ export class ReviewCommentResolver {
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => ReviewComment)
   updateReviewComment(
-    @Args('reviewCommentId', { nullable: true }) reviewCommentId: string, //
-    @Args('updateComment', { nullable: true }) updateComment: string,
+    @Args('updateReviewCommentInput')
+    updateReviewCommentInput: updateReviewCommentInput,
     @Context() context: IContext,
   ) {
     const user = context.req.user.id;
     return this.reviewCommentService.update({
       user,
-      reviewCommentId,
-      updateComment,
+      updateReviewCommentInput,
     });
   }
 
