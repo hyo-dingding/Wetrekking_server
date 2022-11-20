@@ -85,6 +85,7 @@ type ReviewBoard {
   like: Int!
   user: User!
   crewUserList: CrewUserList!
+  createdAt: DateTime!
 }
 
 type ReviewBoardImage {
@@ -133,37 +134,12 @@ type PointPayment {
   amount: Int!
   status: POINT_PAYMENT_STATUS_ENUM!
   user: User!
-  createAt: DateTime!
+  createdAt: DateTime!
 }
 
 enum POINT_PAYMENT_STATUS_ENUM {
   PAYMENT
   CANCEL
-}
-
-type CrewBoardAndList {
-  id: String!
-  title: String!
-  description: String!
-  date: String!
-  dateTime: String!
-  addressDetail: String!
-  address: String!
-  gender: String!
-  dues: Int!
-  peoples: Int!
-  thumbnail: String!
-  mountain: Mountain!
-  user: User!
-  assignedUsers: [User!]!
-  createdAt: DateTime!
-  updatedAt: DateTime
-}
-
-type CrewUserListAndUser {
-  id: String!
-  user: User!
-  crewBoard: CrewBoardAndList!
 }
 
 type DibsWithCrewBoard {
@@ -185,7 +161,6 @@ type TrekkingInfo {
 }
 
 type Query {
-
   fetchTrekkingInfo(address: String!, mountainName: String!): Trekking!
 
   """산이름을 통해 좌표 반환"""
@@ -196,7 +171,7 @@ type Query {
   fetchAllMountains: [Mountain!]!
   fetchMountainsWithSearch(search: String!): [Mountain!]!
   fetchPointPayment: PointPayment!
-  fetchPointPayments: [PointPayment!]!
+  fetchPointPayments: [[PointPayment!]!]!
   fetchDibs: [DibsWithCrewBoard!]!
   fetchCrewBoard(crewBoardId: String!): CrewBoard!
   fetchAllCrewBoards: [CrewBoard!]!
@@ -208,13 +183,13 @@ type Query {
   fetchCrewBoardsTEST: [[CrewBoard!]!]!
   fetchBoardImage(crewBoardId: String!): [CrewBoardImage!]!
   fetchAllCrewBoardImages: [CrewBoardImage!]!
-  fetchCrewUserList: [CrewUserList!]!
+  fetchCrewUserList: [[CrewUserList!]!]!
   fetchApplyList(crewBoardId: String!): [CrewUserList!]!
   fetchAcceptedList(crewBoardId: String!): [CrewUserList!]!
-  fetchHostCrewList: [CrewBoard!]!
-  fetchVisitList: [CrewUserListAndUser!]!
+  fetchHostCrewList: [[CrewBoard!]!]!
+  fetchVisitList: [CrewUserList!]!
   fetchReviewBoard(reviewBoardId: String!): ReviewBoard!
-  fetchReviewBoards: [ReviewBoard!]!
+  fetchReviewBoards: [[ReviewBoard!]!]!
   fetchUser: User!
 
   """boardId에 해당하는 댓글 전체 조회"""

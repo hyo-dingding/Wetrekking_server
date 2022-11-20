@@ -41,9 +41,14 @@ export class CrewBoardResolver {
   }
 
   @Query(() => [CrewBoardAndUser])
-  async fetchCrewBoardsLatestFirst() {
-    // const newCrewBoard = [];
-    return await this.crewBoardService.findAllLatestFirst();
+  async fetchCrewBoardsLatestFirst(
+    @Args('region') region?: string,
+    @Args('startDate') startDate?: string,
+    @Args('endDate') endDate?: string,
+    @Args('search') search?: string,
+  ) {
+    let newCrewBoard = [];
+    const crewBoard = await this.crewBoardService.findAllLatestFirst();
 
     // if (search) {
     //   const ELKcrewBoard = await this.elasticsearchService.search({
@@ -66,19 +71,33 @@ export class CrewBoardResolver {
     //   crewBoard = await this.crewBoardService.findAllWithUsers();
     // }
 
-    // if (region) {
-    //   newCrewBoard.filter((x) => x.mountain.address[0] === region);
-    // }
+    if (search) {
+      crewBoard.map((x) =>
+        x.title.includes(search) ||
+        x.description.includes(search) ||
+        x.mountain.mountain.includes(search)
+          ? newCrewBoard.push(x)
+          : x,
+      );
+    } else {
+      newCrewBoard = crewBoard;
+    }
 
-    // if (startDate) {
-    //   newCrewBoard.filter(
-    //     (x) =>
-    //       Date.parse(startDate) <= Date.parse(x.date) &&
-    //       Date.parse(x.date) < Date.parse(endDate) + 86400000,
-    //   );
-    // }
+    if (region) {
+      newCrewBoard = newCrewBoard.filter(
+        (x) => x.mountain.address.split(' ')[0] === region,
+      );
+    }
 
-    // return newCrewBoard;
+    if (startDate) {
+      newCrewBoard = newCrewBoard.filter(
+        (x) =>
+          Date.parse(startDate) <= Date.parse(x.date) &&
+          Date.parse(x.date) < Date.parse(endDate) + 86400000,
+      );
+    }
+
+    return newCrewBoard;
   }
 
   @Query(() => [CrewBoardAndUser])
