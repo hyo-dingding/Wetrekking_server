@@ -101,8 +101,42 @@ export class CrewBoardResolver {
   }
 
   @Query(() => [CrewBoardAndUser])
-  fetchCrewBoardsDeadlineFirst() {
-    return this.crewBoardService.findAllDeadlineFirst();
+  async fetchCrewBoardsDeadlineFirst(
+    @Args('region') region?: string,
+    @Args('startDate') startDate?: string,
+    @Args('endDate') endDate?: string,
+    @Args('search') search?: string,
+  ) {
+    let newCrewBoard = [];
+    const crewBoard = await this.crewBoardService.findAllDeadlineFirst();
+
+    if (search) {
+      crewBoard.map((x) =>
+        x.title.includes(search) ||
+        x.description.includes(search) ||
+        x.mountain.mountain.includes(search)
+          ? newCrewBoard.push(x)
+          : x,
+      );
+    } else {
+      newCrewBoard = crewBoard;
+    }
+
+    if (region) {
+      newCrewBoard = newCrewBoard.filter(
+        (x) => x.mountain.address.split(' ')[0] === region,
+      );
+    }
+
+    if (startDate) {
+      newCrewBoard = newCrewBoard.filter(
+        (x) =>
+          Date.parse(startDate) <= Date.parse(x.date) &&
+          Date.parse(x.date) < Date.parse(endDate) + 86400000,
+      );
+    }
+
+    return newCrewBoard;
   }
 
   @Query(() => [CrewBoard])

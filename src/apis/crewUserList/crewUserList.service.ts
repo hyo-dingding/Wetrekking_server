@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CrewBoardAndList } from '../crewBoards/dto/crewUserList.output';
 import { CrewBoard } from '../crewBoards/entities/crewBoard.entity';
-import { CrewUserListAndUser } from './dto/crewUserList.output';
 import { CrewUserList } from './entities/crewUserList.entity';
 
 @Injectable()
