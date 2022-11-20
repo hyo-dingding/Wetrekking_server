@@ -185,6 +185,7 @@ type TrekkingInfo {
 }
 
 type Query {
+
   fetchTrekkingInfo(address: String!, mountainName: String!): Trekking!
 
   """산이름을 통해 좌표 반환"""
@@ -201,9 +202,9 @@ type Query {
   fetchAllCrewBoards: [CrewBoard!]!
   fetchAllCrewBoardsWithUsers: [CrewBoardAndUser!]!
   fetchAllCrewBoardsWithDelete: [CrewBoard!]!
-  fetchCrewBoardsLatestFirst: [[CrewBoardAndUser!]!]!
-  fetchCrewBoardsDeadlineFirst: [[CrewBoardAndUser!]!]!
-  fetchCrewBoardsBySearch(region: String!, startDate: String!, endDate: String!, search: String!): [[CrewBoard!]!]!
+  fetchCrewBoardsLatestFirst(region: String!, startDate: String!, endDate: String!, search: String!): [CrewBoardAndUser!]!
+  fetchCrewBoardsDeadlineFirst: [CrewBoardAndUser!]!
+  fetchCrewBoardsBySearch(region: String!, startDate: String!, endDate: String!, search: String!): [CrewBoard!]!
   fetchCrewBoardsTEST: [[CrewBoard!]!]!
   fetchBoardImage(crewBoardId: String!): [CrewBoardImage!]!
   fetchAllCrewBoardImages: [CrewBoardImage!]!
@@ -259,7 +260,7 @@ type Mutation {
   checkTokenPhone(phone: String!, phoneToken: String!): String!
   createReviewBoard(createReviewBoardInput: CreateReviewBoardInput!, crewUserListId: String!, imgURL: [String!]!): ReviewBoard!
   updateReviewBoard(reviewBoardId: String!, updateReviewBoardInput: UpdateReviewBoardInput!, imgURL: [String!]!): ReviewBoard!
-  deleteReviewBoard(revewBoardId: String!): Boolean!
+  deleteReviewBoard(reviewBoardId: String!): Boolean!
   findUserEmail(name: String!, phone: String!, phoneToken: String!): String!
   findUserPassword(name: String!, email: String!, phone: String!, phoneToken: String!): String!
   updatePassword(password: String!): String!
