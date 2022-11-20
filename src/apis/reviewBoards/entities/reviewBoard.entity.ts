@@ -3,6 +3,7 @@ import { CrewUserList } from 'src/apis/crewUserList/entities/crewUserList.entity
 import { User } from 'src/apis/users/entities/user.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   JoinTable,
@@ -43,4 +44,8 @@ export class ReviewBoard {
   @OneToOne(() => CrewUserList)
   @Field(() => CrewUserList)
   crewUserList: CrewUserList;
+
+  @CreateDateColumn()
+  @Field(() => Date)
+  createdAt: Date;
 }

@@ -34,14 +34,21 @@ export class PointPaymentResolver {
   }
 
   @UseGuards(GqlAuthAccessGuard)
-  @Query(() => [PointPayment])
+  @Query(() => [[PointPayment]])
   async fetchPointPayments(
     @Context() context: IContext, //
   ) {
     const userId = context.req.user.id;
-    const result = await this.pointPaymentService.findAllbyId({ userId });
+    const result = [];
+    const paymentList = await this.pointPaymentService.findAllbyId({ userId });
 
-    if (result.length === 0) throw new Error('결제 내역이 없습니다!!!');
+    if (paymentList.length === 0) throw new Error('결제 내역이 없습니다!!!');
+
+    paymentList.sort((a, b) => Number(b.createdAt) - Number(a.createdAt));
+
+    while (paymentList.length > 0) {
+      result.push(paymentList.splice(0, 10));
+    }
 
     return result;
   }

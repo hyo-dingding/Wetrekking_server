@@ -4,7 +4,6 @@ import { GqlAuthAccessGuard } from 'src/commons/auth/gql-auth.guard';
 import { IContext } from 'src/commons/type/context';
 import { CrewBoard } from '../crewBoards/entities/crewBoard.entity';
 import { CrewUserListService } from './crewUserList.service';
-import { CrewUserListAndUser } from './dto/crewUserList.output';
 import { CrewUserList } from './entities/crewUserList.entity';
 
 @Resolver()
@@ -15,20 +14,20 @@ export class CrewUserListResolver {
 
   // 크루 신청 리스트 조회
   @UseGuards(GqlAuthAccessGuard)
-  @Query(() => [CrewUserList])
+  @Query(() => [[CrewUserList]])
   async fetchCrewUserList(
     @Context() context: IContext, //
   ) {
     const userId = context.req.user.id;
-
     const user = await this.crewUserListService.findAll({ userId });
+    const userList = [];
 
-    const result = [];
-    const list = user.map((el) =>
-      el.crewBoard.user.id !== userId ? result.push(el) : el,
-    );
+    user.sort((a, b) => Number(b.createdAt) - Number(a.createdAt));
+    while (user.length > 0) {
+      userList.push(user.splice(0, 10));
+    }
 
-    return result;
+    return userList;
   }
 
   @UseGuards(GqlAuthAccessGuard)
@@ -62,13 +61,19 @@ export class CrewUserListResolver {
 
   // 방장인 올린 게시글 조회
   @UseGuards(GqlAuthAccessGuard)
-  @Query(() => [CrewBoard])
+  @Query(() => [[CrewBoard]])
   async fetchHostCrewList(
     @Context() context: IContext, //
   ) {
     const userId = context.req.user.id;
+    const result = [];
+    const list = await this.crewUserListService.findHostList({ userId });
 
-    return await this.crewUserListService.findHostList({ userId });
+    list.sort((a, b) => Number(b.createdAt) - Number(a.createdAt));
+
+    while (list.length > 0) {
+      result.push(list.splice(0, 10));
+    }
   }
 
   // 크루 리스트 추가
@@ -140,7 +145,7 @@ export class CrewUserListResolver {
 
   // 갔던 산 리스트 조회 (status를 완료로 변경된 사항만 조회 가능)
   @UseGuards(GqlAuthAccessGuard)
-  @Query(() => [CrewUserListAndUser])
+  @Query(() => [CrewUserList])
   async fetchVisitList(
     @Context() context: IContext, //
   ) {
