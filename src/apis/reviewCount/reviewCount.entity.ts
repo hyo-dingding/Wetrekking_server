@@ -13,6 +13,7 @@ export class ReviewCount {
   @Field(() => Int)
   reviewCount: number;
 
+  @JoinColumn()
   @OneToOne(() => User)
   @Field(() => User)
   user: User;
