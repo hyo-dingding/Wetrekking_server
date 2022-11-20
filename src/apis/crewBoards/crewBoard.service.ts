@@ -128,6 +128,14 @@ export class CrewBoardService {
     );
   }
 
+  cutAlreadyDoneForELK(array, today, newArray) {
+    array.map((x) => {
+      Number(Number(new Date(x.deadline))) > Number(today)
+        ? newArray.push(x)
+        : x;
+    });
+  }
+
   changeDateTimeTo24h(dateTimeAMPM) {
     if (
       dateTimeAMPM.split(' ')[1] === 'pm' &&
@@ -163,28 +171,23 @@ export class CrewBoardService {
 
   async findAllLatestFirst() {
     const newCrewBoard = [];
-    const cutAlreadyDone = [];
     const today = new Date();
     const crewBoard = await this.findAllWithUsers();
 
-    this.cutAlreadyDone(crewBoard, today, cutAlreadyDone);
-    cutAlreadyDone.sort((a, b) => Number(b.createdAt) - Number(a.createdAt));
-    this.divideNine(cutAlreadyDone, newCrewBoard);
+    this.cutAlreadyDone(crewBoard, today, newCrewBoard);
+    newCrewBoard.sort((a, b) => Number(b.createdAt) - Number(a.createdAt));
 
     return newCrewBoard;
   }
 
   async findAllDeadlineFirst() {
     const newCrewBoard = [];
-    const cutAlreadyDone = [];
     const today = new Date();
     const crewBoard = await this.findAllWithUsers();
 
-    this.cutAlreadyDone(crewBoard, today, cutAlreadyDone);
+    this.cutAlreadyDone(crewBoard, today, newCrewBoard);
 
-    cutAlreadyDone.sort((a, b) => Number(a.deadline) - Number(b.deadline));
-
-    this.divideNine(cutAlreadyDone, newCrewBoard);
+    newCrewBoard.sort((a, b) => Number(a.deadline) - Number(b.deadline));
 
     return newCrewBoard;
   }
@@ -194,33 +197,31 @@ export class CrewBoardService {
     // const cutAlreadyDone = [];
     // const pickedDate = [];
     let crewBoard;
-    let newCrewBoard;
-    const result = [];
+    const newCrewBoard = [];
     const today = new Date();
 
     if (search) {
-      crewBoard = await this.elasticsearchService.search({
-        index: 'myproduct_new',
+      const ELKcrewBoard = await this.elasticsearchService.search({
+        index: 'mycrewboard',
         query: {
           match_phrase_prefix: {
-            name: search,
+            title: search,
           },
         },
       });
       console.log(JSON.stringify(crewBoard, null, ' '));
-      newCrewBoard = crewBoard.hits.hits.map((el) => {
+      crewBoard = ELKcrewBoard.hits.hits.map((el) => {
         return el._source;
       });
 
-      if (!result[0]) {
+      if (!crewBoard[0]) {
         throw new Error(`검색어 [${search}]로 조회된 검색결과가 없습니다`);
       }
     } else {
       crewBoard = await this.findAllWithUsers();
-      newCrewBoard = [];
     }
 
-    this.cutAlreadyDone(crewBoard, today, newCrewBoard);
+    this.cutAlreadyDoneForELK(crewBoard, today, newCrewBoard);
 
     if (region) {
       newCrewBoard.filter((x) => x.mountain.address[0] === region);
@@ -234,10 +235,7 @@ export class CrewBoardService {
       );
     }
 
-    this.divideNine(newCrewBoard, result);
-
-    console.log(result);
-    return result;
+    return newCrewBoard;
 
     // cutAlreadyDone.map((x) =>
     //   Date.parse(startDate) <= Date.parse(x.date) &&
