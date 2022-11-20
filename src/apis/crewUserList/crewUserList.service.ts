@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CrewBoardAndList } from '../crewBoards/dto/crewUserList.output';
 import { CrewBoard } from '../crewBoards/entities/crewBoard.entity';
-import { CrewUserListAndUser } from './dto/crewUserList.output';
 import { CrewUserList } from './entities/crewUserList.entity';
 
 @Injectable()
@@ -107,6 +106,7 @@ export class CrewUserListService {
   findOne(type) {
     return this.crewUserListRepository.findOne({
       where: type,
+      relations: ['user', 'crewBoard'],
     });
   }
 
@@ -116,7 +116,7 @@ export class CrewUserListService {
         crewBoard: { id: crewBoardId }, //
         user: { id: userId },
       },
-      relations: ['user', 'crewBoard'],
+      relations: ['user', 'crewBoard', 'crewBoard.user'],
     });
   }
 
