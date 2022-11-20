@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  Logger,
-  NotFoundException,
-  UseGuards,
-} from '@nestjs/common';
+import { Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
@@ -18,7 +13,6 @@ import {
 } from '@nestjs/websockets';
 import mongoose from 'mongoose';
 import { Server, Socket } from 'socket.io';
-
 import { Repository } from 'typeorm';
 import { CrewBoard } from '../crewBoards/entities/crewBoard.entity';
 import { CrewUserList } from '../crewUserList/entities/crewUserList.entity';
@@ -69,7 +63,7 @@ export class ChatGateway
   @WebSocketServer() server: Server;
   private logger: Logger = new Logger('ChatGateway');
 
-  wsClients = [];
+  _Clients = [];
 
   @SubscribeMessage('join')
   async connectSomeone(
@@ -94,9 +88,10 @@ export class ChatGateway
       .getOne();
 
     console.log(user);
-    if (name !== user.user.name) throw new Error('이름이 일치하지 않습니다.');
+    if (name !== user.user.name)
+      throw new NotFoundException('이름이 일치하지 않습니다.');
 
-    const findRoom = await this.roomModel.findOne({ boardId, roomName });
+    const findRoom = await this.roomModel.findOne({ boardId });
     const findBoard = await this.crewBoardRepository.findOne({
       where: { id: boardId },
     });
@@ -113,7 +108,7 @@ export class ChatGateway
     console.log(welcome);
 
     this.server.emit('welcome' + roomName, welcome);
-    this.wsClients.push(client);
+    this._Clients.push(client);
 
     // console.log(name, roomName);
     // console.log('socket: ', client);
@@ -122,7 +117,7 @@ export class ChatGateway
   }
 
   private broadcast(event, client, message: any) {
-    for (const c of this.wsClients) {
+    for (const c of this._Clients) {
       if (client.id == c.id) {
         continue;
       }
@@ -132,30 +127,20 @@ export class ChatGateway
     }
   }
 
-  // @SubscribeMessage("message")
-  // connectSomeone(
-  //   @MessageBody() data: string //
-  // ) {
-  //   const [name, room] = data; // 채팅방 입장!
-  //   const receive = `${name}님이 입장했습니다.`;
-  //   this.server.emit("receive" + room, receive);
-  //   console.log(this.server, "server");
-  // }
-
   @SubscribeMessage('send-chat')
   async sendMessage(
     @MessageBody() data: string, //
     @ConnectedSocket() client: Socket,
   ) {
     const [roomName, name, message] = data;
+    // const [roomName, name, message, boardId] = data;
     console.log('send-chat', data);
 
-    // const userName = await this.userRepository.findOne({
-    //   where: { name },
-    // });
+    // const findRoomName = await this.roomModel.findOne({ boardId });
+    // console.log(findRoomName);
 
-    // this.server.emit(roomName, [name, message]);
     this.broadcast(roomName, client, [name, message]);
+    // this.server.emit(roomName, name, [message]);
 
     await this.chatService.saveMessage({
       name,
@@ -163,17 +148,6 @@ export class ChatGateway
       message,
     });
   }
-
-  // @SubscribeMessage('leave')
-  // async leaveChatRoom(
-  //   @MessageBody() data: string, //
-  //   @ConnectedSocket() client,
-  // ) {
-  //   const [room, name] = data;
-
-  //   const bye = `${name} 님이 나가셨습니다.`;
-  //   this.server.emit('bye' + room, bye);
-  // }
 
   afterInit() {
     this.logger.log(`===== Socket Server initialized =====`);

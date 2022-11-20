@@ -4,6 +4,7 @@ import { GqlAuthAccessGuard } from 'src/commons/auth/gql-auth.guard';
 import { IContext } from 'src/commons/type/context';
 import { CrewBoard } from '../crewBoards/entities/crewBoard.entity';
 import { CrewUserListService } from './crewUserList.service';
+import { CrewUserListAndUser } from './dto/crewUserList.output';
 import { CrewUserList } from './entities/crewUserList.entity';
 
 @Resolver()
@@ -22,7 +23,12 @@ export class CrewUserListResolver {
 
     const user = await this.crewUserListService.findAll({ userId });
 
-    return user;
+    const result = [];
+    const list = user.map((el) =>
+      el.crewBoard.user.id !== userId ? result.push(el) : el,
+    );
+
+    return result;
   }
 
   @UseGuards(GqlAuthAccessGuard)
@@ -134,7 +140,7 @@ export class CrewUserListResolver {
 
   // 갔던 산 리스트 조회 (status를 완료로 변경된 사항만 조회 가능)
   @UseGuards(GqlAuthAccessGuard)
-  @Query(() => [CrewUserList])
+  @Query(() => [CrewUserListAndUser])
   async fetchVisitList(
     @Context() context: IContext, //
   ) {

@@ -109,6 +109,7 @@ type Chat {
   name: String!
   roomName: String!
   message: String!
+  createdAt: DateTime!
 }
 
 type Room {
@@ -119,7 +120,7 @@ type Room {
 
 type ReviewComment {
   id: String!
-  reviewComment: String!
+  reviewComment: String
   createdAt: DateTime!
   deletedAt: DateTime!
   user: User!
@@ -140,10 +141,40 @@ enum POINT_PAYMENT_STATUS_ENUM {
   CANCEL
 }
 
+type CrewBoardAndList {
+  id: String!
+  title: String!
+  description: String!
+  date: String!
+  dateTime: String!
+  addressDetail: String!
+  address: String!
+  gender: String!
+  dues: Int!
+  peoples: Int!
+  thumbnail: String!
+  mountain: Mountain!
+  user: User!
+  assignedUsers: [User!]!
+  createdAt: DateTime!
+  updatedAt: DateTime
+}
+
+type CrewUserListAndUser {
+  id: String!
+  user: User!
+  crewBoard: CrewBoardAndList!
+}
+
 type DibsWithCrewBoard {
   id: String!
   user: User!
   crewBoard: CrewBoardAndUser!
+}
+
+type Trekking {
+  mountainName: String!
+  coordinate: [[Float!]!]!
 }
 
 type TrekkingInfo {
@@ -154,6 +185,9 @@ type TrekkingInfo {
 }
 
 type Query {
+
+  fetchTrekkingInfo(address: String!, mountainName: String!): Trekking!
+
   """산이름을 통해 좌표 반환"""
   fetchTrekkingCoordinate(mountainName: String!): [TrekkingInfo!]!
   fetchReviewBoardImage(reviewBoardId: String!): [ReviewBoardImage!]!
@@ -178,7 +212,7 @@ type Query {
   fetchApplyList(crewBoardId: String!): [CrewUserList!]!
   fetchAcceptedList(crewBoardId: String!): [CrewUserList!]!
   fetchHostCrewList: [CrewBoard!]!
-  fetchVisitList: [CrewUserList!]!
+  fetchVisitList: [CrewUserListAndUser!]!
   fetchReviewBoard(reviewBoardId: String!): ReviewBoard!
   fetchReviewBoards: [ReviewBoard!]!
   fetchUser: User!
@@ -188,7 +222,11 @@ type Query {
 
   """userId에 해당하는 댓글 전체 조회"""
   fetchUserCrewComments(userId: String!, boardId: String!): [CrewComment!]!
+
+  """commentId에 해당하는 대댓글 조회하기"""
   fetchCrewSubComments(commentId: String!, page: Int): [CrewComment!]!
+
+  """userId와 boardId에 해당하는 대댓글 조회하기"""
   fetchUserCrewSubComments(userId: String!, boardId: String!): [CrewComment!]!
   fetchLogs(roomName: String!): [Chat!]!
   fetchChatUsers(boardId: String!): [CrewUserList!]!
@@ -235,14 +273,24 @@ type Mutation {
 
   """댓글 생성하기"""
   createCrewComment(createCrewCommentInput: CreateCrewCommentInput!): CrewComment!
+
+  """댓글 수정하기"""
   updateCrewComment(commentId: String!, updateCrewCommentInput: UpdateCrewCommentInput!): CrewComment!
+
+  """댓글 삭제하기"""
   deleteCrewComment(commentId: String!): Boolean!
+
+  """대댓글 생성하기"""
   createCrewSubComment(createSubCrewCommentInput: CreateSubCrewCommentInput!): CrewComment!
+
+  """대댓글 수정하기"""
   updateCrewSubComment(subCommentId: String!, updateSubCrewCommentInput: UpdateSubCrewCommentInput!): CrewComment!
+
+  """대댓글 삭제하기"""
   deleteCrewSubComment(subCommentId: String!): Boolean!
   createRoom(boardId: String!, roomName: String!): Room!
   createReviewComment(reviewBoardId: String!, reviewComment: String!): ReviewComment!
-  updateReviewComment(reviewCommentId: String, updateComment: String): ReviewComment!
+  updateReviewComment(updateReviewCommentInput: updateReviewCommentInput!): ReviewComment!
   deleteReviewComment(reviewCommentId: String!): Boolean!
 }
 
@@ -327,4 +375,9 @@ input CreateSubCrewCommentInput {
 input UpdateSubCrewCommentInput {
   subComment: String
   parentId: String
+}
+
+input updateReviewCommentInput {
+  reviewCommentId: String
+  comment: String
 }

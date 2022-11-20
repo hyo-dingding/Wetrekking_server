@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-
+import { Trekking, TrekkingSchema } from './schemas/trekking.schema';
 import {
   TrekkingInfo,
   TrekkingInfoSchema,
@@ -14,6 +14,10 @@ import { TrekkingService } from './trekking.service';
       {
         name: TrekkingInfo.name,
         schema: TrekkingInfoSchema,
+      },
+      {
+        name: Trekking.name,
+        schema: TrekkingSchema,
       },
     ]),
   ],
