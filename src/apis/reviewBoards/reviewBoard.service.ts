@@ -19,13 +19,23 @@ export class ReviewBoardService {
   findOneById({ reviewBoardId }) {
     return this.reviewBoardRepository.findOne({
       where: { id: reviewBoardId },
-      relations: ['user', 'crewUserList', 'crewUserList.crewBoard'],
+      relations: [
+        'user',
+        'crewUserList',
+        'crewUserList.crewBoard',
+        'crewUserList.crewBoard.mountain',
+      ],
     });
   }
 
   findAll() {
     return this.reviewBoardRepository.find({
-      relations: ['user', 'crewUserList', 'crewUserList.crewBoard'],
+      relations: [
+        'user',
+        'crewUserList',
+        'crewUserList.crewBoard',
+        'crewUserList.crewBoard.mountain',
+      ],
     });
   }
 
