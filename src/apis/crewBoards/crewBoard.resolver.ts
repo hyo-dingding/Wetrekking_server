@@ -41,50 +41,45 @@ export class CrewBoardResolver {
   }
 
   @Query(() => [CrewBoardAndUser])
-  async fetchCrewBoardsLatestFirst(
-    @Args('region') region?: string,
-    @Args('startDate') startDate?: string,
-    @Args('endDate') endDate?: string,
-    @Args('search') search?: string,
-  ) {
-    let crewBoard;
-    const newCrewBoard = [];
-    crewBoard = this.crewBoardService.findAllLatestFirst();
+  async fetchCrewBoardsLatestFirst() {
+    // let crewBoard;
+    // const newCrewBoard = [];
+    return this.crewBoardService.findAllLatestFirst();
 
-    if (search) {
-      const ELKcrewBoard = await this.elasticsearchService.search({
-        index: 'mycrewboard',
-        query: {
-          match_phrase_prefix: {
-            title: search,
-          },
-        },
-      });
-      console.log(JSON.stringify(crewBoard, null, ' '));
-      crewBoard = ELKcrewBoard.hits.hits.map((el) => {
-        return el._source;
-      });
+    // if (search) {
+    //   const ELKcrewBoard = await this.elasticsearchService.search({
+    //     index: 'mycrewboard',
+    //     query: {
+    //       match_phrase_prefix: {
+    //         title: search,
+    //       },
+    //     },
+    //   });
+    //   console.log(JSON.stringify(crewBoard, null, ' '));
+    //   crewBoard = ELKcrewBoard.hits.hits.map((el) => {
+    //     return el._source;
+    //   });
 
-      if (!crewBoard[0]) {
-        throw new Error(`검색어 [${search}]로 조회된 검색결과가 없습니다`);
-      }
-    } else {
-      crewBoard = await this.crewBoardService.findAllWithUsers();
-    }
+    //   if (!crewBoard[0]) {
+    //     throw new Error(`검색어 [${search}]로 조회된 검색결과가 없습니다`);
+    //   }
+    // } else {
+    //   crewBoard = await this.crewBoardService.findAllWithUsers();
+    // }
 
-    if (region) {
-      newCrewBoard.filter((x) => x.mountain.address[0] === region);
-    }
+    // if (region) {
+    //   newCrewBoard.filter((x) => x.mountain.address[0] === region);
+    // }
 
-    if (startDate) {
-      newCrewBoard.filter(
-        (x) =>
-          Date.parse(startDate) <= Date.parse(x.date) &&
-          Date.parse(x.date) < Date.parse(endDate) + 86400000,
-      );
-    }
+    // if (startDate) {
+    //   newCrewBoard.filter(
+    //     (x) =>
+    //       Date.parse(startDate) <= Date.parse(x.date) &&
+    //       Date.parse(x.date) < Date.parse(endDate) + 86400000,
+    //   );
+    // }
 
-    return newCrewBoard;
+    // return newCrewBoard;
   }
 
   @Query(() => [CrewBoardAndUser])

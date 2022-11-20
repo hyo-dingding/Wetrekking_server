@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ReviewCount } from '../reviewCount/reviewCount.entity';
 import { User } from '../users/entities/user.entity';
 import { ReviewBoard } from './entities/reviewBoard.entity';
 
@@ -11,6 +12,8 @@ export class ReviewBoardService {
     private readonly reviewBoardRepository: Repository<ReviewBoard>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(ReviewCount)
+    private readonly reviewCountRepository: Repository<ReviewCount>,
   ) {}
 
   findOneById({ reviewBoardId }) {
@@ -53,6 +56,14 @@ export class ReviewBoardService {
     await this.userRepository.update(
       { id: userId },
       { point: user.point + 100 },
+    );
+
+    const count = await this.reviewCountRepository.findOne({
+      where: { user: { id: userId } },
+    });
+    this.reviewCountRepository.update(
+      { id: count.id },
+      { reviewCount: count.reviewCount + 1 },
     );
 
     return result;

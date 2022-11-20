@@ -154,6 +154,7 @@ type TrekkingInfo {
 }
 
 type Query {
+  """산이름을 통해 좌표 반환"""
   fetchTrekkingCoordinate(mountainName: String!): [TrekkingInfo!]!
   fetchReviewBoardImage(reviewBoardId: String!): [ReviewBoardImage!]!
   fetchAllReviewBoardImages: [ReviewBoardImage!]!
@@ -167,20 +168,25 @@ type Query {
   fetchAllCrewBoards: [CrewBoard!]!
   fetchAllCrewBoardsWithUsers: [CrewBoardAndUser!]!
   fetchAllCrewBoardsWithDelete: [CrewBoard!]!
-  fetchCrewBoardsLatestFirst: [[CrewBoardAndUser!]!]!
-  fetchCrewBoardsDeadlineFirst: [[CrewBoardAndUser!]!]!
-  fetchCrewBoardsBySearch(region: String!, startDate: String!, endDate: String!, search: String!): [[CrewBoard!]!]!
+  fetchCrewBoardsLatestFirst(region: String!, startDate: String!, endDate: String!, search: String!): [CrewBoardAndUser!]!
+  fetchCrewBoardsDeadlineFirst: [CrewBoardAndUser!]!
+  fetchCrewBoardsBySearch(region: String!, startDate: String!, endDate: String!, search: String!): [CrewBoard!]!
   fetchCrewBoardsTEST: [[CrewBoard!]!]!
   fetchBoardImage(crewBoardId: String!): [CrewBoardImage!]!
   fetchAllCrewBoardImages: [CrewBoardImage!]!
   fetchCrewUserList: [CrewUserList!]!
   fetchApplyList(crewBoardId: String!): [CrewUserList!]!
+  fetchAcceptedList(crewBoardId: String!): [CrewUserList!]!
   fetchHostCrewList: [CrewBoard!]!
   fetchVisitList: [CrewUserList!]!
   fetchReviewBoard(reviewBoardId: String!): ReviewBoard!
   fetchReviewBoards: [ReviewBoard!]!
   fetchUser: User!
+
+  """boardId에 해당하는 댓글 전체 조회"""
   fetchCrewComments(boardId: String!, page: Int): [CrewComment!]!
+
+  """userId에 해당하는 댓글 전체 조회"""
   fetchUserCrewComments(userId: String!, boardId: String!): [CrewComment!]!
   fetchCrewSubComments(commentId: String!, page: Int): [CrewComment!]!
   fetchUserCrewSubComments(userId: String!, boardId: String!): [CrewComment!]!
@@ -190,9 +196,7 @@ type Query {
 }
 
 type Mutation {
-  """MongoDB에 산+등산로 좌표를 저장하기 위한 API, 누르지 마요 큰일나요"""
-  createMongoDBTrekking: [TrekkingInfo!]!
-  uploadReviewBoaredImage(imgURL: [String!]!, reviewBoardId: String!): [ReviewBoardImage!]!
+  uploadReviewBoardImage(imgURL: [String!]!, reviewBoardId: String!): [ReviewBoardImage!]!
   likeReviewBoard(reviewBoardId: String!): String!
   createMountain: String!
   createPointPayment(impUid: String!, amount: Int!): PointPayment!
@@ -218,6 +222,7 @@ type Mutation {
   checkTokenPhone(phone: String!, phoneToken: String!): String!
   createReviewBoard(createReviewBoardInput: CreateReviewBoardInput!, crewUserListId: String!, imgURL: [String!]!): ReviewBoard!
   updateReviewBoard(reviewBoardId: String!, updateReviewBoardInput: UpdateReviewBoardInput!, imgURL: [String!]!): ReviewBoard!
+  deleteReviewBoard(reviewBoardId: String!): Boolean!
   findUserEmail(name: String!, phone: String!, phoneToken: String!): String!
   findUserPassword(name: String!, email: String!, phone: String!, phoneToken: String!): String!
   updatePassword(password: String!): String!
@@ -227,6 +232,8 @@ type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(email: String!, updateUserInput: UpdateUserInput!): User!
   deleteUser(userId: String!): Boolean!
+
+  """댓글 생성하기"""
   createCrewComment(createCrewCommentInput: CreateCrewCommentInput!): CrewComment!
   updateCrewComment(commentId: String!, updateCrewCommentInput: UpdateCrewCommentInput!): CrewComment!
   deleteCrewComment(commentId: String!): Boolean!
