@@ -1,4 +1,5 @@
 import { UseGuards } from '@nestjs/common';
+import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GqlAuthAccessGuard } from 'src/commons/auth/gql-auth.guard';
 import { IContext } from 'src/commons/type/context';
@@ -16,6 +17,7 @@ export class CrewBoardResolver {
     private readonly crewBoardService: CrewBoardService, //
     private readonly crewBoardImageService: CrewBoardImageService, //
     private readonly dibService: DibService,
+    private readonly elasticsearchService: ElasticsearchService,
   ) {}
 
   @Query(() => CrewBoard)
@@ -38,17 +40,59 @@ export class CrewBoardResolver {
     return this.crewBoardService.findAllWithDeleted();
   }
 
-  @Query(() => [[CrewBoardAndUser]])
-  async fetchCrewBoardsLatestFirst() {
-    return this.crewBoardService.findAllLatestFirst();
+  @Query(() => [CrewBoardAndUser])
+  async fetchCrewBoardsLatestFirst(
+    @Args('region') region?: string,
+    @Args('startDate') startDate?: string,
+    @Args('endDate') endDate?: string,
+    @Args('search') search?: string,
+  ) {
+    let crewBoard;
+    const newCrewBoard = [];
+    crewBoard = this.crewBoardService.findAllLatestFirst();
+
+    if (search) {
+      const ELKcrewBoard = await this.elasticsearchService.search({
+        index: 'mycrewboard',
+        query: {
+          match_phrase_prefix: {
+            title: search,
+          },
+        },
+      });
+      console.log(JSON.stringify(crewBoard, null, ' '));
+      crewBoard = ELKcrewBoard.hits.hits.map((el) => {
+        return el._source;
+      });
+
+      if (!crewBoard[0]) {
+        throw new Error(`검색어 [${search}]로 조회된 검색결과가 없습니다`);
+      }
+    } else {
+      crewBoard = await this.crewBoardService.findAllWithUsers();
+    }
+
+    if (region) {
+      newCrewBoard.filter((x) => x.mountain.address[0] === region);
+    }
+
+    if (startDate) {
+      newCrewBoard.filter(
+        (x) =>
+          Date.parse(startDate) <= Date.parse(x.date) &&
+          Date.parse(x.date) < Date.parse(endDate) + 86400000,
+      );
+    }
+
+    return newCrewBoard;
   }
 
-  @Query(() => [[CrewBoardAndUser]])
+  @Query(() => [CrewBoardAndUser])
   fetchCrewBoardsDeadlineFirst() {
     return this.crewBoardService.findAllDeadlineFirst();
   }
 
-  @Query(() => [[CrewBoard]])
+  @Query(() => [CrewBoard])
   async fetchCrewBoardsBySearch(
     @Args('region') region?: string,
     @Args('startDate') startDate?: string,

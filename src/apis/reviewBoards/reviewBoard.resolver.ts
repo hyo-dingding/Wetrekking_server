@@ -71,7 +71,7 @@ export class ReviewBoardResolver {
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => Boolean)
   deleteReviewBoard(
-    @Args('revewBoardId') reviewBoardId: string, //
+    @Args('reviewBoardId') reviewBoardId: string, //
   ) {
     return this.reviewBoardService.delete({ reviewBoardId });
   }
