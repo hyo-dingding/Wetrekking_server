@@ -44,5 +44,5 @@ export class PointPayment {
 
   @CreateDateColumn()
   @Field(() => Date)
-  createAt: Date;
+  createdAt: Date;
 }

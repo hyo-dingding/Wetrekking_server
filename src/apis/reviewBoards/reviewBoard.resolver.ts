@@ -20,9 +20,17 @@ export class ReviewBoardResolver {
     return this.reviewBoardService.findOneById({ reviewBoardId });
   }
 
-  @Query(() => [ReviewBoard])
-  fetchReviewBoards() {
-    return this.reviewBoardService.findAll();
+  @Query(() => [[ReviewBoard]])
+  async fetchReviewBoards() {
+    const result = [];
+    const reviewBoard = await this.reviewBoardService.findAll();
+    reviewBoard.sort((a, b) => Number(b.createdAt) - Number(a.createdAt));
+
+    while (reviewBoard.length > 0) {
+      result.push(reviewBoard.splice(0, 10));
+    }
+
+    return result;
   }
 
   @UseGuards(GqlAuthAccessGuard)
