@@ -25,7 +25,7 @@ export class PointPaymentService {
 
   findAllbyId({ userId }) {
     return this.pointPaymentRepository.find({
-      where: { id: userId },
+      where: { user: { id: userId } },
       relations: ['user'],
     });
   }

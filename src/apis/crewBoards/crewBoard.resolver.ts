@@ -42,9 +42,8 @@ export class CrewBoardResolver {
 
   @Query(() => [CrewBoardAndUser])
   async fetchCrewBoardsLatestFirst() {
-    // let crewBoard;
     // const newCrewBoard = [];
-    return this.crewBoardService.findAllLatestFirst();
+    return await this.crewBoardService.findAllLatestFirst();
 
     // if (search) {
     //   const ELKcrewBoard = await this.elasticsearchService.search({
@@ -59,7 +58,7 @@ export class CrewBoardResolver {
     //   crewBoard = ELKcrewBoard.hits.hits.map((el) => {
     //     return el._source;
     //   });
-
+    //
     //   if (!crewBoard[0]) {
     //     throw new Error(`검색어 [${search}]로 조회된 검색결과가 없습니다`);
     //   }
