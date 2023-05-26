@@ -3,7 +3,7 @@
     </div>
     <div style="text-align: left;"> 
     <h2 style="border-bottom: 1px solid #d8dee4; color: #282d33;"> 프로젝트 소개 </h2>  
-    <div style="font-weight: 700; font-size: 15px; text-align: left; color: #282d33;"> <li> 등산이라는 취미를 가진 다양한 사람들을 모아 일회성 크루를 모집하는 서비스</li></li>➤ [URL]: https://wetrekking.kr/ <hr></li>➤ 팀프로젝트 발표영상 보러가기</li>https://youtu.be/r1<li>ANeXxnlQ</li></li> </div> 
+    <div style="font-weight: 700; font-size: 15px; text-align: left; color: #282d33;"> <li> 등산이라는 취미를 가진 다양한 사람들을 모아 일회성 크루를 모집하는 서비스</li></li>➤ [URL]: https://wetrekking.kr/ <hr></li>➤ 팀프로젝트 발표영상 보러가기</li>https://youtu.be/r1-ANeXxnlQ<li>ANeXxnlQ</li></li> </div> 
     </div>
     <div style="text-align: left;">
     <h2 style="border-bottom: 1px solid #d8dee4; color: #282d33;"> 🛠️ Tech Stacks </h2> <br> 
